@@ -15,6 +15,6 @@ What's on the page:
 
 ## For the host
 
-Guides are written and edited in the private planner in Claude. This site is a read-only copy that updates automatically once a day (see [SYNC.md](SYNC.md)). For an immediate update, ask Claude to "update the book club site."
+Guides are written and edited in the private planner in Claude. This site is a read-only copy that updates automatically six times a day, 8:37 AM to 11:37 PM Eastern (see [SYNC.md](SYNC.md)). For an immediate update, ask Claude to "update the book club site."
 
 `tools/sync.py` rebuilds the page from the planner's sync copy; `data/club.json` is the data currently on the site.

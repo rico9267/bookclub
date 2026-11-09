@@ -828,7 +828,7 @@ async function save() {
   if (isNew) data.club = { ...data.club, currentId: id, now: "", updatedAt: record.updatedAt };
   const prev = { current: S.current, unsaved: S.unsaved };
   S.current = record; S.unsaved = false;
-  const ok = await publishState(data, isNew ? "Saved. This is now the meeting everyone sees when they open the link." : "Saved. Everyone sees the update.");
+  const ok = await publishState(data, isNew ? "Saved. This is now the group's meeting; the public site shows it at its next update (within about 3 hours)." : "Saved. The public site shows it at its next update (within about 3 hours).");
   if (!ok) { S.current = prev.current; S.unsaved = prev.unsaved; }
   else ss.del("bc-draft");
   renderGuide(); renderSaved(); renderLivebar();
@@ -1606,7 +1606,7 @@ async function saveClub() {
   data.settings = { ...d.settings, timezone: d.settings.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone };
   data.schedule = d.schedule.filter(p => p.book.trim()).map(p => ({ ...p, book: p.book.trim(), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1) }));
   data.shelf = { upNext: d.shelf.upNext.filter(b => b.title.trim()), books: d.shelf.books };
-  const ok = await publishState(data, "Club changes saved. Ask Claude to \u201cupdate the book club site\u201d to put them on the public link.");
+  const ok = await publishState(data, "Club changes saved. The public site picks them up at its next update (within about 3 hours).");
   if (ok) { clubDraft = null; renderClub(); applyRole(); renderGuide(); }
 }
 function renderClub() {
@@ -1713,7 +1713,7 @@ function exportPanel() {
     el("h2", { style: "font-size:18px" }, "Your club's public site"),
     el("p", { style: "margin:0;font-weight:700" }, el("a", { href: SITE_URL, target: "_blank", rel: "noopener" }, SITE_URL.replace("https://", ""))),
     el("p", { class: "hint", style: "font-size:14px;margin:0" },
-      "Anyone can open this link with no account. It updates automatically every night at 11:37 PM Eastern with whatever you've saved here. Need it sooner? Ask Claude to \u201cupdate the book club site.\u201d The public copy is read-only and leaves out your notes about the group."),
+      "Anyone can open this link with no account. It updates automatically six times a day (8:37 AM, 12:37, 3:37, 5:37, 8:37 and 11:37 PM Eastern) with whatever you've saved here. Need it sooner? Ask Claude to \u201cupdate the book club site.\u201d The public copy is read-only and leaves out your notes about the group."),
     el("div", { class: "actions" },
       el("button", { class: "btn", type: "button", onclick: (e) => exportPublic(e.currentTarget) }, "Download public page")));
 }
