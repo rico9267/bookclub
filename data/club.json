@@ -425,36 +425,75 @@
   "now": ""
  },
  "settings": {
-  "blurb": "",
   "clubName": "Novel Relations",
+  "blurb": "",
   "rsvpUrl": "https://forms.gle/ceJnWhykB2uRWs8fA",
-  "timezone": "America/New_York",
+  "voteUrl": "https://forms.gle/LTvpAKNpVVYo7N9a8",
   "voteLabel": "",
-  "voteUrl": "https://forms.gle/LTvpAKNpVVYo7N9a8"
+  "timezone": "America/New_York",
+  "questionsUrl": ""
  },
  "schedule": [
   {
-   "author": "C.S. Lewis",
+   "id": "p-mn-3",
    "book": "The Magician's Nephew",
+   "author": "C.S. Lewis",
+   "meetingNumber": 3,
    "chapters": "11–15",
    "date": "",
-   "id": "p-mn-3",
-   "meetingNumber": 3,
    "time": "18:00",
    "type": "chapters"
   }
  ],
  "shelf": {
+  "upNext": [],
   "books": {
    "the magician's nephew": {
-    "about": "C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.",
     "finished": false,
     "rating": "",
-    "verdict": ""
+    "verdict": "",
+    "about": "C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.",
+    "similar": [
+     {
+      "title": "The Story of the Amulet",
+      "author": "E. Nesbit",
+      "year": "1906",
+      "why": "Edwardian London children, a magic charm, and trips to far-off times and places. Lewis tips his hat to Nesbit on our book's first page."
+     },
+     {
+      "title": "The Lives of Christopher Chant",
+      "author": "Diana Wynne Jones",
+      "year": "1988",
+      "why": "A boy slips through the Place Between into other worlds, and his charming uncle has him run experiments there. Sound familiar?"
+     },
+     {
+      "title": "A Wrinkle in Time",
+      "author": "Madeleine L'Engle",
+      "year": "1962",
+      "why": "Children cross into other worlds to find a missing parent, in a cosmic fight between light and darkness with a faith thread like Lewis's."
+     },
+     {
+      "title": "Out of the Silent Planet",
+      "author": "C.S. Lewis",
+      "year": "1938",
+      "why": "Lewis's science fiction for adults: a man is carried off to Mars by a scientist who thinks progress excuses anything. Uncle Andrew would approve."
+     },
+     {
+      "title": "Piranesi",
+      "author": "Susanna Clarke",
+      "year": "2020",
+      "why": "An adult novel that opens with an Uncle Andrew quote. Its endless house of halls and statues will feel familiar after Charn."
+     },
+     {
+      "title": "The Golden Compass",
+      "author": "Philip Pullman",
+      "year": "1995",
+      "why": "Parallel worlds from one of Narnia's sharpest critics (called Northern Lights in the UK). Good fuel for a debate night."
+     }
+    ]
    }
-  },
-  "upNext": []
+  }
  },
  "public": true,
- "exportedAt": "2026-11-09T20:11:35.533409Z"
+ "exportedAt": "2026-11-09T21:05:59.666275Z"
 }
