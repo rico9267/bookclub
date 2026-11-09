@@ -320,6 +320,15 @@ a.btn.primary { color: var(--accent-ink); }
 .view-title { font-size: clamp(24px, 4vw, 30px); }
 .shelf-item .about { margin: 4px 0 2px; font-size: 14.5px; max-width: 60ch; }
 .plan-row.shelf-edit .about-edit { grid-column: 1 / -1; }
+/* Section jump bar: sticks under the header, scrolls sideways on phones. */
+.jump { position: sticky; top: var(--sticky, 64px); z-index: 3; display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; margin: 0 -2px;
+  background: var(--paper); scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
+.jump::-webkit-scrollbar { display: none; }
+.jump-btn { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.jump-btn:hover { border-color: var(--accent); }
+.sec { scroll-margin-top: calc(var(--sticky, 120px) + 58px); }
+@media print { .jump { display: none !important; } }
+.jump-btn[aria-current="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1104,6 +1113,44 @@ function whenText(d, time) {
   const rel = diff === 0 ? "today" : diff === 1 ? "tomorrow" : diff === -1 ? "yesterday" : diff > 1 ? `in ${diff} days` : `${-diff} days ago`;
   return `Meeting ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}${time ? " · " + fmtTime(time) : ""} · ${rel}`;
 }
+// Jump between sections on long guides (a phone guide runs ~7,000px). Buttons, not #links, so the URL stays clean.
+const JUMP_LABELS = { agenda: "Agenda", recap: "Recap", icebreakers: "Icebreakers", chapterQuestions: "Questions", themes: "Themes", context: "Context", adaptations: "Movie & TV", wrapUp: "Wrap-up" };
+function jumpNav(g) {
+  const has = {
+    agenda: g.agenda.length, recap: g.recap.length, icebreakers: g.icebreakers.length, chapterQuestions: g.chapterQuestions.length,
+    themes: g.themes.length, context: g.context.length || g.spoilerNote, adaptations: g.adaptations.length,
+    wrapUp: g.wrapUp.predictions.length || g.wrapUp.nextReading || g.wrapUp.bring
+  };
+  const keys = Object.keys(JUMP_LABELS).filter(k => has[k]);
+  if (keys.length < 3) return null;
+  return el("nav", { class: "jump", "aria-label": "Jump to section" },
+    keys.map(k => el("button", { type: "button", class: "jump-btn", "data-key": k, onclick: () => scrollToSection(k) }, JUMP_LABELS[k])));
+}
+// Highlight the section you're reading in the jump bar (one scroll listener for the page's lifetime).
+{
+  let ticking = false;
+  const mark = () => {
+    ticking = false;
+    const nav = document.querySelector(".jump"); if (!nav || nav.offsetParent === null) return;
+    const line = nav.getBoundingClientRect().bottom + 12;
+    let cur = null;
+    const secs = [...document.querySelectorAll("#guide .sec")];
+    for (const s of secs) if (s.getBoundingClientRect().top <= line) cur = s.id.slice(4);
+    if (secs.length && innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = secs[secs.length - 1].id.slice(4);   // at the bottom: last section
+    for (const btn of nav.querySelectorAll(".jump-btn")) {
+      const on = btn.dataset.key === cur;
+      if (on && btn.getAttribute("aria-current") !== "true") btn.scrollIntoView({ block: "nearest", inline: "nearest" });
+      if (on) btn.setAttribute("aria-current", "true"); else btn.removeAttribute("aria-current");
+    }
+  };
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(mark); } }, { passive: true });
+}
+// Cut preview text at a word boundary and mark it as continuing.
+function clip(text, n) {
+  const t = str(text).trim();
+  if (t.length <= n) return t;
+  return t.slice(0, n).replace(/\s+\S*$/, "").replace(/[,;:.\s]+$/, "") + "\u2026";
+}
 const fmtDate = (d) => new Date(d + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 
 // A titled list (icebreakers, themes, context, adaptations): bold title + text, each editable/removable.
@@ -1198,6 +1245,7 @@ function renderGuide() {
     )
   ];
 
+  if (!E) { const nav = jumpNav(g); if (nav) parts.push(nav); }   // sibling of the sections, so it can stick while they scroll
   if (g.agenda.length) parts.push(sec("agenda", el("div", { class: "scroll" },
     el("table", { class: "agenda" },
       el("thead", {}, el("tr", {}, el("th", {}, "Time"), el("th", {}, "Segment"), el("th", {}, "What happens"), E ? el("th", {}, el("span", { class: "sr-only" }, "Remove")) : null)),
@@ -1409,7 +1457,7 @@ function scheduleRow(r, next, cur) {
   const body = [chips.length ? el("span", { class: "chips" }, chips) : null,
     el("span", { class: "title" }, `Meeting ${r.meetingNumber} · ${what}`),
     el("span", { class: "meta" }, when),
-    r.planned ? null : el("span", { class: "meta" }, str(r.guide?.lead).slice(0, 110))];
+    r.planned ? null : el("span", { class: "meta" }, clip(r.guide?.lead, 120))];
   if (r.planned) {
     return el("div", { class: "card planned" }, ...body,
       S.isHost && S.sample ? el("button", { class: "btn small", type: "button", style: "justify-self:start", onclick: async () => { if (await okToLeave()) writePlanned(r); } }, "Write the guide")
@@ -1624,7 +1672,7 @@ function exportPanel() {
     el("h2", { style: "font-size:18px" }, "Your club's public site"),
     el("p", { style: "margin:0;font-weight:700" }, el("a", { href: SITE_URL, target: "_blank", rel: "noopener" }, SITE_URL.replace("https://", ""))),
     el("p", { class: "hint", style: "font-size:14px;margin:0" },
-      "Anyone can open this link with no account. It doesn't update by itself: after you save or edit a meeting, ask Claude to \u201cupdate the book club site,\u201d or download the page and upload it to the bookclub repo on GitHub (Add file \u2192 Upload files). The public copy is read-only and leaves out your notes about the group."),
+      "Anyone can open this link with no account. It updates automatically every night at 11:37 PM Eastern with whatever you've saved here. Need it sooner? Ask Claude to \u201cupdate the book club site.\u201d The public copy is read-only and leaves out your notes about the group."),
     el("div", { class: "actions" },
       el("button", { class: "btn", type: "button", onclick: (e) => exportPublic(e.currentTarget) }, "Download public page")));
 }
