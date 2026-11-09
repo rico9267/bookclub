@@ -1241,6 +1241,7 @@ function renderGuide() {
       actions,
       !E && m.id ? meetingButtons(m) : null,
       !E && m.type === "wrapup" ? el("div", { class: "banner" }, "Final wrap-up: this guide discusses the whole book, including the ending.") : null,
+      !E ? afterBanner(m) : null,
       !E ? shieldControl(m) : null
     )
   ];
@@ -1429,6 +1430,22 @@ function bookRows(b) {
   for (const p of b.planned) rows.set(p.meetingNumber, { ...p, planned: true });
   for (const m of b.meetings) rows.set(m.meetingNumber, { ...m, planned: false });
   return [...rows.values()].sort((x, y) => (x.meetingNumber || 0) - (y.meetingNumber || 0));
+}
+// After a meeting ends, point to what's next (the next meeting of the same book, or the club's next meeting).
+function nextAfter(m) {
+  const b = allBooks().find(x => sameBook(x.book, m.book));
+  const later = b ? bookRows(b).filter(r => (r.meetingNumber || 0) > (m.meetingNumber || 0)) : [];
+  return later[0] || nextMeeting();
+}
+function afterBanner(m) {
+  if (!m.id || !m.date || isUpcoming(m)) return null;
+  const n = nextAfter(m);
+  const when = n ? (n.date ? `${fmtDate(n.date)}${n.time ? " · " + fmtTime(n.time) : ""}` : "date to be set") : "";
+  const what = n ? `${sameBook(n.book, m.book) ? "" : n.book + ", "}meeting ${n.meetingNumber}${n.type === "wrapup" ? " (final wrap-up)" : str(n.chapters).trim() ? `, chapters ${n.chapters}` : ""}` : "";
+  return el("div", { class: "banner past" },
+    el("span", {}, `This meeting took place on ${fmtDate(m.date)}.`, n ? el("b", {}, ` Up next: ${what}, ${when}.`) : " The next meeting hasn't been scheduled yet."),
+    n && !n.planned && n.id ? el("button", { class: "btn small", type: "button", onclick: () => openMeeting(n) }, "Open the next guide")
+      : el("button", { class: "btn small", type: "button", onclick: () => showView("saved") }, "See the schedule"));
 }
 function nextMeeting() {
   const all = allBooks().flatMap(bookRows).filter(isUpcoming).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
