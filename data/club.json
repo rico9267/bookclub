@@ -425,36 +425,36 @@
   "now": ""
  },
  "settings": {
-  "clubName": "",
   "blurb": "",
-  "rsvpUrl": "",
-  "voteUrl": "",
+  "clubName": "Novel Relations",
+  "rsvpUrl": "https://forms.gle/ceJnWhykB2uRWs8fA",
+  "timezone": "America/New_York",
   "voteLabel": "",
-  "timezone": "America/New_York"
+  "voteUrl": "https://forms.gle/LTvpAKNpVVYo7N9a8"
  },
  "schedule": [
   {
-   "id": "p-mn-3",
-   "book": "The Magician's Nephew",
    "author": "C.S. Lewis",
-   "meetingNumber": 3,
+   "book": "The Magician's Nephew",
    "chapters": "11–15",
    "date": "",
+   "id": "p-mn-3",
+   "meetingNumber": 3,
    "time": "18:00",
    "type": "chapters"
   }
  ],
  "shelf": {
-  "upNext": [],
   "books": {
    "the magician's nephew": {
+    "about": "C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.",
     "finished": false,
     "rating": "",
-    "verdict": "",
-    "about": "C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters."
+    "verdict": ""
    }
-  }
+  },
+  "upNext": []
  },
  "public": true,
- "exportedAt": "2026-11-09T03:16:06.966944Z"
+ "exportedAt": "2026-11-09T20:11:35.533409Z"
 }
