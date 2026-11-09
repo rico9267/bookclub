@@ -319,7 +319,7 @@ a.btn.primary { color: var(--accent-ink); }
   .plan-row .rm { justify-self: start; }
   .grid2 { grid-template-columns: 1fr; }
 }
-@media print { .meet-actions, .shield, .cal-menu { display: none !important; } }
+@media print { details.cal, .shield, .cal-menu { display: none !important; } }
 
 #saved-list { display: grid; gap: 28px; }
 #club-root { display: grid; gap: 16px; }
@@ -1204,6 +1204,8 @@ function renderGuide() {
   if (S.downloads && !E) actions.append(el("button", { class: "btn", type: "button", onclick: downloadGuide }, "Download"));
   if (m.id && canManage() && !E) actions.append(el("button", { class: "btn danger", type: "button", onclick: () => askDelete(m) }, "Delete"));
 
+  if (!E && m.id) { const cal = meetingButtons(m); if (cal) actions.prepend(cal); }   // calendar first, in the same row as Print / Copy
+
   let banner = null;
   const cur = club().currentId;
   if (E) {
@@ -1246,7 +1248,6 @@ function renderGuide() {
       (g.accuracy.note && g.accuracy.confidence !== "high") ? el("div", { class: "accuracy" }, el("b", {}, "Check before the meeting: "), g.accuracy.note) : null,
       banner,
       actions,
-      !E && m.id ? meetingButtons(m) : null,
       !E && m.type === "wrapup" ? el("div", { class: "banner" }, "Final wrap-up: this guide discusses the whole book, including the ending.") : null,
       !E ? afterBanner(m) : null,
       !E ? shieldControl(m) : null
@@ -1388,12 +1389,11 @@ function clubBar() {
 function meetingButtons(m) {
   if (!m.date || !isUpcoming(m)) return null;
   const canIcs = PUBLIC || !window.claude || !!S.downloads;
-  return el("div", { class: "actions meet-actions" },
-    el("details", { class: "cal" },
+  return el("details", { class: "cal" },
       el("summary", { class: "btn" }, "Add to calendar"),
       el("div", { class: "cal-menu" },
         canIcs ? el("button", { class: "btn link", type: "button", onclick: () => downloadIcs(m) }, "Apple or Outlook (.ics)") : null,
-        el("a", { class: "btn link", href: googleCalUrl(m), target: "_blank", rel: "noopener" }, "Google Calendar"))));
+        el("a", { class: "btn link", href: googleCalUrl(m), target: "_blank", rel: "noopener" }, "Google Calendar")));
 }
 
 // Spoiler shield (Fable's spoiler-free chapter rooms): hide chapters past where you've read.
