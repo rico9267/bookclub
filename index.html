@@ -1117,7 +1117,7 @@ function whenText(d, time) {
   const today = new Date(); today.setHours(12, 0, 0, 0);
   const diff = Math.round((day - today) / 86400000);
   const rel = diff === 0 ? "today" : diff === 1 ? "tomorrow" : diff === -1 ? "yesterday" : diff > 1 ? `in ${diff} days` : `${-diff} days ago`;
-  return `Meeting ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}${time ? " · " + fmtTime(time) : ""} · ${rel}`;
+  return `${diff < 0 ? "Met" : "Meeting"} ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}${time ? " · " + fmtTime(time) : ""} · ${rel}`;
 }
 // Jump between sections on long guides (a phone guide runs ~7,000px). Buttons, not #links, so the URL stays clean.
 const JUMP_LABELS = { agenda: "Agenda", recap: "Recap", icebreakers: "Icebreakers", chapterQuestions: "Questions", themes: "Themes", context: "Context", adaptations: "Movie & TV", wrapUp: "Wrap-up" };
@@ -1489,9 +1489,11 @@ function writePlanned(p) {
 function scheduleRow(r, next, cur) {
   const when = r.date ? `${fmtDate(r.date)}${r.time ? " · " + fmtTime(r.time) : ""}` : "Date to be set";
   const what = r.type === "wrapup" ? "Final wrap-up" : (str(r.chapters).trim() ? `Ch. ${r.chapters}` : "Chapters to be set");
+  const isNext = !!next && next.meetingNumber === r.meetingNumber && sameBook(next.book, r.book);
   const chips = [
-    r.id === cur ? el("span", { class: "chip" }, "Group's current meeting") : null,
-    next && next.meetingNumber === r.meetingNumber && sameBook(next.book, r.book) ? el("span", { class: "chip next" }, "Next up") : null,
+    // Members only need one label when the group's meeting is also the next one; the host keeps both.
+    r.id === cur && !(isNext && !S.isHost) ? el("span", { class: "chip" }, "Group's current meeting") : null,
+    isNext ? el("span", { class: "chip next" }, "Next up") : null,
     r.date && !isUpcoming(r) && !r.planned ? el("span", { class: "chip done" }, "Done") : null,
     r.planned ? el("span", { class: "chip planned" }, "Planned") : null
   ].filter(Boolean);
