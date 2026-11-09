@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book Club</title>
+<meta name="description" content="Meeting guides for our book club: agenda, chapter recaps and discussion questions.">
+<meta property="og:title" content="Book Club">
+<meta property="og:description" content="Meeting guides for our book club: agenda, chapter recaps and discussion questions.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#2c5d4c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%232c5d4c%27/%3E%3Cpath d=%27M14 18c6-3 12-3 18 1v29c-6-4-12-4-18-1z%27 fill=%27%23fff%27/%3E%3Cpath d=%27M50 18c-6-3-12-3-18 1v29c6-4 12-4 18-1z%27 fill=%27%23e3efe9%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="app-style">
+:root {
+  /* Layout: settings column beside a reading column on wide screens; one column on phones. */
+  --paper: #eef1f4;
+  --surface: #ffffff;
+  --ink: #17202a;
+  --muted: #5a6571;
+  --line: #d9dfe5;
+  --accent: #2c5d4c;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3efe9;
+  --mark: #f3dc8e;
+  --warn: #8a5a00;
+  --warn-soft: #fbf1d9;
+  --danger: #a3302a;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11161b;
+    --surface: #182027;
+    --ink: #e7ecf1;
+    --muted: #9aa6b2;
+    --line: #2b3640;
+    --accent: #79c3a6;
+    --accent-ink: #0d1a15;
+    --accent-soft: #1d2f29;
+    --mark: #5a4a17;
+    --warn: #f0c46a;
+    --warn-soft: #2e2614;
+    --danger: #f08b84;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11161b;
+  --surface: #182027;
+  --ink: #e7ecf1;
+  --muted: #9aa6b2;
+  --line: #2b3640;
+  --accent: #79c3a6;
+  --accent-ink: #0d1a15;
+  --accent-soft: #1d2f29;
+  --mark: #5a4a17;
+  --warn: #f0c46a;
+  --warn-soft: #2e2614;
+  --danger: #f08b84;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 650; text-wrap: balance; margin: 0; line-height: 1.2; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.top-inner {
+  max-width: 1180px; margin: 0 auto; padding: 12px 16px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.brand { font-family: var(--font-display); font-size: 20px; font-weight: 650; }
+.tabs { display: flex; gap: 4px; margin-left: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.tab { border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 64px; }
+.layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+.layout.member { grid-template-columns: minmax(0, 820px); justify-content: center; }
+.layout.member .form { display: none; }
+
+.livebar { background: var(--accent); color: var(--accent-ink); }
+.livebar[hidden] { display: none; }
+.livebar-inner { max-width: 1180px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+#livebar-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.livebar .dot { flex: none; }
+.livebar .btn { flex: none; }
+@media (max-width: 520px) {
+  .top-inner { padding: 8px 12px; gap: 8px; flex-wrap: nowrap; }
+  .brand { font-size: 17px; white-space: nowrap; }
+  .brand-rest { display: none; }
+  .tab { padding: 6px 11px; font-size: 13px; }
+  .livebar-inner { padding: 6px 12px; }
+  .livebar-meta { display: none; }
+}
+.livebar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-ink); animation: pulse 1.4s ease-in-out infinite; }
+.livebar .btn { background: transparent; color: var(--accent-ink); border-color: currentColor; padding: 4px 10px; font-size: 13px; }
+
+.banner { font-size: 14px; padding: 10px 12px; border-radius: 9px; background: var(--accent-soft); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; max-width: 70ch; }
+.sec { scroll-margin-top: calc(var(--sticky, 120px) + 12px); transition: box-shadow .2s, border-color .2s; }
+.sec.now { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.sec-head .tag-now { font-size: 12px; font-weight: 700; color: var(--accent-ink); background: var(--accent); padding: 2px 8px; border-radius: 999px; }
+.sec-tools { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.card.current { border-color: var(--accent); }
+.follow { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.form { display: grid; gap: 14px; position: sticky; top: calc(var(--sticky, 64px) + 12px); }
+@media (max-width: 860px) {
+  .form { position: static; }
+  /* On phones the host sees the meeting first; the planning form sits below it. */
+  .layout:not(.member):not(.empty) .guide { order: -1; }
+}
+.form h2 { font-size: 18px; }
+.field { display: grid; gap: 5px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper);
+}
+.field textarea { min-height: 76px; resize: vertical; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 9px 14px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.small { padding: 5px 10px; font-size: 13px; }
+.btn.danger { color: var(--danger); }
+.btn.link { border: 0; background: none; padding: 4px 6px; color: var(--accent); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.status { font-size: 14px; padding: 10px 12px; border-radius: 9px; background: var(--accent-soft); }
+.status.warn { background: var(--warn-soft); color: var(--warn); }
+.status[hidden] { display: none; }
+
+/* Guide */
+.guide { display: grid; gap: 18px; }
+.guide-head { display: grid; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-variant-numeric: tabular-nums; }
+.chip.example { background: var(--mark); color: var(--ink); }
+.chip.unsaved { background: var(--warn-soft); color: var(--warn); }
+.guide-head h1 { font-size: clamp(26px, 4vw, 34px); }
+.lead { margin: 0; max-width: 65ch; color: var(--muted); }
+.accuracy { font-size: 14px; padding: 10px 12px; border-radius: 9px; background: var(--warn-soft); color: var(--warn); max-width: 70ch; }
+
+.sec { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 20px; display: grid; gap: 12px; }
+.sec-head { display: flex; align-items: baseline; gap: 10px; }
+.sec-head h2 { font-size: 21px; }
+.sec.busy { opacity: .6; }
+
+.agenda { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.agenda th, .agenda td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.agenda th { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.agenda td:first-child { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+.scroll { overflow-x: auto; }
+
+.chapters { display: grid; gap: 12px; }
+.ch { display: grid; grid-template-columns: 52px 1fr; gap: 12px; }
+.ch-num { font-family: var(--font-display); font-size: 13px; font-weight: 650; color: var(--accent); background: var(--accent-soft); border-radius: 8px; height: 40px; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.ch h3 { font-size: 16px; margin-bottom: 2px; }
+.ch p { margin: 0; max-width: 68ch; }
+.ch ol { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 6px; max-width: 68ch; }
+
+.items { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.items li { padding-left: 14px; border-left: 3px solid var(--line); max-width: 70ch; }
+.items b { display: block; }
+.spoiler { padding: 12px 14px; border-radius: 10px; border: 1px dashed var(--muted); font-size: 14.5px; max-width: 70ch; }
+.spoiler summary { cursor: pointer; font-weight: 700; }
+
+/* Saved */
+.saved { display: grid; gap: 12px; }
+.saved-group h2 { font-size: 20px; margin-bottom: 10px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.card { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 14px; cursor: pointer; display: grid; gap: 4px; }
+.card:hover { border-color: var(--accent); }
+.card .meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.card .title { font-weight: 700; }
+.empty { color: var(--muted); }
+
+.dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: grid; place-items: center; padding: 16px; z-index: 20; }
+.dialog-backdrop[hidden] { display: none; }
+.dialog { background: var(--surface); border-radius: 14px; padding: 20px; max-width: 380px; width: 100%; display: grid; gap: 14px; border: 1px solid var(--line); }
+.dialog h3 { font-size: 18px; }
+
+.thinking { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .thinking { animation: none; } }
+
+/* Edit mode */
+.editable { outline: 1px dashed var(--muted); outline-offset: 2px; border-radius: 4px; cursor: text; min-width: 3ch; }
+.editable:focus { outline: 2px solid var(--accent); background: var(--accent-soft); }
+.editable:empty::before { content: "Type here"; color: var(--muted); }
+.items li > span.editable { display: block; margin-top: 4px; }
+.rm { font-size: 12.5px; color: var(--danger); padding: 2px 4px; }
+.items li.add { border-left-color: transparent; padding-left: 0; }
+ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px; }
+.edit-bar { flex-direction: column; align-items: flex-start; }
+.edit-bar input { padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.when { margin: 0; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.panel.export { display: grid; gap: 10px; margin-bottom: 8px; border-color: var(--accent); }
+
+/* Print: a clean handout, always light, no app chrome. */
+@media print {
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+    --paper: #ffffff; --surface: #ffffff; --ink: #000000; --muted: #444444; --line: #cccccc;
+    --accent: #2c5d4c; --accent-ink: #ffffff; --accent-soft: #eef4f1; color-scheme: light;
+  }
+  body { background: #fff; font-size: 11.5pt; }
+  .top, .livebar, .actions, .sec-tools, .banner, .follow, #status, .form, #pub-footer, .tag-now, #view-saved { display: none !important; }
+  .wrap { padding: 0; max-width: none; }
+  .layout, .layout.member { display: block; }
+  .guide { gap: 10pt; }
+  .sec { border: 0; box-shadow: none; padding: 0; border-radius: 0; }
+  .sec h2 { break-after: avoid; font-size: 15pt; }
+  .ch, .items li, .agenda tr { break-inside: avoid; }
+  .chip { border: 1px solid #ccc; }
+  .spoiler { display: none !important; }
+  a { color: inherit; text-decoration: none; }
+}
+@page { margin: 0.6in; }
+.edit-fields { display: flex; flex-wrap: wrap; gap: 10px; }
+.edit-fields label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.edit-fields input { width: 9.5em; }
+.edit-fields input[type="number"] { width: 6.5em; }
+</style>
+</head>
+<body>
+<template id="shell">
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">Book Club <span class="brand-rest">Meeting Planner</span></div>
+    <div class="tabs" role="tablist" aria-label="Views">
+      <button class="tab" id="tab-plan" role="tab" aria-selected="true" aria-controls="view-plan" tabindex="0">Plan a meeting</button>
+      <button class="tab" id="tab-saved" role="tab" aria-selected="false" aria-controls="view-saved" tabindex="-1">Saved meetings <span id="saved-count"></span></button>
+    </div>
+  </div>
+  <div class="livebar" id="livebar" hidden>
+    <div class="livebar-inner">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="livebar-text">Now discussing</span>
+      <button class="btn" id="livebar-jump" type="button">Jump there</button>
+      <button class="btn" id="livebar-stop" type="button" hidden>End</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="status" id="status" hidden style="margin-bottom:16px"></div>
+  <section id="view-plan" class="layout" role="tabpanel" aria-labelledby="tab-plan">
+    <form id="form" class="panel form" autocomplete="off">
+      <h2>Plan a new meeting</h2>
+      <p class="hint" id="form-hint">Filled in with the next chapters. Change anything, then tap Write the guide.</p>
+      <div class="field">
+        <label for="f-book">Book title</label>
+        <input id="f-book" required placeholder="e.g. The Hobbit">
+      </div>
+      <div class="field">
+        <label for="f-author">Author</label>
+        <input id="f-author" placeholder="e.g. J.R.R. Tolkien">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-chapters">Chapters</label>
+          <input id="f-chapters" required placeholder="e.g. 1–5">
+        </div>
+        <div class="field">
+          <label for="f-number">Meeting #</label>
+          <input id="f-number" type="number" min="1" value="1">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-minutes">Length</label>
+          <select id="f-minutes">
+            <option value="60">60 min</option>
+            <option value="90" selected>90 min</option>
+            <option value="120">120 min</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-date">Meeting date</label>
+          <input id="f-date" type="date">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-notes">Notes about your group</label>
+        <textarea id="f-notes" placeholder="e.g. A few members are new to fantasy. Keep spoilers out."></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="btn-generate" type="submit">Write the guide</button>
+        <button class="btn" id="btn-stop" type="button" hidden>Stop</button>
+      </div>
+      <p class="hint" id="ai-hint">Claude writes the guide from what it already knows about the book. It can't browse the web, so double-check movie dates and other recent news.</p>
+    </form>
+
+    <article id="guide" class="guide" aria-live="polite"></article>
+  </section>
+
+  <section id="view-saved" class="saved" role="tabpanel" aria-labelledby="tab-saved" hidden>
+    <div id="saved-list"></div>
+  </section>
+</main>
+
+<div class="dialog-backdrop" id="confirm" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h3 id="confirm-title">Delete this meeting?</h3>
+    <p class="hint" id="confirm-text">This removes the saved guide for everyone who uses this page.</p>
+    <div class="actions">
+      <button class="btn danger" id="confirm-yes">Delete</button>
+      <button class="btn" id="confirm-no">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</template>
+<script type="application/json" id="club-data">{"meetings":[],"club":{"currentId":"","now":""},"public":true,"exportedAt":"2026-11-09T02:12:23.394018Z"}</script>
+<script id="app-script">// Mount the page markup (kept pristine in <template id="shell"> so the page can republish itself).
+document.body.prepend(document.getElementById("shell").content.cloneNode(true));
+
+const SECTION_LABELS = {
+  agenda: "Agenda", recap: "Chapter recap", icebreakers: "Icebreakers",
+  chapterQuestions: "Discussion questions", themes: "Big-picture talking points",
+  context: "Interesting context", adaptations: "Film, TV and stage", wrapUp: "Wrap-up"
+};
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) n.append(k instanceof Node ? k : String(k));
+  return n;
+};
+const str = (v) => (v == null ? "" : String(v));
+const arr = (v) => (Array.isArray(v) ? v : []);
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ss = {
+  get(k) { try { return sessionStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, v); } catch {} },
+  del(k) { try { sessionStorage.removeItem(k); } catch {} }
+};
+
+// ---------- Shared state, embedded in the page ----------
+function readData() {
+  try {
+    const d = JSON.parse($("club-data").textContent || "{}");
+    return { meetings: arr(d.meetings), club: d.club && typeof d.club === "object" ? d.club : {}, exportedAt: str(d.exportedAt) };
+  } catch { return { meetings: [], club: {} }; }
+}
+
+// A page exported for outside hosting carries `public: true` in its data: read-only, no Claude, no live features.
+const PUBLIC = (() => { try { return !!JSON.parse($("club-data").textContent || "{}").public; } catch { return false; } })();
+const S = {
+  data: readData(),
+  artifact: null, user: null, sample: null, downloads: null,
+  isHost: false, readOnly: false, publishing: false,
+  current: null, isExample: false, unsaved: false,
+  ctl: null, busySection: null, editing: false,
+  follow: ss.get("bc-follow") !== "0"
+};
+const meetings = () => [...S.data.meetings].sort((a, b) => str(b.createdAt).localeCompare(str(a.createdAt)));
+const club = () => S.data.club || {};
+const isCurrentMeeting = () => !!(S.current?.id && S.current.id === club().currentId);
+const canManage = () => S.isHost && !!S.artifact && !S.readOnly;
+
+const HEAD = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Book Club Meeting Planner</title>\n<meta name="description" content="Meeting guides for our book club: agenda, chapter recaps and discussion questions.">\n<meta property="og:title" content="Book Club">\n<meta property="og:description" content="Meeting guides for our book club: agenda, chapter recaps and discussion questions.">\n<meta property="og:type" content="website">\n<meta name="theme-color" content="#2c5d4c">\n<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%232c5d4c%27/%3E%3Cpath d=%27M14 18c6-3 12-3 18 1v29c-6-4-12-4-18-1z%27 fill=%27%23fff%27/%3E%3Cpath d=%27M50 18c-6-3-12-3-18 1v29c6-4 12-4 18-1z%27 fill=%27%23e3efe9%27/%3E%3C/svg%3E">\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">\n';
+
+function buildHtml(data) {
+  const css = $("app-style").textContent;
+  const shell = $("shell").innerHTML;
+  const js = $("app-script").textContent;
+  const json = JSON.stringify(data).replace(/</g, "\\u003c");
+  return HEAD + '<style id="app-style">' + css + '</style>\n</head>\n<body>\n<template id="shell">' + shell +
+    '</template>\n<script type="application/json" id="club-data">' + json + '<\/script>\n<script id="app-script">' + js + '<\/script>\n</body>\n</html>\n';
+}
+
+// Publish a new version of this page carrying the new data. Every open copy reloads to it.
+async function publishState(data, okMsg, opts = {}) {
+  if (!S.artifact) { setStatus("Saving isn't available in this view. Open the page in Claude, signed in as the host.", true); return false; }
+  if (S.publishing) return false;
+  S.publishing = true;
+  if (!opts.keepUndo) ss.del("bc-undo");
+  if (S.unsaved && S.current && !S.current.id) ss.set("bc-draft", JSON.stringify(S.current)); else ss.del("bc-draft");
+  ss.set("bc-msg", okMsg || "");
+  if (S.current?.id) ss.set("bc-viewing", S.current.id);
+  setStatus([el("span", { class: "thinking" }), "  Updating the page for everyone…"]);
+  try {
+    await S.artifact.publish(buildHtml(data));
+    S.data = data;            // in case this view isn't reloaded right away
+    setStatus(okMsg || "");
+    return true;
+  } catch (e) {
+    ss.del("bc-msg");
+    if (e?.code === "conflict") setStatus("Someone else updated the page at the same moment. Try again.", true);
+    else if (e?.code === "not_granted" || e?.code === "not_writer") { S.readOnly = true; setStatus("Only the host can change this page.", true); }
+    else setStatus("Couldn't update the page. Try again in a moment.", true);
+    return false;
+  } finally {
+    S.publishing = false;
+  }
+}
+
+function withCurrentSaved(data) {
+  // If the host has unsaved edits to an existing meeting, keep them in the same publish.
+  if (S.unsaved && S.current?.id) {
+    const rec = recordFrom(S.current);
+    data.meetings = data.meetings.map(m => (m.id === S.current.id ? { ...rec, id: S.current.id } : m));
+  }
+  return data;
+}
+function cloneData() { return JSON.parse(JSON.stringify(S.data)); }
+
+function setStatus(msg, warn = false) {
+  const s = $("status");
+  if (!msg) { s.hidden = true; s.textContent = ""; return; }
+  s.hidden = false; s.className = "status" + (warn ? " warn" : "");
+  s.replaceChildren(...(Array.isArray(msg) ? msg : [msg]));
+}
+
+// ---------- Form ----------
+function readForm() {
+  return {
+    book: $("f-book").value.trim(),
+    author: $("f-author").value.trim(),
+    chapters: $("f-chapters").value.trim(),
+    meetingNumber: Math.max(1, parseInt($("f-number").value, 10) || 1),
+    minutes: parseInt($("f-minutes").value, 10) || 90,
+    date: $("f-date").value || "",
+    notes: $("f-notes").value.trim()
+  };
+}
+function fillForm(m) {
+  $("f-book").value = m.book || "";
+  $("f-author").value = m.author || "";
+  $("f-chapters").value = m.chapters || "";
+  $("f-number").value = m.meetingNumber || 1;
+  $("f-minutes").value = String(m.minutes || 90);
+  $("f-date").value = m.date || "";
+  $("f-notes").value = m.notes || "";
+}
+function fillNext(m) {
+  fillForm({ ...m, chapters: nextRange(m.chapters), meetingNumber: (m.meetingNumber || 1) + 1, date: "" });
+}
+function nextRange(chapters) {
+  const m = str(chapters).match(/(\d+)\s*[-–—to]+\s*(\d+)/i);
+  if (m) {
+    const a = +m[1], b = +m[2], len = Math.max(1, b - a + 1);
+    return `${b + 1}–${b + len}`;
+  }
+  const one = str(chapters).match(/(\d+)/);
+  return one ? String(+one[1] + 1) : "";
+}
+
+// ---------- Prompt ----------
+function sameBook(a, b) { return str(a).trim().toLowerCase() === str(b).trim().toLowerCase(); }
+
+function previousContext(f) {
+  const prev = meetings().filter(m => sameBook(m.book, f.book) && m.id !== S.current?.id && (m.meetingNumber || 0) < f.meetingNumber);
+  if (!prev.length) return "";
+  const lines = prev.slice(0, 6).map(m => {
+    const qs = arr(m.guide?.chapterQuestions).flatMap(c => arr(c.questions)).slice(0, 12).map(q => "  - " + str(q).slice(0, 160));
+    return `Meeting ${m.meetingNumber} covered chapters ${m.chapters}. Questions already used:\n${qs.join("\n")}`;
+  });
+  return "\nEarlier meetings of this club on the same book (don't repeat these questions; you may build on them):\n" + lines.join("\n");
+}
+
+// How many chapters a range like "1–5", "6-10, 12" or "Prologue–3" covers (best effort).
+function chapterCount(chapters) {
+  let n = 0;
+  for (const part of str(chapters).split(/[,;&]|\band\b/i)) {
+    const r = part.match(/(\d+)\s*(?:[-–—]|to)\s*(\d+)/i);
+    if (r) n += Math.max(1, Math.abs(+r[2] - +r[1]) + 1);
+    else if (/\d+/.test(part)) n += 1;
+  }
+  return n || 1;
+}
+function sizeRules(f) {
+  const n = chapterCount(f.chapters);
+  if (n > 8) return { q: "2 per chapter", recap: "1 sentence per chapter" };
+  if (n > 5) return { q: "2 or 3 per chapter", recap: "1 or 2 sentences per chapter" };
+  return { q: "3 or 4 per chapter", recap: "2 or 3 sentences per chapter" };
+}
+function rules(f) {
+  const size = sizeRules(f);
+  return `Rules:
+- Cover ONLY what happens in chapters ${f.chapters}. Do not reveal plot from later chapters anywhere except "spoilerNote", and keep even that vague. Earlier chapters may be referenced.
+- Be accurate. If you are unsure of the exact book, its chapter titles, or what happens in specific chapters, say so in accuracy.note, set accuracy.confidence to "medium" or "low", and keep recaps general instead of inventing details. Never invent chapter titles; use "" when unsure.
+- Do not quote the book beyond a phrase of a few words. Paraphrase.
+- Discussion questions: open-ended, tied to specific scenes and characters, mixing easy openers with deeper ones. ${size.q}.
+- Recap: ${size.recap}.
+- Agenda: 5 to 7 segments whose times add up to exactly ${f.minutes} minutes, written like "0:00–0:10".
+- Icebreakers: 3 or 4, each answerable in about a minute.
+- Themes: 4 to 6 big-picture talking points, each a short title plus a prompt the host can read aloud.
+- Context: 3 to 5 well-established facts about the author, the book's history, influences or reception.
+- Adaptations: film, TV, stage or audio versions. Your knowledge has a cutoff, so for anything recent or upcoming, tell the host to check current news; never state unconfirmed dates or casting as fact. Use [] if there are none.
+- Wrap-up: 2 or 3 prediction questions, the suggested next reading, and one thing to bring next time.
+- Plain words, sentences under 25 words, no emoji, no markdown inside strings.`;
+}
+
+const SCHEMA = `{
+  "lead": "one sentence on what these chapters are about",
+  "accuracy": {"confidence": "high|medium|low", "note": "empty when confident"},
+  "agenda": [{"time": "0:00–0:10", "segment": "Welcome", "details": "..."}],
+  "recap": [{"chapter": "1", "title": "Chapter title or empty", "summary": "short"}],
+  "icebreakers": [{"title": "...", "prompt": "..."}],
+  "chapterQuestions": [{"chapter": "1", "title": "Chapter title or empty", "questions": ["..."]}],
+  "themes": [{"title": "...", "prompt": "..."}],
+  "context": [{"title": "...", "detail": "..."}],
+  "spoilerNote": "optional vague note for groups who have read further, or empty",
+  "adaptations": [{"title": "...", "detail": "..."}],
+  "wrapUp": {"predictions": ["..."], "nextReading": "...", "bring": "..."}
+}`;
+
+function header(f) {
+  return `You are helping a book club host plan one meeting.
+
+Book: ${f.book}${f.author ? " by " + f.author : ""}
+Chapters for this meeting: ${f.chapters}
+Meeting number: ${f.meetingNumber}
+Meeting length: ${f.minutes} minutes
+Host's notes about the group: ${f.notes || "none"}${previousContext(f)}`;
+}
+function guidePrompt(f) {
+  return `${header(f)}\n\n${rules(f)}\n\nReply with only one JSON object in exactly this shape:\n${SCHEMA}`;
+}
+function sectionPrompt(f, key, guide) {
+  return `${header(f)}
+
+Here is the current meeting guide as JSON:
+${JSON.stringify(guide).slice(0, 60000)}
+
+Rewrite ONLY the "${key}" section with fresh content that differs from what is there now. Keep the same shape as in the guide.
+
+${rules(f)}
+
+Reply with only a JSON object with one key: {"${key}": ...}`;
+}
+
+function normalizeGuide(g) {
+  g = g && typeof g === "object" ? g : {};
+  return {
+    lead: str(g.lead),
+    accuracy: { confidence: str(g.accuracy?.confidence || "medium"), note: str(g.accuracy?.note) },
+    agenda: arr(g.agenda).map(a => ({ time: str(a.time), segment: str(a.segment), details: str(a.details) })),
+    recap: arr(g.recap).map(r => ({ chapter: str(r.chapter), title: str(r.title), summary: str(r.summary) })),
+    icebreakers: arr(g.icebreakers).map(i => ({ title: str(i.title), prompt: str(i.prompt) })),
+    chapterQuestions: arr(g.chapterQuestions).map(c => ({ chapter: str(c.chapter), title: str(c.title), questions: arr(c.questions).map(str) })),
+    themes: arr(g.themes).map(t => ({ title: str(t.title), prompt: str(t.prompt) })),
+    context: arr(g.context).map(c => ({ title: str(c.title), detail: str(c.detail) })),
+    spoilerNote: str(g.spoilerNote),
+    adaptations: arr(g.adaptations).map(a => ({ title: str(a.title), detail: str(a.detail) })),
+    wrapUp: { predictions: arr(g.wrapUp?.predictions).map(str), nextReading: str(g.wrapUp?.nextReading), bring: str(g.wrapUp?.bring) }
+  };
+}
+
+function errorCopy(e) {
+  switch (e?.code) {
+    case "not_granted": case "sampling_disabled": case "not_declared": case "capability_disabled": case "capability_removed":
+      return "Claude isn't available on this page for your account, so new guides can't be written here.";
+    case "rate_limited": return "Too many requests right now. Wait a minute and try again.";
+    case "session_expired": return "Your session expired. Sign in to Claude again, then retry.";
+    case "refused": return "Claude couldn't write a guide for that request. Try different details.";
+    case "invalid_json": return "The guide came back incomplete. Try again, or cover fewer chapters in this meeting.";
+    case "prompt_too_large": return "Too much saved history to send. Try again with fewer earlier meetings of this book.";
+    default: return "Something went wrong while writing the guide. Try again.";
+  }
+}
+
+// ---------- Generate ----------
+async function generate(ev) {
+  ev?.preventDefault();
+  const f = readForm();
+  if (!f.book || !f.chapters) { setStatus("Add a book title and the chapters for this meeting.", true); return; }
+  if (!S.sample) { setStatus("Claude isn't available on this page right now, so new guides can't be written.", true); return; }
+  if (!(await okToLeave())) return;
+  S.ctl = new AbortController();
+  $("btn-generate").disabled = true; $("btn-stop").hidden = false;
+  setStatus([el("span", { class: "thinking" }), "  Reading the chapters and drafting… this can take a minute."]);
+  try {
+    const g = await S.sample.json(guidePrompt(f), {
+      signal: S.ctl.signal, cache: false,
+      onText: ({ text }) => setStatus([el("span", { class: "thinking" }), `  Writing the guide… ${text.length.toLocaleString()} characters so far`])
+    });
+    S.current = { ...f, guide: normalizeGuide(g) };
+    S.isExample = false; S.unsaved = true; S.editing = false;
+    ss.set("bc-draft", JSON.stringify(S.current));
+    setStatus("");
+    renderGuide();
+    $("guide").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  } catch (e) {
+    if (e?.code === "cancelled") setStatus("Stopped.");
+    else {
+      const retry = !["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed", "session_expired"].includes(e?.code);
+      setStatus([errorCopy(e), retry ? el("button", { class: "btn small", type: "button", style: "margin-left:8px", onclick: () => generate() }, "Try again") : null], true);
+    }
+  } finally {
+    $("btn-generate").disabled = false; $("btn-stop").hidden = true; S.ctl = null;
+  }
+}
+
+async function redoSection(key) {
+  if (!S.sample || !S.current || S.busySection) return;
+  const c = S.current;
+  const f = { book: c.book, author: c.author, chapters: c.chapters, meetingNumber: c.meetingNumber, minutes: c.minutes, notes: c.notes };
+  S.busySection = key; renderGuide();
+  try {
+    const out = await S.sample.json(sectionPrompt(f, key, c.guide), { cache: false });
+    S.current = { ...S.current, guide: normalizeGuide({ ...S.current.guide, [key]: out?.[key] ?? S.current.guide[key] }) };
+    S.unsaved = true;
+    if (!S.current.id) ss.set("bc-draft", JSON.stringify(S.current));
+  } catch (e) {
+    if (e?.code !== "cancelled") setStatus(errorCopy(e), true);
+  } finally {
+    S.busySection = null; renderGuide();
+  }
+}
+
+// ---------- Save / share / delete ----------
+function recordFrom(c) {
+  const now = new Date().toISOString();
+  return {
+    book: c.book, author: c.author || "", chapters: c.chapters,
+    meetingNumber: c.meetingNumber, minutes: c.minutes, date: c.date || "",
+    notes: c.notes || "", guide: cleanGuide(c.guide),
+    createdAt: c.createdAt || now, updatedAt: now
+  };
+}
+
+async function save() {
+  if (!S.current || !canManage()) return;
+  const isNew = !S.current.id;
+  const id = S.current.id || ("m-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+  const record = { ...recordFrom(S.current), id };
+  const data = cloneData();
+  data.meetings = isNew ? [...data.meetings, record] : data.meetings.map(m => (m.id === id ? record : m));
+  if (isNew) data.club = { ...data.club, currentId: id, now: "", updatedAt: record.updatedAt };
+  const prev = { current: S.current, unsaved: S.unsaved };
+  S.current = record; S.unsaved = false;
+  const ok = await publishState(data, isNew ? "Saved. This is now the meeting everyone sees when they open the link." : "Saved. Everyone sees the update.");
+  if (!ok) { S.current = prev.current; S.unsaved = prev.unsaved; }
+  else ss.del("bc-draft");
+  renderGuide(); renderSaved(); renderLivebar();
+}
+
+async function setClub(patch, msg) {
+  if (!canManage()) return;
+  const data = withCurrentSaved(cloneData());
+  data.club = { ...data.club, ...patch, updatedAt: new Date().toISOString() };
+  const ok = await publishState(data, msg || "");
+  if (ok && S.current?.id) S.unsaved = false;
+  renderGuide(); renderSaved(); renderLivebar();
+}
+function discussNow(key) { if (S.current?.id) setClub({ currentId: S.current.id, now: key }); }
+function showToEveryone() { if (S.current?.id) setClub({ currentId: S.current.id, now: "" }, "Everyone now sees this meeting when they open the link."); }
+
+// ---------- In-page confirm dialog (window.confirm is blocked in the viewer) ----------
+let confirmResolve = null, confirmReturn = null;
+function askConfirm({ title, text, yes, danger = true }) {
+  confirmReturn = document.activeElement;
+  $("confirm-title").textContent = title;
+  $("confirm-text").textContent = text;
+  const y = $("confirm-yes"); y.textContent = yes; y.className = "btn " + (danger ? "danger" : "primary");
+  $("confirm").hidden = false; y.focus();
+  return new Promise((res) => { confirmResolve = res; });
+}
+function closeConfirm(v) {
+  $("confirm").hidden = true;
+  const r = confirmResolve; confirmResolve = null; r?.(v);
+  if (confirmReturn?.isConnected) confirmReturn.focus({ preventScroll: true });
+  confirmReturn = null;
+}
+$("confirm-no").onclick = () => closeConfirm(false);
+$("confirm-yes").onclick = () => closeConfirm(true);
+document.addEventListener("keydown", (e) => {
+  if ($("confirm").hidden) return;
+  if (e.key === "Escape") { closeConfirm(false); return; }
+  if (e.key === "Tab") {   // keep focus inside the dialog
+    const btns = [$("confirm-yes"), $("confirm-no")];
+    const i = btns.indexOf(document.activeElement);
+    e.preventDefault();
+    btns[(i + (e.shiftKey ? btns.length - 1 : 1)) % btns.length].focus();
+  }
+});
+
+// Ask before throwing away unsaved work (an edited guide or an unsaved new guide).
+async function okToLeave() {
+  if (!(S.isHost && S.unsaved && S.current)) return true;
+  const ok = await askConfirm({
+    title: "Discard unsaved changes?",
+    text: S.current.id ? "Your edits to this guide haven't been saved." : "This new guide hasn't been saved yet. It will be lost.",
+    yes: "Discard"
+  });
+  if (ok) { S.unsaved = false; S.editing = false; if (!S.current.id) ss.del("bc-draft"); }
+  return ok;
+}
+// Put the guide back to its saved version (or drop an unsaved new guide).
+async function discardChanges() {
+  if (!(await okToLeave())) return;
+  const saved = S.current?.id && S.data.meetings.find(x => x.id === S.current.id);
+  if (saved) S.current = { ...saved, guide: normalizeGuide(saved.guide) };
+  else {
+    const list = meetings();
+    const m = list.find(x => x.id === club().currentId) || list[0];
+    S.current = m ? { ...m, guide: normalizeGuide(m.guide) } : null;
+  }
+  S.unsaved = false; S.editing = false;
+  setStatus("");
+  renderGuide();
+}
+
+async function askDelete(m) {
+  const ok = await askConfirm({ title: "Delete this meeting?", text: "This removes the saved guide for everyone who uses this link. You can undo for 10 minutes.", yes: "Delete" });
+  if (ok) deleteMeeting(m);
+}
+async function deleteMeeting(m) {
+  if (!m || !canManage()) return;
+  const data = cloneData();
+  data.meetings = data.meetings.filter(x => x.id !== m.id);
+  if (data.club.currentId === m.id) data.club = { ...data.club, currentId: "", now: "" };
+  const keep = S.current;
+  const wasCurrent = S.data.club?.currentId === m.id;
+  const record = { ...m, guide: m.guide };
+  ss.set("bc-undo", JSON.stringify({ record, wasCurrent, at: Date.now() }));
+  if (S.current?.id === m.id) {
+    // The deleted meeting leaves the screen; show the group's meeting or the empty state.
+    const next = data.meetings.find(x => x.id === data.club.currentId) || [...data.meetings].sort((a, b) => str(b.createdAt).localeCompare(str(a.createdAt)))[0];
+    S.current = next ? { ...next, guide: normalizeGuide(next.guide) } : null;
+    S.unsaved = false; S.editing = false;
+    if (next) ss.set("bc-viewing", next.id); else ss.del("bc-viewing");
+  }
+  const ok = await publishState(data, "", { keepUndo: true });
+  if (!ok) { S.current = keep; ss.del("bc-undo"); }
+  renderGuide(); renderSaved(); renderLivebar();
+  if (ok) showUndo();
+}
+
+function showUndo() {
+  let u = null;
+  try { u = JSON.parse(ss.get("bc-undo") || "null"); } catch {}
+  if (!u?.record || !canManage()) return;
+  if (Date.now() - (u.at || 0) > 10 * 60 * 1000) { ss.del("bc-undo"); return; }   // offer Undo for 10 minutes
+  const r = u.record;
+  setStatus([`Deleted ${r.book}, meeting ${r.meetingNumber}. `,
+    el("button", { class: "btn small", type: "button", style: "margin-left:6px", onclick: undoDelete }, "Undo")]);
+}
+async function undoDelete() {
+  let u = null;
+  try { u = JSON.parse(ss.get("bc-undo") || "null"); } catch {}
+  if (!u?.record) return;
+  const data = cloneData();
+  if (!data.meetings.some(x => x.id === u.record.id)) data.meetings.push(u.record);
+  if (u.wasCurrent) data.club = { ...data.club, currentId: u.record.id, updatedAt: new Date().toISOString() };
+  S.current = { ...u.record, guide: normalizeGuide(u.record.guide) }; S.unsaved = false;
+  ss.set("bc-viewing", u.record.id);
+  const ok = await publishState(data, "Meeting restored.");
+  renderGuide(); renderSaved(); renderLivebar();
+  if (!ok) showUndo();
+}
+
+function planNext() {
+  const c = S.current; if (!c) return;
+  fillNext(c);
+  setStatus("");
+  showView("plan");
+  $("form").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  $("f-chapters").focus({ preventScroll: true });
+}
+
+// ---------- Export ----------
+function toMarkdown(m) {
+  const g = m.guide, L = [];
+  L.push(`# ${m.book} — Meeting ${m.meetingNumber} (Ch. ${m.chapters})`);
+  const sub = [m.author, m.date, `${m.minutes} minutes`].filter(Boolean).join(" · ");
+  if (sub) L.push("", sub);
+  if (g.lead) L.push("", g.lead);
+  if (g.agenda.length) { L.push("", "## Agenda", "", "| Time | Segment | What happens |", "| --- | --- | --- |"); g.agenda.forEach(a => L.push(`| ${a.time} | ${a.segment} | ${a.details} |`)); }
+  if (g.recap.length) { L.push("", "## Chapter recap"); g.recap.forEach(r => L.push("", `**Ch. ${r.chapter}${r.title ? ": " + r.title : ""}** — ${r.summary}`)); }
+  if (g.icebreakers.length) { L.push("", "## Icebreakers", ""); g.icebreakers.forEach(i => L.push(`- **${i.title}:** ${i.prompt}`)); }
+  if (g.chapterQuestions.length) { L.push("", "## Discussion questions"); g.chapterQuestions.forEach(c => { L.push("", `### Chapter ${c.chapter}${c.title ? ": " + c.title : ""}`, ""); c.questions.forEach((q, i) => L.push(`${i + 1}. ${q}`)); }); }
+  if (g.themes.length) { L.push("", "## Big-picture talking points", ""); g.themes.forEach(t => L.push(`- **${t.title}.** ${t.prompt}`)); }
+  if (g.context.length) { L.push("", "## Interesting context", ""); g.context.forEach(c => L.push(`- **${c.title}.** ${c.detail}`)); }
+  if (g.spoilerNote) L.push("", `> **Spoiler box (only if everyone has read further):** ${g.spoilerNote}`);
+  if (g.adaptations.length) { L.push("", "## Film, TV and stage", ""); g.adaptations.forEach(a => L.push(`- **${a.title}.** ${a.detail}`)); }
+  const w = g.wrapUp;
+  if (w.predictions.length || w.nextReading || w.bring) {
+    L.push("", "## Wrap-up", "");
+    w.predictions.forEach(p => L.push(`- Prediction: ${p}`));
+    if (w.nextReading) L.push(`- Next reading: ${w.nextReading}`);
+    if (w.bring) L.push(`- Bring next time: ${w.bring}`);
+  }
+  return L.join("\n") + "\n";
+}
+function fileName(m) {
+  return (`${m.book}-meeting-${m.meetingNumber}`).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".md";
+}
+function toPlainText(m) {
+  const g = m.guide, L = [];
+  const head = `${m.book}: meeting ${m.meetingNumber}, chapters ${m.chapters}`;
+  L.push(head.toUpperCase());
+  if (m.date) L.push(whenText(m.date).split(" · ")[0]);
+  if (g.lead) L.push("", g.lead);
+  const section = (t) => L.push("", t.toUpperCase());
+  if (g.agenda.length) { section("Agenda"); g.agenda.forEach(a => L.push(`${a.time}  ${a.segment}${a.details ? ": " + a.details : ""}`)); }
+  if (g.recap.length) { section("Chapter recap"); g.recap.forEach(r => L.push(`Ch. ${r.chapter}${r.title ? " (" + r.title + ")" : ""}: ${r.summary}`)); }
+  if (g.icebreakers.length) { section("Icebreakers"); g.icebreakers.forEach(i => L.push(`- ${i.title}: ${i.prompt}`)); }
+  if (g.chapterQuestions.length) { section("Discussion questions"); g.chapterQuestions.forEach(c => { L.push(`Ch. ${c.chapter}${c.title ? " (" + c.title + ")" : ""}`); c.questions.forEach((q, i) => L.push(`  ${i + 1}. ${q}`)); }); }
+  if (g.themes.length) { section("Big-picture talking points"); g.themes.forEach(t => L.push(`- ${t.title}: ${t.prompt}`)); }
+  if (g.context.length) { section("Interesting context"); g.context.forEach(c => L.push(`- ${c.title}: ${c.detail}`)); }
+  if (g.adaptations.length) { section("Film, TV and stage"); g.adaptations.forEach(x => L.push(`- ${x.title}: ${x.detail}`)); }
+  const w = g.wrapUp;
+  if (w.predictions.length || w.nextReading || w.bring) {
+    section("Wrap-up");
+    w.predictions.forEach(p => L.push(`- Prediction: ${p}`));
+    if (w.nextReading) L.push(`- Next reading: ${w.nextReading}`);
+    if (w.bring) L.push(`- Bring next time: ${w.bring}`);
+  }
+  return L.join("\n") + "\n";   // the spoiler note is left out on purpose: copies get forwarded
+}
+async function copyGuide(btn) {
+  try { await navigator.clipboard.writeText(toPlainText(S.current)); btn.textContent = "Copied"; setTimeout(() => (btn.textContent = "Copy text"), 1600); }
+  catch { setStatus(S.downloads ? "Your browser blocked copying. Try Download instead." : "Your browser blocked copying. Try selecting the text instead.", true); }
+}
+async function downloadGuide() {
+  if (!S.downloads) return;
+  try { await S.downloads.save({ filename: fileName(S.current), data: toMarkdown(S.current) }); } catch {}
+}
+
+// ---------- Live bar ----------
+function scrollToSection(key) {
+  const n = document.getElementById("sec-" + key);
+  if (n) n.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+}
+async function goToCurrent() {
+  const m = meetings().find(x => x.id === club().currentId);
+  if (!m || !(await okToLeave())) return;
+  openMeeting(m, { keepForm: true });
+  S.follow = true; ss.set("bc-follow", "1");
+  if (club().now) setTimeout(() => scrollToSection(club().now), 50);
+}
+function renderLivebar() {
+  const bar = $("livebar");
+  if (PUBLIC) { bar.hidden = true; return; }
+  const m = meetings().find(x => x.id === club().currentId);
+  const now = str(club().now);
+  if (!m || !now || !SECTION_LABELS[now]) { bar.hidden = true; return; }
+  bar.hidden = false;
+  $("livebar-text").replaceChildren("Now: ", el("b", {}, SECTION_LABELS[now]), el("span", { class: "livebar-meta" }, ` · ${m.book}, meeting ${m.meetingNumber}`));
+  $("livebar-stop").hidden = !canManage();
+}
+$("livebar-jump").onclick = () => { if (!isCurrentMeeting()) goToCurrent(); else scrollToSection(club().now); };
+$("livebar-stop").onclick = () => setClub({ now: "" });
+
+// ---------- Render guide ----------
+// Edit mode: the host can change any text in place, remove items and add questions.
+const PLAINTEXT = (() => { const d = document.createElement("div"); try { d.contentEditable = "plaintext-only"; return d.contentEditable === "plaintext-only"; } catch { return false; } })();
+const getPath = (o, p) => p.split(".").reduce((a, k) => (a == null ? a : a[k]), o);
+function setPath(o, p, v) { const ks = p.split("."); const last = ks.pop(); const t = ks.reduce((a, k) => a[k], o); t[last] = v; }
+function markUnsaved() {
+  if (S.unsaved) return;
+  S.unsaved = true;
+  const b = $("btn-save"); if (b) { b.disabled = false; b.textContent = S.current.id ? "Save changes" : "Save and share"; }
+  const c = $("chip-unsaved"); if (c) c.hidden = false;
+}
+// A piece of guide text bound to a path; editable for the host in edit mode.
+function tx(tag, path, label, attrs = {}) {
+  const n = el(tag, attrs, str(getPath(S.current.guide, path)));
+  if (!S.editing) return n;
+  n.setAttribute("contenteditable", PLAINTEXT ? "plaintext-only" : "true");
+  if (!/^h[1-6]$/i.test(tag)) n.setAttribute("role", "textbox");   // headings stay headings
+  n.setAttribute("aria-label", label);
+  n.classList.add("editable");
+  n.addEventListener("input", () => { setPath(S.current.guide, path, n.innerText.replace(/\s*\n\s*/g, " ").trim()); markUnsaved(); });
+  n.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); n.blur(); } });
+  return n;
+}
+function rmBtn(listPath, i, label, compact = false) {
+  if (!S.editing) return null;
+  return el("button", { class: "btn link rm", type: "button", "aria-label": "Remove " + label, title: "Remove " + label,
+    onclick: () => { getPath(S.current.guide, listPath).splice(i, 1); S.unsaved = true; renderGuide(); } }, compact ? "✕" : "Remove");
+}
+function addBtn(listPath, label, blank) {
+  if (!S.editing) return null;
+  return el("button", { class: "btn link", type: "button", onclick: () => {
+    const list = getPath(S.current.guide, listPath); list.push(blank); S.unsaved = true; renderGuide();
+    const ed = document.querySelectorAll(`[data-list="${listPath}"] .editable`); ed[ed.length - 1]?.focus();
+  } }, "+ " + label);
+}
+// Drop items left blank in edit mode.
+function cleanGuide(g) {
+  g = normalizeGuide(g);
+  const filled = (o) => Object.values(o).some(v => str(v).trim());
+  for (const k of ["agenda", "recap", "icebreakers", "themes", "context", "adaptations"]) g[k] = g[k].filter(filled);
+  g.chapterQuestions = g.chapterQuestions.map(c => ({ ...c, questions: c.questions.filter(q => q.trim()) }));
+  g.wrapUp.predictions = g.wrapUp.predictions.filter(p => p.trim());
+  return g;
+}
+function toggleEdit() {
+  S.editing = !S.editing;
+  if (!S.editing && S.current) S.current = { ...S.current, guide: cleanGuide(S.current.guide) };
+  renderGuide();
+}
+
+function sec(key, ...body) {
+  const busy = S.busySection === key;
+  const live = isCurrentMeeting() && club().now === key;
+  const head = el("div", { class: "sec-head" }, el("h2", {}, SECTION_LABELS[key]), live ? el("span", { class: "tag-now" }, "Now") : null);
+  const tools = el("div", { class: "sec-tools" });
+  if (canManage() && isCurrentMeeting() && !S.editing) {
+    tools.append(live
+      ? el("button", { class: "btn small", type: "button", disabled: S.publishing, onclick: () => setClub({ now: "" }) }, "End")
+      : el("button", { class: "btn small", type: "button", disabled: S.publishing, onclick: () => discussNow(key), "aria-label": "Discuss " + SECTION_LABELS[key] + " now" }, "Discuss now"));
+  }
+  if (S.isHost && S.sample && !S.isExample && !S.editing) {
+    tools.append(el("button", { class: "btn small", type: "button", disabled: !!S.busySection, onclick: () => redoSection(key), "aria-label": "Rewrite " + SECTION_LABELS[key] },
+      busy ? [el("span", { class: "thinking" }), " Rewriting…"] : "Rewrite"));
+  }
+  if (tools.childNodes.length) head.append(tools);
+  return el("section", { class: "sec" + (busy ? " busy" : "") + (live ? " now" : ""), id: "sec-" + key }, head, ...body);
+}
+
+// "Thursday, Nov 20 · in 12 days" (local dates, no time-zone drift).
+function whenText(d) {
+  const day = new Date(d + "T12:00:00");
+  if (isNaN(day)) return "";
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  const diff = Math.round((day - today) / 86400000);
+  const rel = diff === 0 ? "today" : diff === 1 ? "tomorrow" : diff === -1 ? "yesterday" : diff > 1 ? `in ${diff} days` : `${-diff} days ago`;
+  return `Meeting ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })} · ${rel}`;
+}
+const fmtDate = (d) => new Date(d + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+
+// A titled list (icebreakers, themes, context, adaptations): bold title + text, each editable/removable.
+function titledList(key, a, b, label) {
+  return el("ul", { class: "items", "data-list": key },
+    S.current.guide[key].map((_, i) => el("li", {},
+      tx("b", `${key}.${i}.${a}`, `${label} ${i + 1} title`),
+      tx("span", `${key}.${i}.${b}`, `${label} ${i + 1} text`),
+      rmBtn(key, i, `${label} ${i + 1}`))),
+    S.editing ? el("li", { class: "add" }, addBtn(key, "Add " + label.toLowerCase(), { [a]: "", [b]: "" })) : null);
+}
+
+function renderGuide() {
+  const root = $("guide");
+  const m = S.current;
+  $("view-plan").classList.toggle("empty", !m);
+  if (!m) {
+    root.replaceChildren(el("div", { class: "panel empty" },
+      el("h2", { style: "font-size:20px;margin-bottom:6px" }, S.isHost ? "No meetings saved yet" : "Nothing shared yet"),
+      S.isHost ? "Fill in the book and chapters, tap Write the guide, then Save and share. Your club sees it at this same link."
+               : "The host hasn't shared a meeting guide yet. Check back at this link before your next meeting."));
+    return;
+  }
+  if (!S.isHost) S.editing = false;
+  const g = m.guide, E = S.editing;
+
+  const chips = el("div", { class: "chips" },
+    el("span", { class: "chip", id: "chip-number" }, `Meeting ${m.meetingNumber}`),
+    el("span", { class: "chip", id: "chip-chapters" }, `Ch. ${m.chapters}`),
+    el("span", { class: "chip", id: "chip-minutes" }, `${m.minutes} min`),
+    isCurrentMeeting() ? el("span", { class: "chip" }, "Group's current meeting") : null,
+    el("span", { class: "chip unsaved", id: "chip-unsaved", hidden: !S.unsaved }, "Not saved")
+  );
+
+  const actions = el("div", { class: "actions" });
+  if (canManage()) {
+    actions.append(el("button", { class: "btn primary", id: "btn-save", type: "button", disabled: S.publishing || (!!m.id && !S.unsaved), onclick: () => { S.editing = false; save(); } },
+      m.id ? (S.unsaved ? "Save changes" : "Saved") : "Save and share"));
+  }
+  if (S.isHost && (S.unsaved || E) && (m.id || S.unsaved)) actions.append(el("button", { class: "btn", type: "button", onclick: discardChanges }, m.id ? "Discard changes" : "Discard guide"));
+  if (S.isHost) actions.append(el("button", { class: "btn", id: "btn-edit", type: "button", "aria-pressed": E ? "true" : "false", onclick: toggleEdit }, E ? "Done editing" : "Edit text"));
+  if (S.isHost && !E) actions.append(el("button", { class: "btn", type: "button", onclick: planNext }, "Plan next meeting"));
+  if (PUBLIC) actions.append(el("button", { class: "btn", type: "button", onclick: () => window.print() }, "Print"));   // print is blocked inside Claude
+  if (!E) actions.append(el("button", { class: "btn", type: "button", onclick: (e) => copyGuide(e.currentTarget) }, "Copy text"));
+  if (S.downloads && !E) actions.append(el("button", { class: "btn", type: "button", onclick: downloadGuide }, "Download"));
+  if (m.id && canManage() && !E) actions.append(el("button", { class: "btn danger", type: "button", onclick: () => askDelete(m) }, "Delete"));
+
+  let banner = null;
+  const cur = club().currentId;
+  if (E) {
+    banner = el("div", { class: "banner edit-bar" },
+      el("span", {}, "Editing. Tap any text to change it, or remove items you don't want. Save changes when you're done."),
+      el("div", { class: "edit-fields" },
+        el("label", { for: "edit-chapters" }, "Chapters",
+          el("input", { type: "text", id: "edit-chapters", value: m.chapters || "", oninput: (e) => { S.current.chapters = e.currentTarget.value.trim(); $("chip-chapters").textContent = `Ch. ${S.current.chapters}`; markUnsaved(); } })),
+        el("label", { for: "edit-number" }, "Meeting #",
+          el("input", { type: "number", id: "edit-number", min: "1", value: String(m.meetingNumber || 1), oninput: (e) => { S.current.meetingNumber = Math.max(1, parseInt(e.currentTarget.value, 10) || 1); $("chip-number").textContent = `Meeting ${S.current.meetingNumber}`; markUnsaved(); } })),
+        el("label", { for: "edit-minutes" }, "Length (min)",
+          el("input", { type: "number", id: "edit-minutes", min: "15", step: "15", value: String(m.minutes || 90), oninput: (e) => { S.current.minutes = Math.max(15, parseInt(e.currentTarget.value, 10) || 90); $("chip-minutes").textContent = `${S.current.minutes} min`; markUnsaved(); } })),
+        el("label", { for: "edit-date" }, "Meeting date",
+          el("input", { type: "date", id: "edit-date", value: m.date || "", onchange: (e) => { S.current.date = e.currentTarget.value; markUnsaved(); } }))));
+  } else if (S.isHost && S.unsaved && !m.id) {
+    banner = el("div", { class: "banner" }, "Only you can see this guide until you save it. Saving makes it the meeting everyone sees.");
+  } else if (m.id && cur && !isCurrentMeeting()) {
+    banner = el("div", { class: "banner" },
+      canManage() ? "The group is on a different meeting right now." : "You're looking at a different meeting from the group's.",
+      canManage()
+        ? el("button", { class: "btn small", type: "button", onclick: showToEveryone }, "Show this one to everyone")
+        : el("button", { class: "btn small", type: "button", onclick: goToCurrent }, "Back to the group's meeting"));
+  } else if (m.id && !cur && canManage()) {
+    banner = el("div", { class: "banner" }, "Pick which meeting people see when they open the link.",
+      el("button", { class: "btn small", type: "button", onclick: showToEveryone }, "Show this one to everyone"));
+  } else if (!S.isHost && isCurrentMeeting() && !PUBLIC) {
+    banner = el("label", { class: "follow", for: "follow-toggle" },
+      el("input", { type: "checkbox", id: "follow-toggle", checked: S.follow, onchange: (e) => { S.follow = e.currentTarget.checked; ss.set("bc-follow", S.follow ? "1" : "0"); if (S.follow && club().now) scrollToSection(club().now); } }),
+      "Follow along: jump to the section the host is discussing");
+  }
+
+  const parts = [
+    el("div", { class: "guide-head" },
+      chips,
+      el("h1", {}, m.book),
+      m.date && !E ? el("p", { class: "when" }, whenText(m.date)) : null,
+      m.author ? el("p", { class: "lead" }, "by " + m.author) : null,
+      (g.lead || E) ? tx("p", "lead", "Summary", { class: "lead" }) : null,
+      (g.accuracy.note && g.accuracy.confidence !== "high") ? el("div", { class: "accuracy" }, el("b", {}, "Check before the meeting: "), g.accuracy.note) : null,
+      banner,
+      actions
+    )
+  ];
+
+  if (g.agenda.length) parts.push(sec("agenda", el("div", { class: "scroll" },
+    el("table", { class: "agenda" },
+      el("thead", {}, el("tr", {}, el("th", {}, "Time"), el("th", {}, "Segment"), el("th", {}, "What happens"), E ? el("th", {}, el("span", { class: "sr-only" }, "Remove")) : null)),
+      el("tbody", { "data-list": "agenda" }, g.agenda.map((a, i) => el("tr", {},
+        tx("td", `agenda.${i}.time`, `Agenda row ${i + 1} time`), tx("td", `agenda.${i}.segment`, `Agenda row ${i + 1} segment`),
+        tx("td", `agenda.${i}.details`, `Agenda row ${i + 1} details`), E ? el("td", {}, rmBtn("agenda", i, `agenda row ${i + 1}`, true)) : null))))),
+    E ? addBtn("agenda", "Add agenda row", { time: "", segment: "", details: "" }) : null));
+
+  if (g.recap.length) parts.push(sec("recap", el("div", { class: "chapters" },
+    g.recap.map((r, i) => el("div", { class: "ch" }, el("div", { class: "ch-num" }, "Ch. " + r.chapter),
+      el("div", {}, (r.title || E) ? tx("h3", `recap.${i}.title`, `Chapter ${r.chapter} title`) : null, tx("p", `recap.${i}.summary`, `Chapter ${r.chapter} recap`)))))));
+
+  if (g.icebreakers.length || E) parts.push(sec("icebreakers", titledList("icebreakers", "title", "prompt", "Icebreaker")));
+
+  if (g.chapterQuestions.length) parts.push(sec("chapterQuestions", el("div", { class: "chapters" },
+    g.chapterQuestions.map((c, ci) => el("div", { class: "ch" }, el("div", { class: "ch-num" }, "Ch. " + c.chapter),
+      el("div", { "data-list": `chapterQuestions.${ci}.questions` },
+        (c.title || E) ? tx("h3", `chapterQuestions.${ci}.title`, `Chapter ${c.chapter} title`) : null,
+        el("ol", {}, c.questions.map((q, qi) => el("li", {}, tx("span", `chapterQuestions.${ci}.questions.${qi}`, `Chapter ${c.chapter} question ${qi + 1}`), rmBtn(`chapterQuestions.${ci}.questions`, qi, `question ${qi + 1}`)))),
+        addBtn(`chapterQuestions.${ci}.questions`, "Add question", "")))))));
+
+  if (g.themes.length || E) parts.push(sec("themes", titledList("themes", "title", "prompt", "Talking point")));
+
+  if (g.context.length || g.spoilerNote || E) parts.push(sec("context",
+    titledList("context", "title", "detail", "Fact"),
+    (g.spoilerNote || E) ? el("details", { class: "spoiler", open: E }, el("summary", {}, "Spoiler box: only if everyone has read further"), tx("p", "spoilerNote", "Spoiler note")) : null));
+
+  if (g.adaptations.length || E) parts.push(sec("adaptations", titledList("adaptations", "title", "detail", "Adaptation")));
+
+  const w = g.wrapUp;
+  if (w.predictions.length || w.nextReading || w.bring || E) parts.push(sec("wrapUp", el("ul", { class: "items" },
+    (w.predictions.length || E) ? el("li", { "data-list": "wrapUp.predictions" }, el("b", {}, "Predictions round"),
+      E ? [el("ul", { class: "plain" }, w.predictions.map((_, i) => el("li", {}, tx("span", `wrapUp.predictions.${i}`, `Prediction ${i + 1}`), rmBtn("wrapUp.predictions", i, `prediction ${i + 1}`)))), addBtn("wrapUp.predictions", "Add prediction", "")]
+        : w.predictions.join(" ")) : null,
+    (w.nextReading || E) ? el("li", {}, el("b", {}, "Next reading"), tx("span", "wrapUp.nextReading", "Next reading")) : null,
+    (w.bring || E) ? el("li", {}, el("b", {}, "Bring next time"), tx("span", "wrapUp.bring", "Bring next time")) : null)));
+
+  root.replaceChildren(...parts);
+}
+
+// ---------- Saved list ----------
+function publicHtml() {
+  const d = cloneData();
+  // Strip host-only state: no live section, no notes about the group.
+  d.club = { currentId: d.club.currentId || "", now: "" };
+  d.meetings = d.meetings.map(({ notes, ...m }) => m);
+  d.public = true;
+  d.exportedAt = new Date().toISOString();
+  // Members see the club's name, not the host tool's (first match = the <head> title).
+  return buildHtml(d).replace("<title>Book Club Meeting Planner</title>", "<title>Book Club</title>");
+}
+async function exportPublic(btn) {
+  if (!meetings().length) { setStatus("Save at least one meeting first.", true); return; }
+  const html = publicHtml();
+  if (S.downloads) {
+    try { await S.downloads.save({ filename: "index.html", data: html }); setStatus("Downloaded index.html. Put it in a folder and drag the folder onto your host to update the public link."); return; }
+    catch {}
+  }
+  try { await navigator.clipboard.writeText(html); btn.textContent = "Copied page code"; setStatus("Page code copied. Paste it into a file named index.html, then upload it to your host."); }
+  catch { setStatus("Couldn't download or copy the page here. Try again from the Claude app on a computer.", true); }
+}
+function exportPanel() {
+  if (!S.isHost || PUBLIC) return null;
+  return el("div", { class: "panel export" },
+    el("h2", { style: "font-size:18px" }, "Share outside Claude"),
+    el("p", { class: "hint", style: "font-size:14px;margin:0" },
+      "Download a copy of the club page that anyone can open with no account. Upload it to a free host once, then upload the new copy after each meeting you save. The copy is read-only: no live Discuss now, and it doesn't include your notes about the group."),
+    el("div", { class: "actions" },
+      el("button", { class: "btn primary", type: "button", onclick: (e) => exportPublic(e.currentTarget) }, "Download public page")));
+}
+function renderFooter() {
+  if (!PUBLIC || $("pub-footer")) return;
+  document.querySelector(".brand-rest")?.remove();
+  const when = S.data.exportedAt ? new Date(S.data.exportedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
+  document.querySelector("main").append(el("p", { class: "hint", id: "pub-footer", style: "margin-top:24px;text-align:center" },
+    when ? `Updated ${when}. Refresh for the latest guide.` : "Refresh for the latest guide."));
+}
+
+function renderSaved() {
+  const root = $("saved-list");
+  const list = meetings();
+  $("saved-count").textContent = list.length ? `(${list.length})` : "";
+  if (!list.length) { root.replaceChildren(el("div", { class: "panel empty" }, S.isHost ? "No saved meetings yet. Write a guide and tap Save and share." : "No meetings shared yet.")); return; }
+  const byBook = new Map();
+  for (const m of list) {
+    const k = str(m.book).trim().toLowerCase();
+    if (!byBook.has(k)) byBook.set(k, { book: m.book, author: m.author, items: [] });
+    byBook.get(k).items.push(m);
+  }
+  const cur = club().currentId;
+  root.replaceChildren(...[exportPanel(), ...[...byBook.values()].map(gp => {
+    gp.items.sort((a, b) => (a.meetingNumber || 0) - (b.meetingNumber || 0));
+    return el("div", { class: "saved-group" },
+      el("h2", {}, gp.book, gp.author ? el("span", { class: "hint", style: "font-family:var(--font-body);font-weight:500;margin-left:8px" }, gp.author) : null),
+      el("div", { class: "cards" }, gp.items.map(m => el("button", { class: "card" + (m.id === cur ? " current" : ""), type: "button", onclick: async () => { if (S.current?.id === m.id || await okToLeave()) openMeeting(m); } },
+        m.id === cur ? el("span", { class: "chip", style: "justify-self:start" }, "Group's current meeting") : null,
+        el("span", { class: "title" }, `Meeting ${m.meetingNumber} · Ch. ${m.chapters}`),
+        el("span", { class: "meta" }, m.date ? "Meeting on " + fmtDate(m.date) : "Saved " + new Date(m.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })),
+        el("span", { class: "meta" }, str(m.guide?.lead).slice(0, 110))))));
+  })]);
+}
+
+function openMeeting(m, opts = {}) {
+  S.editing = false;
+  S.current = { ...m, guide: normalizeGuide(m.guide) };
+  S.isExample = false; S.unsaved = false;
+  ss.set("bc-viewing", m.id);
+  if (!S.isHost) { S.follow = m.id === club().currentId; ss.set("bc-follow", S.follow ? "1" : "0"); }
+  if (S.isHost && !opts.keepForm) fillForm(m);
+  setStatus("");
+  renderGuide();
+  showView("plan");
+  window.scrollTo(0, 0);
+}
+
+function showView(v) {
+  $("view-plan").hidden = v !== "plan";
+  $("view-saved").hidden = v !== "saved";
+  $("tab-plan").setAttribute("aria-selected", v === "plan");
+  $("tab-saved").setAttribute("aria-selected", v === "saved");
+  $("tab-plan").tabIndex = v === "plan" ? 0 : -1;
+  $("tab-saved").tabIndex = v === "saved" ? 0 : -1;
+  if (v === "saved") renderSaved();
+}
+function applyRole() {
+  $("view-plan").classList.toggle("member", !S.isHost);
+  $("tab-plan").textContent = S.isHost ? "Plan a meeting" : "This meeting";
+  $("tab-saved").firstChild.textContent = S.isHost ? "Saved meetings " : "All meetings ";
+}
+$("tab-plan").onclick = () => showView("plan");
+$("tab-saved").onclick = () => showView("saved");
+document.querySelector(".tabs").addEventListener("keydown", (e) => {
+  if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+  e.preventDefault();
+  const toSaved = e.key === "End" || (e.key !== "Home" && $("tab-saved").getAttribute("aria-selected") !== "true");
+  showView(toSaved ? "saved" : "plan");
+  $(toSaved ? "tab-saved" : "tab-plan").focus();
+});
+$("form").addEventListener("submit", generate);
+$("btn-stop").onclick = () => S.ctl?.abort();
+
+// Keep jump targets and the sticky form below the real header height (it changes with the live bar).
+{
+  const top = document.querySelector(".top");
+  const setSticky = () => document.documentElement.style.setProperty("--sticky", top.getBoundingClientRect().height + "px");
+  setSticky();
+  if (window.ResizeObserver) new ResizeObserver(setSticky).observe(top);
+}
+
+// ---------- Start: render from the embedded data right away ----------
+function pickInitial() {
+  const list = meetings();
+  const cur = list.find(x => x.id === club().currentId);
+  const viewing = list.find(x => x.id === ss.get("bc-viewing"));
+  const m = (!S.follow && viewing) ? viewing : (cur || viewing || list[0]);
+  if (m) { S.current = { ...m, guide: normalizeGuide(m.guide) }; S.isExample = false; fillNext(m); }
+  else {
+    // Nothing saved yet: no fake example. Members see a short note, the host sees the form first.
+    S.current = null; S.isExample = false;
+    fillForm({ meetingNumber: 1, minutes: 90 });
+    $("form-hint").textContent = "Enter your book and the chapters for the first meeting, then tap Write the guide.";
+  }
+  S.unsaved = false;
+}
+pickInitial();
+applyRole();
+renderGuide(); renderSaved(); renderLivebar();
+{
+  const msg = ss.get("bc-msg"); if (msg) { setStatus(msg); ss.del("bc-msg"); }
+}
+if (club().now && isCurrentMeeting() && S.follow) setTimeout(() => scrollToSection(club().now), 120);
+
+(async () => {
+  if (PUBLIC || !window.claude?.use) { renderFooter(); return; }   // plain public view: read-only, nothing else to load
+  const [artifact, user, sample, downloads] = await Promise.all([
+    claude.use("artifact").catch(() => null), claude.use("user").catch(() => null),
+    claude.use("sample").catch(() => null), claude.use("downloads").catch(() => null)
+  ]);
+  S.artifact = artifact; S.user = user; S.sample = sample; S.downloads = downloads;
+
+  let edit = null, owner = null;
+  if (user) {
+    try { edit = await user.canEdit(); } catch {}
+    try { owner = await user.isOwner(); } catch {}
+  }
+  // Host = the owner or an editor. Everyone else gets the read-only club view.
+  S.isHost = edit === true || owner === true || (user && edit == null && owner == null && !!sample);
+
+  if (S.isHost) {
+    // Restore an unsaved draft that a page update would otherwise have wiped.
+    const draft = ss.get("bc-draft");
+    if (draft) {
+      try { S.current = { ...JSON.parse(draft) }; S.current.guide = normalizeGuide(S.current.guide); S.isExample = false; S.unsaved = true; fillForm(S.current); } catch { ss.del("bc-draft"); }
+    }
+    if (!sample) { $("btn-generate").disabled = true; $("ai-hint").textContent = "Claude isn't available in this view, so new guides can't be written."; }
+  }
+  applyRole();
+  if (S.isHost) showUndo();   // offer Undo again after the page reloads from a delete
+  renderGuide(); renderSaved(); renderLivebar();
+})();
+</script>
+</body>
+</html>
