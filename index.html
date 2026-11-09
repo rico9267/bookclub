@@ -28,6 +28,7 @@
   --warn: #8a5a00;
   --warn-soft: #fbf1d9;
   --danger: #a3302a;
+  --star: #85600f;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
   --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: light;
@@ -46,6 +47,7 @@
     --warn: #f0c46a;
     --warn-soft: #2e2614;
     --danger: #f08b84;
+  --star: #e2b453;
     color-scheme: dark;
   }
 }
@@ -62,6 +64,7 @@
   --warn: #f0c46a;
   --warn-soft: #2e2614;
   --danger: #f08b84;
+  --star: #e2b453;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -105,7 +108,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .livebar .dot { flex: none; }
 .livebar .btn { flex: none; }
 @media (max-width: 520px) {
-  .top-inner { padding: 8px 12px; gap: 8px; flex-wrap: nowrap; }
+  .top-inner { padding: 8px 12px; gap: 6px; flex-wrap: wrap; }
+  .tabs { width: 100%; margin-left: 0; }
+  .tab { flex: 1; text-align: center; }
   .brand { font-size: 17px; white-space: nowrap; }
   .brand-rest { display: none; }
   .tab { padding: 6px 11px; font-size: 13px; }
@@ -244,6 +249,75 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
 .edit-fields label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
 .edit-fields input { width: 9.5em; }
 .edit-fields input[type="number"] { width: 6.5em; }
+.panel.export a { color: var(--accent); }
+
+/* ---------- Club features ---------- */
+/* Typographic covers: a hue per title, no images needed. */
+.cover { --hue: 160; flex: none; width: 72px; height: 104px; border-radius: 4px 8px 8px 4px; padding: 8px 7px; display: flex; flex-direction: column; justify-content: space-between;
+  background: linear-gradient(90deg, hsl(var(--hue) 30% 22%) 0 6px, hsl(var(--hue) 38% 34%) 6px); color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); overflow: hidden; }
+.cover-title { font-family: var(--font-display); font-size: 11px; font-weight: 650; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.cover-author { font-size: 8.5px; opacity: .85; line-height: 1.2; }
+.cover.sm { width: 48px; height: 70px; padding: 5px; }
+.cover.sm .cover-title { font-size: 8px; -webkit-line-clamp: 4; } .cover.sm .cover-author { display: none; }
+.cover.xs { width: 30px; height: 44px; padding: 3px; } .cover.xs .cover-title, .cover.xs .cover-author { display: none; }
+
+.book-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.book-head h2 { font-size: 20px; margin: 0; }
+.chip.next { background: var(--accent); color: var(--accent-ink); }
+.chip.done { background: var(--line); color: var(--ink); }
+.chip.planned { background: transparent; border: 1px dashed var(--muted); color: var(--muted); }
+.card .chips { gap: 4px; }
+.card.planned { border-style: dashed; cursor: default; }
+
+.meet-actions { margin-top: 2px; }
+details.cal { position: relative; }
+details.cal > summary { list-style: none; }
+details.cal > summary::-webkit-details-marker { display: none; }
+.cal-menu { position: absolute; z-index: 4; top: calc(100% + 6px); left: 0; min-width: 220px; display: grid; gap: 2px; padding: 6px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.14); }
+.cal-menu .btn { justify-content: flex-start; padding: 8px 10px; width: 100%; text-decoration: none; }
+a.btn { text-decoration: none; color: inherit; }
+a.btn.primary { color: var(--accent-ink); }
+
+.shield { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; font-weight: 600; color: var(--muted); }
+.shield select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font-weight: 500; color: var(--ink); }
+.ch.shielded .ch-num { background: var(--line); color: var(--muted); }
+
+.club { display: grid; gap: 16px; }
+.shelf-head { display: grid; gap: 8px; }
+.shelf-head h1 { font-size: clamp(26px, 4vw, 34px); }
+.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.shelf-item { display: flex; gap: 12px; align-items: flex-start; }
+.shelf-item > div { display: grid; gap: 3px; min-width: 0; }
+.shelf-item .meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stars { color: var(--star); letter-spacing: 1px; font-size: 15px; }
+.rating-num { color: var(--muted); font-size: 13px; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.verdict { font-style: italic; }
+
+.club-editors { display: grid; gap: 16px; }
+.club-editors .field { display: grid; gap: 5px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.club-editors .field .hint { font-weight: 400; }
+.club-editors input, .club-editors select, .club-editors textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); font-weight: 500; color: var(--ink); }
+.club-editors textarea { min-height: 64px; resize: vertical; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.plan-rows { display: grid; gap: 10px; }
+.plan-row { display: grid; grid-template-columns: 2fr 0.8fr 1fr 1.2fr 1fr 1.2fr auto; gap: 8px; align-items: end; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+.plan-row.shelf-edit { grid-template-columns: 2fr auto 1fr 2.5fr; align-items: center; }
+.plan-row.upnext { grid-template-columns: 2fr 1.5fr auto; }
+.book-mini { display: flex; gap: 8px; align-items: center; min-width: 0; }
+.club-actions { position: sticky; bottom: 0; padding: 10px 0; background: var(--paper); }
+.preview-label { font-size: 15px; color: var(--muted); font-family: var(--font-body); margin-top: 8px; }
+.preview { display: grid; gap: 16px; padding: 16px; border: 2px dashed var(--line); border-radius: 16px; }
+@media (max-width: 860px) {
+  .plan-row, .plan-row.shelf-edit, .plan-row.upnext { grid-template-columns: 1fr 1fr; }
+  .plan-row .rm { justify-self: start; }
+  .grid2 { grid-template-columns: 1fr; }
+}
+@media print { .meet-actions, .shield, .cal-menu { display: none !important; } }
+
+#saved-list { display: grid; gap: 28px; }
+#club-root { display: grid; gap: 16px; }
+.view-title { font-size: clamp(24px, 4vw, 30px); }
 </style>
 </head>
 <body>
@@ -254,6 +328,7 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
     <div class="tabs" role="tablist" aria-label="Views">
       <button class="tab" id="tab-plan" role="tab" aria-selected="true" aria-controls="view-plan" tabindex="0">Plan a meeting</button>
       <button class="tab" id="tab-saved" role="tab" aria-selected="false" aria-controls="view-saved" tabindex="-1">Saved meetings <span id="saved-count"></span></button>
+      <button class="tab" id="tab-club" role="tab" aria-selected="false" aria-controls="view-club" tabindex="-1">Club</button>
     </div>
   </div>
   <div class="livebar" id="livebar" hidden>
@@ -304,6 +379,19 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
           <input id="f-date" type="date">
         </div>
       </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-time">Start time</label>
+          <input id="f-time" type="time" value="19:00">
+        </div>
+        <div class="field">
+          <label for="f-type">Meeting type</label>
+          <select id="f-type">
+            <option value="chapters" selected>Chapters</option>
+            <option value="wrapup">Final wrap-up</option>
+          </select>
+        </div>
+      </div>
       <div class="field">
         <label for="f-notes">Notes about your group</label>
         <textarea id="f-notes" placeholder="e.g. A few members are new to fantasy. Keep spoilers out."></textarea>
@@ -321,6 +409,10 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
   <section id="view-saved" class="saved" role="tabpanel" aria-labelledby="tab-saved" hidden>
     <div id="saved-list"></div>
   </section>
+
+  <section id="view-club" class="club" role="tabpanel" aria-labelledby="tab-club" hidden>
+    <div id="club-root"></div>
+  </section>
 </main>
 
 <div class="dialog-backdrop" id="confirm" hidden>
@@ -335,7 +427,7 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
 </div>
 
 </template>
-<script type="application/json" id="club-data">{"meetings":[],"club":{"currentId":"","now":""},"public":true,"exportedAt":"2026-11-09T02:12:23.394018Z"}</script>
+<script type="application/json" id="club-data">{"meetings":[],"club":{"currentId":"","now":""},"settings":{"blurb":"","clubName":"","rsvpUrl":"","timezone":"America/New_York","voteLabel":"","voteUrl":""},"schedule":[],"shelf":{"books":{},"upNext":[]},"public":true,"exportedAt":"2026-11-09T02:35:17.791572Z"}</script>
 <script id="app-script">// Mount the page markup (kept pristine in <template id="shell"> so the page can republish itself).
 document.body.prepend(document.getElementById("shell").content.cloneNode(true));
 
@@ -367,18 +459,35 @@ const ss = {
 };
 
 // ---------- Shared state, embedded in the page ----------
+// Data: meetings (saved guides), club (current meeting + live section), settings (name, form links, time zone),
+// schedule (planned meetings without a guide yet), shelf (finished books, ratings, up next).
+const obj = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+function normalizeData(d) {
+  d = obj(d);
+  const st = obj(d.settings), sh = obj(d.shelf);
+  return {
+    meetings: arr(d.meetings),
+    club: obj(d.club),
+    exportedAt: str(d.exportedAt),
+    settings: { clubName: str(st.clubName), blurb: str(st.blurb), rsvpUrl: str(st.rsvpUrl), voteUrl: str(st.voteUrl),
+                voteLabel: str(st.voteLabel), timezone: str(st.timezone) },
+    schedule: arr(d.schedule).map(p => ({ id: str(p.id), book: str(p.book), author: str(p.author), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1),
+                                          chapters: str(p.chapters), date: str(p.date), time: str(p.time), type: p.type === "wrapup" ? "wrapup" : "chapters" })),
+    shelf: { upNext: arr(sh.upNext).map(b => ({ title: str(b.title), author: str(b.author) })), books: obj(sh.books) }
+  };
+}
 function readData() {
   try {
     const d = JSON.parse($("club-data").textContent || "{}");
-    return { meetings: arr(d.meetings), club: d.club && typeof d.club === "object" ? d.club : {}, exportedAt: str(d.exportedAt) };
-  } catch { return { meetings: [], club: {} }; }
+    return normalizeData(d);
+  } catch { return normalizeData({}); }
 }
 
 // A page exported for outside hosting carries `public: true` in its data: read-only, no Claude, no live features.
 const PUBLIC = (() => { try { return !!JSON.parse($("club-data").textContent || "{}").public; } catch { return false; } })();
 const S = {
   data: readData(),
-  artifact: null, user: null, sample: null, downloads: null,
+  artifact: null, user: null, sample: null, downloads: null, db: null,
   isHost: false, readOnly: false, publishing: false,
   current: null, isExample: false, unsaved: false,
   ctl: null, busySection: null, editing: false,
@@ -410,6 +519,7 @@ async function publishState(data, okMsg, opts = {}) {
   ss.set("bc-msg", okMsg || "");
   if (S.current?.id) ss.set("bc-viewing", S.current.id);
   setStatus([el("span", { class: "thinking" }), "  Updating the page for everyone…"]);
+  try { await withTimeout(mirrorToDb(data), 8000); } catch {}
   try {
     await S.artifact.publish(buildHtml(data));
     S.data = data;            // in case this view isn't reloaded right away
@@ -452,6 +562,8 @@ function readForm() {
     meetingNumber: Math.max(1, parseInt($("f-number").value, 10) || 1),
     minutes: parseInt($("f-minutes").value, 10) || 90,
     date: $("f-date").value || "",
+    time: $("f-time").value || "",
+    type: $("f-type").value === "wrapup" ? "wrapup" : "chapters",
     notes: $("f-notes").value.trim()
   };
 }
@@ -462,11 +574,27 @@ function fillForm(m) {
   $("f-number").value = m.meetingNumber || 1;
   $("f-minutes").value = String(m.minutes || 90);
   $("f-date").value = m.date || "";
+  $("f-time").value = m.time || "19:00";
+  $("f-type").value = m.type === "wrapup" ? "wrapup" : "chapters";
+  syncTypeField();
   $("f-notes").value = m.notes || "";
 }
-function fillNext(m) {
-  fillForm({ ...m, chapters: nextRange(m.chapters), meetingNumber: (m.meetingNumber || 1) + 1, date: "" });
+// A final wrap-up covers the whole book, so Chapters isn't required for it.
+function syncTypeField() {
+  const wrap = $("f-type").value === "wrapup", ch = $("f-chapters");
+  ch.required = !wrap;
+  ch.placeholder = wrap ? "Whole book" : "e.g. 1–5";
+  if (wrap && !ch.value.trim()) ch.value = "Whole book";
+  if (!wrap && ch.value.trim() === "Whole book") ch.value = "";
 }
+$("f-type").addEventListener("change", syncTypeField);
+function fillNext(m) {
+  const n = (m.meetingNumber || 1) + 1;
+  const p = plannedFor(m.book, n);
+  if (p) fillForm({ ...m, ...p, notes: m.notes });
+  else fillForm({ ...m, chapters: nextRange(m.chapters), meetingNumber: n, date: "", type: "chapters" });
+}
+function plannedFor(book, n) { return S.data.schedule.find(p => sameBook(p.book, book) && p.meetingNumber === n) || null; }
 function nextRange(chapters) {
   const m = str(chapters).match(/(\d+)\s*[-–—to]+\s*(\d+)/i);
   if (m) {
@@ -541,13 +669,31 @@ function header(f) {
   return `You are helping a book club host plan one meeting.
 
 Book: ${f.book}${f.author ? " by " + f.author : ""}
-Chapters for this meeting: ${f.chapters}
+Chapters for this meeting: ${f.type === "wrapup" ? "the whole book (final wrap-up)" : f.chapters}
 Meeting number: ${f.meetingNumber}
 Meeting length: ${f.minutes} minutes
 Host's notes about the group: ${f.notes || "none"}${previousContext(f)}`;
 }
+// Final wrap-up meeting: the whole book, spoilers allowed, a rating round (Fable's "reflection room").
+function wrapRules(f) {
+  return `This is the club's FINAL meeting on this book: a whole-book wrap-up. Everyone has finished the book.
+Rules:
+- Spoilers are allowed: discuss the whole book, including the ending.
+- Be accurate. If you are unsure of details, say so in accuracy.note, set accuracy.confidence to "medium" or "low", and stay general instead of inventing.
+- Do not quote the book beyond a phrase of a few words. Paraphrase.
+- Recap: 3 to 5 entries covering the arc of the story. Use "chapter" for the part ("Beginning", "Middle", "Ending", or a part name) and "title" for a short label.
+- Discussion questions: 3 to 5 groups. Use "chapter" for the group name ("Characters", "Themes", "The ending", "Craft"), "title" empty, 3 or 4 questions each.
+- Agenda: 5 to 7 segments adding up to exactly ${f.minutes} minutes, and include a rating round where everyone rates the book out of 5.
+- Icebreakers: 3 or 4 quick whole-book prompts (one word for the book, favorite character, a line they remember).
+- Themes: 4 to 6 big-picture talking points about the book as a whole.
+- Context: 3 to 5 well-established facts about the author, the book's history, reception, or what came after it.
+- Adaptations: film, TV, stage or audio versions; for anything recent or upcoming, tell the host to check current news. [] if none.
+- Wrap-up: predictions = 2 or 3 "would you recommend it, and to whom?" style closing questions; nextReading = what the club might read next or "Vote on our next book"; bring = one thing to bring to the next meeting.
+- spoilerNote: "".
+- Plain words, sentences under 25 words, no emoji, no markdown inside strings.`;
+}
 function guidePrompt(f) {
-  return `${header(f)}\n\n${rules(f)}\n\nReply with only one JSON object in exactly this shape:\n${SCHEMA}`;
+  return `${header(f)}\n\n${f.type === "wrapup" ? wrapRules(f) : rules(f)}\n\nReply with only one JSON object in exactly this shape:\n${SCHEMA}`;
 }
 function sectionPrompt(f, key, guide) {
   return `${header(f)}
@@ -557,7 +703,7 @@ ${JSON.stringify(guide).slice(0, 60000)}
 
 Rewrite ONLY the "${key}" section with fresh content that differs from what is there now. Keep the same shape as in the guide.
 
-${rules(f)}
+${f.type === "wrapup" ? wrapRules(f) : rules(f)}
 
 Reply with only a JSON object with one key: {"${key}": ...}`;
 }
@@ -596,6 +742,7 @@ function errorCopy(e) {
 async function generate(ev) {
   ev?.preventDefault();
   const f = readForm();
+  if (f.type === "wrapup" && !f.chapters) f.chapters = "Whole book";
   if (!f.book || !f.chapters) { setStatus("Add a book title and the chapters for this meeting.", true); return; }
   if (!S.sample) { setStatus("Claude isn't available on this page right now, so new guides can't be written.", true); return; }
   if (!(await okToLeave())) return;
@@ -627,7 +774,7 @@ async function generate(ev) {
 async function redoSection(key) {
   if (!S.sample || !S.current || S.busySection) return;
   const c = S.current;
-  const f = { book: c.book, author: c.author, chapters: c.chapters, meetingNumber: c.meetingNumber, minutes: c.minutes, notes: c.notes };
+  const f = { book: c.book, author: c.author, chapters: c.chapters, meetingNumber: c.meetingNumber, minutes: c.minutes, notes: c.notes, type: c.type };
   S.busySection = key; renderGuide();
   try {
     const out = await S.sample.json(sectionPrompt(f, key, c.guide), { cache: false });
@@ -646,7 +793,8 @@ function recordFrom(c) {
   const now = new Date().toISOString();
   return {
     book: c.book, author: c.author || "", chapters: c.chapters,
-    meetingNumber: c.meetingNumber, minutes: c.minutes, date: c.date || "",
+    meetingNumber: c.meetingNumber, minutes: c.minutes, date: c.date || "", time: c.time || "",
+    type: c.type === "wrapup" ? "wrapup" : "chapters",
     notes: c.notes || "", guide: cleanGuide(c.guide),
     createdAt: c.createdAt || now, updatedAt: now
   };
@@ -659,6 +807,7 @@ async function save() {
   const record = { ...recordFrom(S.current), id };
   const data = cloneData();
   data.meetings = isNew ? [...data.meetings, record] : data.meetings.map(m => (m.id === id ? record : m));
+  data.schedule = data.schedule.filter(p => !(sameBook(p.book, record.book) && p.meetingNumber === record.meetingNumber));
   if (isNew) data.club = { ...data.club, currentId: id, now: "", updatedAt: record.updatedAt };
   const prev = { current: S.current, unsaved: S.unsaved };
   S.current = record; S.unsaved = false;
@@ -796,7 +945,7 @@ function planNext() {
 function toMarkdown(m) {
   const g = m.guide, L = [];
   L.push(`# ${m.book} — Meeting ${m.meetingNumber} (Ch. ${m.chapters})`);
-  const sub = [m.author, m.date, `${m.minutes} minutes`].filter(Boolean).join(" · ");
+  const sub = [m.author, m.date, m.time ? fmtTime(m.time) : "", `${m.minutes} minutes`].filter(Boolean).join(" · ");
   if (sub) L.push("", sub);
   if (g.lead) L.push("", g.lead);
   if (g.agenda.length) { L.push("", "## Agenda", "", "| Time | Segment | What happens |", "| --- | --- | --- |"); g.agenda.forEach(a => L.push(`| ${a.time} | ${a.segment} | ${a.details} |`)); }
@@ -823,7 +972,7 @@ function toPlainText(m) {
   const g = m.guide, L = [];
   const head = `${m.book}: meeting ${m.meetingNumber}, chapters ${m.chapters}`;
   L.push(head.toUpperCase());
-  if (m.date) L.push(whenText(m.date).split(" · ")[0]);
+  if (m.date) L.push(whenText(m.date, m.time).split(" · ").slice(0, m.time ? 2 : 1).join(" · "));
   if (g.lead) L.push("", g.lead);
   const section = (t) => L.push("", t.toUpperCase());
   if (g.agenda.length) { section("Agenda"); g.agenda.forEach(a => L.push(`${a.time}  ${a.segment}${a.details ? ": " + a.details : ""}`)); }
@@ -945,13 +1094,13 @@ function sec(key, ...body) {
 }
 
 // "Thursday, Nov 20 · in 12 days" (local dates, no time-zone drift).
-function whenText(d) {
+function whenText(d, time) {
   const day = new Date(d + "T12:00:00");
   if (isNaN(day)) return "";
   const today = new Date(); today.setHours(12, 0, 0, 0);
   const diff = Math.round((day - today) / 86400000);
   const rel = diff === 0 ? "today" : diff === 1 ? "tomorrow" : diff === -1 ? "yesterday" : diff > 1 ? `in ${diff} days` : `${-diff} days ago`;
-  return `Meeting ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })} · ${rel}`;
+  return `Meeting ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}${time ? " · " + fmtTime(time) : ""} · ${rel}`;
 }
 const fmtDate = (d) => new Date(d + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 
@@ -981,7 +1130,7 @@ function renderGuide() {
 
   const chips = el("div", { class: "chips" },
     el("span", { class: "chip", id: "chip-number" }, `Meeting ${m.meetingNumber}`),
-    el("span", { class: "chip", id: "chip-chapters" }, `Ch. ${m.chapters}`),
+    el("span", { class: "chip", id: "chip-chapters" }, m.type === "wrapup" ? "Final wrap-up" : `Ch. ${m.chapters}`),
     el("span", { class: "chip", id: "chip-minutes" }, `${m.minutes} min`),
     isCurrentMeeting() ? el("span", { class: "chip" }, "Group's current meeting") : null,
     el("span", { class: "chip unsaved", id: "chip-unsaved", hidden: !S.unsaved }, "Not saved")
@@ -1035,12 +1184,15 @@ function renderGuide() {
     el("div", { class: "guide-head" },
       chips,
       el("h1", {}, m.book),
-      m.date && !E ? el("p", { class: "when" }, whenText(m.date)) : null,
+      m.date && !E ? el("p", { class: "when" }, whenText(m.date, m.time)) : null,
       m.author ? el("p", { class: "lead" }, "by " + m.author) : null,
       (g.lead || E) ? tx("p", "lead", "Summary", { class: "lead" }) : null,
       (g.accuracy.note && g.accuracy.confidence !== "high") ? el("div", { class: "accuracy" }, el("b", {}, "Check before the meeting: "), g.accuracy.note) : null,
       banner,
-      actions
+      actions,
+      !E && m.id ? meetingButtons(m) : null,
+      !E && m.type === "wrapup" ? el("div", { class: "banner" }, "Final wrap-up: this guide discusses the whole book, including the ending.") : null,
+      !E ? shieldControl(m) : null
     )
   ];
 
@@ -1053,13 +1205,13 @@ function renderGuide() {
     E ? addBtn("agenda", "Add agenda row", { time: "", segment: "", details: "" }) : null));
 
   if (g.recap.length) parts.push(sec("recap", el("div", { class: "chapters" },
-    g.recap.map((r, i) => el("div", { class: "ch" }, el("div", { class: "ch-num" }, "Ch. " + r.chapter),
-      el("div", {}, (r.title || E) ? tx("h3", `recap.${i}.title`, `Chapter ${r.chapter} title`) : null, tx("p", `recap.${i}.summary`, `Chapter ${r.chapter} recap`)))))));
+    g.recap.map((r, i) => shielded(m, r.chapter) ? hiddenNote(m, r.chapter) : el("div", { class: "ch" }, el("div", { class: "ch-num" }, chLabel(r.chapter)),
+      el("div", {}, (r.title || E) ? tx("h3", `recap.${i}.title`, `${chLabel(r.chapter)} title`) : null, tx("p", `recap.${i}.summary`, `Chapter ${r.chapter} recap`)))))));
 
   if (g.icebreakers.length || E) parts.push(sec("icebreakers", titledList("icebreakers", "title", "prompt", "Icebreaker")));
 
   if (g.chapterQuestions.length) parts.push(sec("chapterQuestions", el("div", { class: "chapters" },
-    g.chapterQuestions.map((c, ci) => el("div", { class: "ch" }, el("div", { class: "ch-num" }, "Ch. " + c.chapter),
+    g.chapterQuestions.map((c, ci) => shielded(m, c.chapter) ? hiddenNote(m, c.chapter) : el("div", { class: "ch" }, el("div", { class: "ch-num" }, chLabel(c.chapter)),
       el("div", { "data-list": `chapterQuestions.${ci}.questions` },
         (c.title || E) ? tx("h3", `chapterQuestions.${ci}.title`, `Chapter ${c.chapter} title`) : null,
         el("ol", {}, c.questions.map((q, qi) => el("li", {}, tx("span", `chapterQuestions.${ci}.questions.${qi}`, `Chapter ${c.chapter} question ${qi + 1}`), rmBtn(`chapterQuestions.${ci}.questions`, qi, `question ${qi + 1}`)))),
@@ -1084,22 +1236,374 @@ function renderGuide() {
   root.replaceChildren(...parts);
 }
 
-// ---------- Saved list ----------
-function publicHtml() {
+// ---------- Club features: calendar, spoiler shield, schedule, bookshelf, club settings ----------
+const ls = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+};
+const bookKey = (b) => str(b).trim().toLowerCase();
+const clubName = () => S.data.settings.clubName.trim() || "Book Club";
+const isUrl = (u) => /^https:\/\/\S+$/i.test(str(u).trim());
+const todayISO = () => { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`; };
+const isUpcoming = (m) => !!m.date && m.date >= todayISO();
+const chLabel = (c) => (/^\d+$/.test(str(c).trim()) ? "Ch. " + c : str(c));
+function fmtTime(t) {
+  const m = str(t).match(/^(\d{1,2}):(\d{2})/);
+  if (!m) return "";
+  const h = +m[1], mm = m[2];
+  return `${((h + 11) % 12) + 1}:${mm} ${h < 12 ? "AM" : "PM"}`;
+}
+
+// Calendar: the meeting's wall-clock time in the club's time zone, as a real instant.
+function tzOffsetMin(tz, utcMs) {
+  const dtf = new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const p = Object.fromEntries(dtf.formatToParts(new Date(utcMs)).filter(x => x.type !== "literal").map(x => [x.type, +x.value]));
+  return (Date.UTC(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second) - utcMs) / 60000;
+}
+function meetingStart(m) {
+  if (!m.date) return null;
+  const [y, mo, d] = m.date.split("-").map(Number);
+  const [hh, mi] = (str(m.time) || "19:00").split(":").map(Number);
+  const tz = S.data.settings.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const wall = Date.UTC(y, mo - 1, d, hh || 0, mi || 0);
+  try {
+    let t = wall - tzOffsetMin(tz, wall) * 60000;
+    t = wall - tzOffsetMin(tz, t) * 60000;   // second pass handles DST edges
+    return new Date(t);
+  } catch { return new Date(y, mo - 1, d, hh || 0, mi || 0); }
+}
+const calStamp = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+function eventFor(m) {
+  const start = meetingStart(m); if (!start) return null;
+  const end = new Date(start.getTime() + (m.minutes || 90) * 60000);
+  const what = m.type === "wrapup" ? "final wrap-up" : `chapters ${m.chapters}`;
+  return { start, end, title: `${clubName()}: ${m.book} (${what})`, details: `Meeting ${m.meetingNumber} of ${clubName()}. Guide: ${SITE_URL}` };
+}
+function icsFor(m) {
+  const e = eventFor(m); if (!e) return "";
+  const esc = (s) => s.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Book Club//Meeting Planner//EN", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+    `UID:${m.id || "meeting"}-${m.date}@rico9267.github.io`, `DTSTAMP:${calStamp(new Date())}`, `DTSTART:${calStamp(e.start)}`, `DTEND:${calStamp(e.end)}`,
+    `SUMMARY:${esc(e.title)}`, `DESCRIPTION:${esc(e.details)}`, `URL:${SITE_URL}`,
+    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Book club tomorrow", "TRIGGER:-P1D", "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+}
+function googleCalUrl(m) {
+  const e = eventFor(m); if (!e) return "";
+  const q = new URLSearchParams({ action: "TEMPLATE", text: e.title, dates: `${calStamp(e.start)}/${calStamp(e.end)}`, details: e.details });
+  return "https://calendar.google.com/calendar/render?" + q.toString();
+}
+async function downloadIcs(m) {
+  const text = icsFor(m), name = (`${m.book}-meeting-${m.meetingNumber}`).toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".ics";
+  if (PUBLIC || !window.claude) {
+    const url = URL.createObjectURL(new Blob([text], { type: "text/calendar" }));
+    const a = el("a", { href: url, download: name }); document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    return;
+  }
+  if (S.downloads) { try { await S.downloads.save({ filename: name, data: text }); } catch {} }
+}
+function meetingButtons(m) {
+  if (!m.date || !isUpcoming(m)) return null;
+  const canIcs = PUBLIC || !window.claude || !!S.downloads;
+  const rsvp = S.data.settings.rsvpUrl;
+  return el("div", { class: "actions meet-actions" },
+    isUrl(rsvp) ? el("a", { class: "btn primary", href: rsvp, target: "_blank", rel: "noopener" }, "RSVP") : null,
+    el("details", { class: "cal" },
+      el("summary", { class: "btn" }, "Add to calendar"),
+      el("div", { class: "cal-menu" },
+        canIcs ? el("button", { class: "btn link", type: "button", onclick: () => downloadIcs(m) }, "Apple or Outlook (.ics)") : null,
+        el("a", { class: "btn link", href: googleCalUrl(m), target: "_blank", rel: "noopener" }, "Google Calendar"))));
+}
+
+// Spoiler shield (Fable's spoiler-free chapter rooms): hide chapters past where you've read.
+const shieldKey = (book) => "bc-read-through:" + bookKey(book);
+function readThrough(book) { const v = parseInt(ls.get(shieldKey(book)), 10); return Number.isFinite(v) ? v : null; }
+const revealed = new Set();
+function shieldControl(m) {
+  const nums = [...new Set([...m.guide.recap, ...m.guide.chapterQuestions].map(x => parseInt(x.chapter, 10)).filter(Number.isFinite))].sort((a, b) => a - b);
+  if (m.type === "wrapup" || nums.length < 2) return null;
+  const cur = readThrough(m.book);
+  const sel = el("select", { id: "shield", onchange: (e) => { ls.set(shieldKey(m.book), e.currentTarget.value); revealed.clear(); renderGuide(); } },
+    el("option", { value: "" }, "Off: show everything"),
+    nums.slice(0, -1).map(n => el("option", { value: String(n), selected: cur === n }, `I've read through chapter ${n}`)),
+    el("option", { value: String(nums[nums.length - 1]), selected: cur != null && cur >= nums[nums.length - 1] }, `I've read through chapter ${nums[nums.length - 1]}`));
+  if (cur == null) sel.value = "";
+  return el("label", { class: "shield", for: "shield" }, el("span", {}, "Spoiler shield"), sel);
+}
+function shielded(m, chapter) {
+  if (S.editing || m.type === "wrapup") return false;
+  const n = parseInt(chapter, 10), rt = readThrough(m.book);
+  return rt != null && Number.isFinite(n) && n > rt && !revealed.has(m.id + ":" + n);
+}
+function hiddenNote(m, chapter) {
+  const n = parseInt(chapter, 10);
+  return el("div", { class: "ch shielded" }, el("div", { class: "ch-num" }, "Ch. " + n),
+    el("div", {}, el("p", { class: "hint", style: "margin:0" }, `Hidden because you haven't read chapter ${n} yet.`),
+      el("button", { class: "btn link", type: "button", onclick: () => { revealed.add(m.id + ":" + n); renderGuide(); } }, "Show anyway")));
+}
+
+// Typographic book cover (no network needed, works inside Claude and on GitHub Pages).
+function cover(title, author, size = "") {
+  let h = 0; for (const c of bookKey(title)) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return el("div", { class: "cover " + size, style: `--hue:${h}`, "aria-hidden": "true" },
+    el("span", { class: "cover-title" }, title), author ? el("span", { class: "cover-author" }, author) : null);
+}
+function stars(r) {
+  const v = Math.round((parseFloat(r) || 0) * 2) / 2;
+  if (!v) return null;
+  const full = Math.floor(v), half = v % 1 ? 1 : 0;
+  return el("span", { class: "stars", "aria-label": `Club rating ${v} out of 5` }, "★".repeat(full) + (half ? "½" : "") + "☆".repeat(5 - full - half), el("span", { class: "rating-num" }, ` ${v}`));
+}
+
+// Every book the club has touched: saved meetings + planned schedule.
+function allBooks(data = S.data) {
+  const map = new Map();
+  for (const m of [...data.meetings, ...data.schedule]) {
+    const k = bookKey(m.book); if (!k) continue;
+    if (!map.has(k)) map.set(k, { key: k, book: m.book, author: m.author || "", meetings: [], planned: [] });
+    const b = map.get(k);
+    if (!b.author && m.author) b.author = m.author;
+    (m.guide ? b.meetings : b.planned).push(m);
+  }
+  return [...map.values()];
+}
+// One ordered list of a book's meetings: saved guides win over a plan with the same number.
+function bookRows(b) {
+  const rows = new Map();
+  for (const p of b.planned) rows.set(p.meetingNumber, { ...p, planned: true });
+  for (const m of b.meetings) rows.set(m.meetingNumber, { ...m, planned: false });
+  return [...rows.values()].sort((x, y) => (x.meetingNumber || 0) - (y.meetingNumber || 0));
+}
+function nextMeeting() {
+  const all = allBooks().flatMap(bookRows).filter(isUpcoming).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
+  return all[0] || null;
+}
+
+// ---------- Schedule (members) / Meetings (host) ----------
+function writePlanned(p) {
+  const prev = meetings().find(m => sameBook(m.book, p.book));
+  fillForm({ book: p.book, author: p.author || prev?.author || "", chapters: p.chapters, meetingNumber: p.meetingNumber, minutes: prev?.minutes || 90,
+             date: p.date, time: p.time, type: p.type, notes: prev?.notes || "" });
+  $("form-hint").textContent = `Filled in from your schedule: meeting ${p.meetingNumber}. Tap Write the guide.`;
+  showView("plan");
+  $("form").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  $("btn-generate").focus({ preventScroll: true });
+}
+function scheduleRow(r, next, cur) {
+  const when = r.date ? `${fmtDate(r.date)}${r.time ? " · " + fmtTime(r.time) : ""}` : "Date to be set";
+  const what = r.type === "wrapup" ? "Final wrap-up" : (str(r.chapters).trim() ? `Ch. ${r.chapters}` : "Chapters to be set");
+  const chips = [
+    r.id === cur ? el("span", { class: "chip" }, "Group's current meeting") : null,
+    next && next.meetingNumber === r.meetingNumber && sameBook(next.book, r.book) ? el("span", { class: "chip next" }, "Next up") : null,
+    r.date && !isUpcoming(r) && !r.planned ? el("span", { class: "chip done" }, "Done") : null,
+    r.planned ? el("span", { class: "chip planned" }, "Planned") : null
+  ].filter(Boolean);
+  const body = [chips.length ? el("span", { class: "chips" }, chips) : null,
+    el("span", { class: "title" }, `Meeting ${r.meetingNumber} · ${what}`),
+    el("span", { class: "meta" }, when),
+    r.planned ? null : el("span", { class: "meta" }, str(r.guide?.lead).slice(0, 110))];
+  if (r.planned) {
+    return el("div", { class: "card planned" }, ...body,
+      S.isHost && S.sample ? el("button", { class: "btn small", type: "button", style: "justify-self:start", onclick: async () => { if (await okToLeave()) writePlanned(r); } }, "Write the guide")
+                           : el("span", { class: "meta" }, "Guide coming soon"));
+  }
+  return el("button", { class: "card" + (r.id === cur ? " current" : ""), type: "button", onclick: async () => { if (S.current?.id === r.id || await okToLeave()) openMeeting(r); } }, ...body);
+}
+function renderSaved() {
+  const root = $("saved-list");
+  const books = allBooks();
+  const saved = meetings().length;
+  $("saved-count").textContent = saved && S.isHost ? `(${saved})` : "";
+  if (!books.length) {
+    root.replaceChildren(exportPanel() || "", el("div", { class: "panel empty" }, S.isHost ? "No meetings yet. Write a guide and tap Save and share, or plan your schedule in the Club tab." : "No meetings scheduled yet."));
+    return;
+  }
+  const cur = club().currentId, next = nextMeeting();
+  const curBook = meetings().find(m => m.id === cur)?.book;
+  books.sort((a, b) => (sameBook(a.book, curBook) ? -1 : sameBook(b.book, curBook) ? 1 : 0));
+  root.replaceChildren(...[el("h1", { class: "view-title" }, S.isHost ? "Meetings" : "Schedule"), exportPanel(), ...books.map(b => {
+    const rows = bookRows(b);
+    const done = rows.filter(r => !r.planned && r.date && !isUpcoming(r)).length;
+    return el("div", { class: "saved-group" },
+      el("div", { class: "book-head" }, cover(b.book, b.author, "sm"),
+        el("div", {}, el("h2", {}, b.book), el("p", { class: "hint", style: "margin:2px 0 0" }, [b.author, `${rows.length} meeting${rows.length === 1 ? "" : "s"}${done ? `, ${done} done` : ""}`].filter(Boolean).join(" · ")))),
+      el("div", { class: "cards" }, rows.map(r => scheduleRow(r, next, cur))));
+  })].filter(Boolean));
+}
+
+// ---------- Bookshelf (members) and Club settings (host) ----------
+function bookshelf(data = S.data) {
+  const books = allBooks(data), shelfBooks = obj(data.shelf.books);
+  const cur = data.meetings.find(m => m.id === obj(data.club).currentId);
+  const reading = books.filter(b => !shelfBooks[b.key]?.finished && (sameBook(b.book, cur?.book) || b.planned.length || b.meetings.length));
+  const finished = books.filter(b => shelfBooks[b.key]?.finished)
+    .sort((a, b) => (parseFloat(shelfBooks[b.key].rating) || 0) - (parseFloat(shelfBooks[a.key].rating) || 0));
+  const s = data.settings;
+  const next = nextMeeting();
+  const parts = [
+    el("div", { class: "shelf-head" },
+      el("h1", {}, s.clubName.trim() || "Book Club"),
+      s.blurb ? el("p", { class: "lead" }, s.blurb) : null,
+      isUrl(s.voteUrl) ? el("div", { class: "actions" }, el("a", { class: "btn primary", href: s.voteUrl, target: "_blank", rel: "noopener" }, s.voteLabel.trim() || "Vote on our next book")) : null)
+  ];
+  if (reading.length) parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Reading now")),
+    el("div", { class: "shelf" }, reading.map(b => {
+      const rows = bookRows(b), n = next && sameBook(next.book, b.book) ? next : null;
+      return el("div", { class: "shelf-item" }, cover(b.book, b.author),
+        el("div", {}, el("b", {}, b.book), b.author ? el("span", { class: "hint" }, b.author) : null,
+          el("span", { class: "meta" }, `${rows.length} meeting${rows.length === 1 ? "" : "s"} planned`),
+          n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtTime(n.time) : ""}`) : null));
+    }))));
+  if (data.shelf.upNext.filter(b => b.title.trim()).length) parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Up next")),
+    el("div", { class: "shelf" }, data.shelf.upNext.filter(b => b.title.trim()).map(b => el("div", { class: "shelf-item" }, cover(b.title, b.author),
+      el("div", {}, el("b", {}, b.title), b.author ? el("span", { class: "hint" }, b.author) : null))))));
+  parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Books we've read")),
+    finished.length ? el("div", { class: "shelf" }, finished.map(b => {
+      const info = shelfBooks[b.key];
+      const last = [...b.meetings].map(m => m.date).filter(Boolean).sort().pop();
+      return el("div", { class: "shelf-item" }, cover(b.book, b.author),
+        el("div", {}, el("b", {}, b.book), b.author ? el("span", { class: "hint" }, b.author) : null,
+          stars(info.rating), info.verdict ? el("span", { class: "verdict" }, info.verdict) : null,
+          last ? el("span", { class: "meta" }, "Finished " + new Date(last + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })) : null));
+    })) : el("p", { class: "hint", style: "margin:0" }, "Finished books and the club's ratings will show up here.")));
+  return parts;
+}
+
+let clubDraft = null;
+function tzOptions(current) {
+  const here = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const us = ["America/New_York", "America/Chicago", "America/Denver", "America/Phoenix", "America/Los_Angeles", "America/Anchorage", "Pacific/Honolulu"];
+  return [...new Set([current, here, ...us].filter(Boolean))];
+}
+function draftFromData() {
   const d = cloneData();
-  // Strip host-only state: no live section, no notes about the group.
-  d.club = { currentId: d.club.currentId || "", now: "" };
+  return { settings: d.settings, schedule: d.schedule, shelf: { upNext: d.shelf.upNext, books: obj(d.shelf.books) } };
+}
+function field(label, input, hint) {
+  return el("label", { class: "field" }, el("span", {}, label), input, hint ? el("span", { class: "hint" }, hint) : null);
+}
+function bindText(obj, key, attrs = {}) {
+  return el(attrs.multiline ? "textarea" : "input", { ...attrs, multiline: null, value: attrs.multiline ? null : str(obj[key]),
+    oninput: (e) => { obj[key] = e.currentTarget.value; $("club-save").disabled = false; } }, attrs.multiline ? str(obj[key]) : null);
+}
+function addPlanned() {
+  const b = allBooks({ ...S.data, schedule: clubDraft.schedule });
+  const curBook = meetings().find(m => m.id === club().currentId)?.book || b[0]?.book || "";
+  const rows = [...S.data.meetings, ...clubDraft.schedule].filter(m => sameBook(m.book, curBook)).sort((x, y) => (x.meetingNumber || 0) - (y.meetingNumber || 0));
+  const last = rows[rows.length - 1];
+  const lastCh = [...rows].reverse().find(x => x.type !== "wrapup" && /\d/.test(str(x.chapters)));
+  let date = "";
+  if (last?.date) { const d = new Date(last.date + "T12:00:00"); d.setDate(d.getDate() + 14); date = d.toISOString().slice(0, 10); }
+  clubDraft.schedule.push({ id: "p-" + Date.now().toString(36), book: curBook, author: last?.author || "", meetingNumber: (last?.meetingNumber || 0) + 1,
+    chapters: lastCh ? nextRange(lastCh.chapters) : (last ? "" : "1–5"), date, time: last?.time || "19:00", type: "chapters" });
+  renderClub(); $("club-save").disabled = false;
+}
+async function saveClub() {
+  const d = clubDraft;
+  for (const k of ["rsvpUrl", "voteUrl"]) {
+    d.settings[k] = d.settings[k].trim();
+    if (d.settings[k] && !isUrl(d.settings[k])) { setStatus(`The ${k === "rsvpUrl" ? "RSVP" : "vote"} link must start with https:// (paste the form's share link).`, true); return; }
+  }
+  const data = withCurrentSaved(cloneData());
+  data.settings = { ...d.settings, timezone: d.settings.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone };
+  data.schedule = d.schedule.filter(p => p.book.trim()).map(p => ({ ...p, book: p.book.trim(), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1) }));
+  data.shelf = { upNext: d.shelf.upNext.filter(b => b.title.trim()), books: d.shelf.books };
+  const ok = await publishState(data, "Club changes saved. Ask Claude to \u201cupdate the book club site\u201d to put them on the public link.");
+  if (ok) { clubDraft = null; renderClub(); }
+}
+function renderClub() {
+  const root = $("club-root");
+  if (!S.isHost || PUBLIC) { root.replaceChildren(...bookshelf()); return; }
+  if (!clubDraft) clubDraft = draftFromData();
+  const d = clubDraft, s = d.settings;
+  const books = allBooks({ ...S.data, schedule: d.schedule });
+  const editors = el("div", { class: "club-editors" },
+    el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Club details")),
+      el("div", { class: "grid2" },
+        field("Club name", bindText(s, "clubName", { type: "text", placeholder: "Book Club", maxlength: "60" })),
+        field("Vote button text", bindText(s, "voteLabel", { type: "text", placeholder: "Vote on our next book", maxlength: "40" }))),
+      field("Welcome message", bindText(s, "blurb", { multiline: true, maxlength: "240", placeholder: "e.g. We meet every other Friday. New members welcome." }), "Shown on the public Bookshelf page."),
+      field("Club time zone", el("select", { onchange: (e) => { s.timezone = e.currentTarget.value; $("club-save").disabled = false; } },
+        tzOptions(s.timezone).map(z => el("option", { value: z, selected: z === (s.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone) }, z.replace(/_/g, " ")))),
+        "Meeting times and calendar invites use this time zone, even when you plan from somewhere else."),
+      field("RSVP form link", bindText(s, "rsvpUrl", { type: "url", placeholder: "https://forms.gle/…" }), "A Google Form with a name field and Yes/No. Members see an RSVP button on upcoming meetings."),
+      field("Next-book vote form link", bindText(s, "voteUrl", { type: "url", placeholder: "https://forms.gle/…" }), "A Google Form listing book choices. Shown on the Bookshelf page.")),
+    el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Reading schedule")),
+      el("p", { class: "hint", style: "margin:0" }, "Plan meetings ahead. Members see them on the Schedule tab; tap Write the guide in Meetings when one comes up."),
+      d.schedule.length ? el("div", { class: "plan-rows" }, d.schedule.map((p, i) => el("div", { class: "plan-row" },
+        field("Book", bindText(p, "book", { type: "text", list: "book-list" })),
+        field("Meeting #", bindText(p, "meetingNumber", { type: "number", min: "1" })),
+        field("Chapters", bindText(p, "chapters", { type: "text" })),
+        field("Date", bindText(p, "date", { type: "date" })),
+        field("Time", bindText(p, "time", { type: "time" })),
+        field("Type", el("select", { onchange: (e) => { p.type = e.currentTarget.value; $("club-save").disabled = false; } },
+          el("option", { value: "chapters", selected: p.type !== "wrapup" }, "Chapters"), el("option", { value: "wrapup", selected: p.type === "wrapup" }, "Final wrap-up"))),
+        el("button", { class: "btn link rm", type: "button", "aria-label": `Remove planned meeting ${p.meetingNumber}`, onclick: () => { d.schedule.splice(i, 1); renderClub(); $("club-save").disabled = false; } }, "Remove")))) : null,
+      el("datalist", { id: "book-list" }, books.map(b => el("option", { value: b.book }))),
+      el("div", {}, el("button", { class: "btn", type: "button", onclick: addPlanned }, "+ Add planned meeting"))),
+    el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Bookshelf")),
+      books.length ? el("div", { class: "plan-rows" }, books.map(b => {
+        const info = d.shelf.books[b.key] || (d.shelf.books[b.key] = { finished: false, rating: "", verdict: "" });
+        return el("div", { class: "plan-row shelf-edit" },
+          el("div", { class: "book-mini" }, cover(b.book, b.author, "xs"), el("b", {}, b.book)),
+          el("label", { class: "follow" }, el("input", { type: "checkbox", checked: !!info.finished, onchange: (e) => { info.finished = e.currentTarget.checked; $("club-save").disabled = false; } }), "Finished"),
+          field("Club rating", el("select", { onchange: (e) => { info.rating = e.currentTarget.value; $("club-save").disabled = false; } },
+            el("option", { value: "" }, "None"), ["5", "4.5", "4", "3.5", "3", "2.5", "2", "1.5", "1"].map(v => el("option", { value: v, selected: str(info.rating) === v }, v + " / 5")))),
+          field("One-line verdict", bindText(info, "verdict", { type: "text", maxlength: "120", placeholder: "e.g. Slow start, unforgettable ending" })));
+      })) : el("p", { class: "hint", style: "margin:0" }, "Books appear here once you save or plan a meeting."),
+      el("h3", { style: "font-size:16px;margin-top:6px" }, "Up next"),
+      el("div", { class: "plan-rows" }, d.shelf.upNext.map((b, i) => el("div", { class: "plan-row upnext" },
+        field("Title", bindText(b, "title", { type: "text" })), field("Author", bindText(b, "author", { type: "text" })),
+        el("button", { class: "btn link rm", type: "button", "aria-label": `Remove ${b.title || "book"} from Up next`, onclick: () => { d.shelf.upNext.splice(i, 1); renderClub(); $("club-save").disabled = false; } }, "Remove")))),
+      el("div", {}, el("button", { class: "btn", type: "button", onclick: () => { d.shelf.upNext.push({ title: "", author: "" }); renderClub(); $("club-save").disabled = false; } }, "+ Add a book"))),
+    el("div", { class: "actions club-actions" },
+      el("button", { class: "btn primary", id: "club-save", type: "button", disabled: true, onclick: saveClub }, "Save club changes"),
+      el("button", { class: "btn", type: "button", onclick: () => { clubDraft = null; renderClub(); } }, "Discard")));
+  root.replaceChildren(editors,
+    el("h2", { class: "preview-label" }, "What members see on the Bookshelf tab"),
+    el("div", { class: "preview" }, ...bookshelf({ ...S.data, settings: d.settings, schedule: d.schedule, shelf: d.shelf })));
+}
+
+// ---------- Saved list ----------
+const SITE_URL = "https://rico9267.github.io/bookclub/";
+// The public copy of the data: no live section, no host notes about the group.
+function publicData(data) {
+  const d = JSON.parse(JSON.stringify(data));
+  d.club = { currentId: obj(d.club).currentId || "", now: "" };
   d.meetings = d.meetings.map(({ notes, ...m }) => m);
   d.public = true;
+  return d;
+}
+// Private mirror for the daily site sync: one record per meeting, so a sync only fetches what changed.
+// Owner-only (db rules), never shown on the page. A failed or slow mirror never blocks a save.
+async function mirrorToDb(data) {
+  if (!S.db || !S.isHost) return;
+  const pub = publicData(data);
+  const metaRef = S.db.doc("pub/meta");
+  const snap = await metaRef.get();
+  const prev = snap.exists ? obj(snap.data()) : {};
+  const stamps = Object.fromEntries(arr(prev.meetings).map(x => [x.id, x.updatedAt]));
+  for (const m of pub.meetings) if (stamps[m.id] !== m.updatedAt) await S.db.doc("pubmeetings/" + m.id).set(m);
+  for (const id of Object.keys(stamps)) if (!pub.meetings.some(m => m.id === id)) await S.db.doc("pubmeetings/" + id).delete();
+  const meta = { currentId: pub.club.currentId, settings: pub.settings, schedule: pub.schedule, shelf: pub.shelf,
+                 meetings: pub.meetings.map(m => ({ id: m.id, updatedAt: m.updatedAt })) };
+  const same = JSON.stringify({ ...prev, mirroredAt: undefined }) === JSON.stringify({ ...meta, mirroredAt: undefined });
+  if (!same) await metaRef.set({ ...meta, mirroredAt: new Date().toISOString() });
+}
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+function publicHtml() {
+  const d = publicData(cloneData());
   d.exportedAt = new Date().toISOString();
   // Members see the club's name, not the host tool's (first match = the <head> title).
-  return buildHtml(d).replace("<title>Book Club Meeting Planner</title>", "<title>Book Club</title>");
+  const name = (d.settings.clubName.trim() || "Book Club").replace(/[<>&"]/g, "");
+  return buildHtml(d).replace("<title>Book Club Meeting Planner</title>", `<title>${name}</title>`).replace('<meta property="og:title" content="Book Club">', `<meta property="og:title" content="${name}">`);
 }
 async function exportPublic(btn) {
   if (!meetings().length) { setStatus("Save at least one meeting first.", true); return; }
   const html = publicHtml();
   if (S.downloads) {
-    try { await S.downloads.save({ filename: "index.html", data: html }); setStatus("Downloaded index.html. Put it in a folder and drag the folder onto your host to update the public link."); return; }
+    try { await S.downloads.save({ filename: "index.html", data: html }); setStatus("Downloaded index.html. Upload it to the bookclub repo on GitHub to update the public site."); return; }
     catch {}
   }
   try { await navigator.clipboard.writeText(html); btn.textContent = "Copied page code"; setStatus("Page code copied. Paste it into a file named index.html, then upload it to your host."); }
@@ -1108,11 +1612,12 @@ async function exportPublic(btn) {
 function exportPanel() {
   if (!S.isHost || PUBLIC) return null;
   return el("div", { class: "panel export" },
-    el("h2", { style: "font-size:18px" }, "Share outside Claude"),
+    el("h2", { style: "font-size:18px" }, "Your club's public site"),
+    el("p", { style: "margin:0;font-weight:700" }, el("a", { href: SITE_URL, target: "_blank", rel: "noopener" }, SITE_URL.replace("https://", ""))),
     el("p", { class: "hint", style: "font-size:14px;margin:0" },
-      "Download a copy of the club page that anyone can open with no account. Upload it to a free host once, then upload the new copy after each meeting you save. The copy is read-only: no live Discuss now, and it doesn't include your notes about the group."),
+      "Anyone can open this link with no account. It doesn't update by itself: after you save or edit a meeting, ask Claude to \u201cupdate the book club site,\u201d or download the page and upload it to the bookclub repo on GitHub (Add file \u2192 Upload files). The public copy is read-only and leaves out your notes about the group."),
     el("div", { class: "actions" },
-      el("button", { class: "btn primary", type: "button", onclick: (e) => exportPublic(e.currentTarget) }, "Download public page")));
+      el("button", { class: "btn", type: "button", onclick: (e) => exportPublic(e.currentTarget) }, "Download public page")));
 }
 function renderFooter() {
   if (!PUBLIC || $("pub-footer")) return;
@@ -1120,30 +1625,6 @@ function renderFooter() {
   const when = S.data.exportedAt ? new Date(S.data.exportedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
   document.querySelector("main").append(el("p", { class: "hint", id: "pub-footer", style: "margin-top:24px;text-align:center" },
     when ? `Updated ${when}. Refresh for the latest guide.` : "Refresh for the latest guide."));
-}
-
-function renderSaved() {
-  const root = $("saved-list");
-  const list = meetings();
-  $("saved-count").textContent = list.length ? `(${list.length})` : "";
-  if (!list.length) { root.replaceChildren(el("div", { class: "panel empty" }, S.isHost ? "No saved meetings yet. Write a guide and tap Save and share." : "No meetings shared yet.")); return; }
-  const byBook = new Map();
-  for (const m of list) {
-    const k = str(m.book).trim().toLowerCase();
-    if (!byBook.has(k)) byBook.set(k, { book: m.book, author: m.author, items: [] });
-    byBook.get(k).items.push(m);
-  }
-  const cur = club().currentId;
-  root.replaceChildren(...[exportPanel(), ...[...byBook.values()].map(gp => {
-    gp.items.sort((a, b) => (a.meetingNumber || 0) - (b.meetingNumber || 0));
-    return el("div", { class: "saved-group" },
-      el("h2", {}, gp.book, gp.author ? el("span", { class: "hint", style: "font-family:var(--font-body);font-weight:500;margin-left:8px" }, gp.author) : null),
-      el("div", { class: "cards" }, gp.items.map(m => el("button", { class: "card" + (m.id === cur ? " current" : ""), type: "button", onclick: async () => { if (S.current?.id === m.id || await okToLeave()) openMeeting(m); } },
-        m.id === cur ? el("span", { class: "chip", style: "justify-self:start" }, "Group's current meeting") : null,
-        el("span", { class: "title" }, `Meeting ${m.meetingNumber} · Ch. ${m.chapters}`),
-        el("span", { class: "meta" }, m.date ? "Meeting on " + fmtDate(m.date) : "Saved " + new Date(m.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })),
-        el("span", { class: "meta" }, str(m.guide?.lead).slice(0, 110))))));
-  })]);
 }
 
 function openMeeting(m, opts = {}) {
@@ -1159,28 +1640,35 @@ function openMeeting(m, opts = {}) {
   window.scrollTo(0, 0);
 }
 
+const VIEWS = ["plan", "saved", "club"];
+let currentView = "plan";
 function showView(v) {
-  $("view-plan").hidden = v !== "plan";
-  $("view-saved").hidden = v !== "saved";
-  $("tab-plan").setAttribute("aria-selected", v === "plan");
-  $("tab-saved").setAttribute("aria-selected", v === "saved");
-  $("tab-plan").tabIndex = v === "plan" ? 0 : -1;
-  $("tab-saved").tabIndex = v === "saved" ? 0 : -1;
+  currentView = v;
+  for (const k of VIEWS) {
+    $("view-" + k).hidden = k !== v;
+    $("tab-" + k).setAttribute("aria-selected", k === v);
+    $("tab-" + k).tabIndex = k === v ? 0 : -1;
+  }
   if (v === "saved") renderSaved();
+  if (v === "club") renderClub();
 }
 function applyRole() {
   $("view-plan").classList.toggle("member", !S.isHost);
   $("tab-plan").textContent = S.isHost ? "Plan a meeting" : "This meeting";
-  $("tab-saved").firstChild.textContent = S.isHost ? "Saved meetings " : "All meetings ";
+  $("tab-saved").firstChild.textContent = S.isHost ? "Meetings " : "Schedule ";
+  $("tab-club").textContent = S.isHost ? "Club" : "Bookshelf";
+  document.querySelector(".brand").firstChild.textContent = S.isHost ? "Book Club " : clubName() + " ";
+  const rest = document.querySelector(".brand-rest"); if (rest) rest.hidden = !S.isHost;
+  if (currentView === "club") renderClub();
 }
-$("tab-plan").onclick = () => showView("plan");
-$("tab-saved").onclick = () => showView("saved");
+for (const k of VIEWS) $("tab-" + k).onclick = () => showView(k);
 document.querySelector(".tabs").addEventListener("keydown", (e) => {
   if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
   e.preventDefault();
-  const toSaved = e.key === "End" || (e.key !== "Home" && $("tab-saved").getAttribute("aria-selected") !== "true");
-  showView(toSaved ? "saved" : "plan");
-  $(toSaved ? "tab-saved" : "tab-plan").focus();
+  const i = VIEWS.indexOf(currentView);
+  const to = e.key === "Home" ? 0 : e.key === "End" ? VIEWS.length - 1 : (i + (e.key === "ArrowRight" ? 1 : VIEWS.length - 1)) % VIEWS.length;
+  showView(VIEWS[to]);
+  $("tab-" + VIEWS[to]).focus();
 });
 $("form").addEventListener("submit", generate);
 $("btn-stop").onclick = () => S.ctl?.abort();
@@ -1218,11 +1706,11 @@ if (club().now && isCurrentMeeting() && S.follow) setTimeout(() => scrollToSecti
 
 (async () => {
   if (PUBLIC || !window.claude?.use) { renderFooter(); return; }   // plain public view: read-only, nothing else to load
-  const [artifact, user, sample, downloads] = await Promise.all([
+  const [artifact, user, sample, downloads, db] = await Promise.all([
     claude.use("artifact").catch(() => null), claude.use("user").catch(() => null),
-    claude.use("sample").catch(() => null), claude.use("downloads").catch(() => null)
+    claude.use("sample").catch(() => null), claude.use("downloads").catch(() => null), claude.use("db").catch(() => null)
   ]);
-  S.artifact = artifact; S.user = user; S.sample = sample; S.downloads = downloads;
+  S.artifact = artifact; S.user = user; S.sample = sample; S.downloads = downloads; S.db = db;
 
   let edit = null, owner = null;
   if (user) {
@@ -1242,6 +1730,7 @@ if (club().now && isCurrentMeeting() && S.follow) setTimeout(() => scrollToSecti
   }
   applyRole();
   if (S.isHost) showUndo();   // offer Undo again after the page reloads from a delete
+  if (S.isHost && S.db) withTimeout(mirrorToDb(S.data), 15000).catch(() => {});   // keep the sync copy current
   renderGuide(); renderSaved(); renderLivebar();
 })();
 </script>

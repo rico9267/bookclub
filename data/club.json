@@ -1,0 +1,22 @@
+{
+ "meetings": [],
+ "club": {
+  "currentId": "",
+  "now": ""
+ },
+ "settings": {
+  "blurb": "",
+  "clubName": "",
+  "rsvpUrl": "",
+  "timezone": "America/New_York",
+  "voteLabel": "",
+  "voteUrl": ""
+ },
+ "schedule": [],
+ "shelf": {
+  "books": {},
+  "upNext": []
+ },
+ "public": true,
+ "exportedAt": "2026-11-09T02:35:17.791572Z"
+}
