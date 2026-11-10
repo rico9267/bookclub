@@ -432,7 +432,7 @@
   "voteLabel": "",
   "timezone": "America/New_York",
   "questionsUrl": "",
-  "suggestUrl": "",
+  "suggestUrl": "https://docs.google.com/forms/d/e/1FAIpQLSftD75gFczIfeaXGNFHu5MjmLu3eCQO2JmfE81RGUrq8UW9aw/viewform?usp=pp_url&entry.1942427135=NAME&entry.2146332353=TITLE&entry.2114115816=AUTHOR&entry.180248078=WHY&entry.1826694680=LINK",
   "suggestOff": false
  },
  "schedule": [
@@ -497,5 +497,5 @@
   }
  },
  "public": true,
- "exportedAt": "2026-11-10T01:45:33.189347Z"
+ "exportedAt": "2026-11-10T02:10:11.600742Z"
 }
