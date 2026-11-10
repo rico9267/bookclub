@@ -255,7 +255,7 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
 /* Typographic covers: a hue per title, no images needed. */
 .cover { --hue: 160; flex: none; width: 72px; height: 104px; border-radius: 4px 8px 8px 4px; padding: 8px 7px; display: flex; flex-direction: column; justify-content: space-between;
   background: linear-gradient(90deg, hsl(var(--hue) 30% 22%) 0 6px, hsl(var(--hue) 38% 34%) 6px); color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); overflow: hidden; }
-.cover-title { font-family: var(--font-display); font-size: 11px; font-weight: 650; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.cover-title { font-family: var(--font-display); font-size: 11px; font-weight: 650; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; hyphens: auto; }
 .cover-author { font-size: 8.5px; opacity: .85; line-height: 1.2; }
 .cover.sm { width: 48px; height: 70px; padding: 5px; }
 .cover.sm .cover-title { font-size: 8px; -webkit-line-clamp: 4; } .cover.sm .cover-author { display: none; }
@@ -309,7 +309,7 @@ a.btn.primary { color: var(--accent-ink); }
 .plan-rows { display: grid; gap: 10px; }
 .plan-row { display: grid; grid-template-columns: 2fr 0.8fr 1fr 1.2fr 1fr 1.2fr auto; gap: 8px; align-items: end; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
 .plan-row.shelf-edit { grid-template-columns: 2fr auto 1fr 2.5fr; align-items: center; }
-.plan-row.upnext { grid-template-columns: 2fr 1.5fr auto; }
+.plan-row.upnext { grid-template-columns: 1.6fr 1.2fr 1fr 2fr auto; }
 .book-mini { display: flex; gap: 8px; align-items: center; min-width: 0; }
 .club-actions { position: sticky; bottom: 0; padding: 10px 0; background: var(--paper); }
 .preview-label { font-size: 15px; color: var(--muted); font-family: var(--font-body); margin-top: 8px; }
@@ -351,12 +351,37 @@ a.btn.primary { color: var(--accent-ink); }
 .similar li > div { display: grid; gap: 2px; min-width: 0; }
 .similar p { margin: 4px 0 0; }
 .similar-line { max-width: 60ch; }
-.sim-edit { grid-column: 1 / -1; display: grid; gap: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
-.sim-head { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; color: var(--ink); }
+.sim-edit { grid-column: 1 / -1; padding-top: 8px; border-top: 1px dashed var(--line); }
+details.sim-edit > * + * { margin-top: 8px; }
+.sim-head { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 .plan-row.sim-row { grid-template-columns: 1.6fr 1.2fr 0.6fr 2.6fr auto; }
 @media (max-width: 860px) { .plan-row.sim-row { grid-template-columns: 1fr 1fr; } .plan-row.sim-row .field:nth-child(4) { grid-column: 1 / -1; } }
 @media print { .similar .cover, .mq-tools, #mq-send { display: none !important; } }
 .club-editors .hint a, .sec .hint a { color: var(--accent); }
+/* Club strip: actions in two labelled groups (the next meeting, the next book) */
+.club-groups { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+.club-group { display: grid; gap: 6px; align-content: start; }
+.club-cap { margin: 0; font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.club-setup { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; margin: 0; }
+.btn.link.quiet { color: var(--muted); font-weight: 500; }
+.btn.link.inline { padding: 0; font-size: inherit; text-decoration: underline; }
+@media print { .club-groups, .club-setup { display: none !important; } }
+/* Our next book (Bookshelf) */
+.next-lead { margin: 0; max-width: 60ch; }
+.running-title { font-family: var(--font-body); font-size: 14px; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.running { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.running li { display: flex; gap: 12px; align-items: flex-start; }
+.running li > div { display: grid; gap: 2px; min-width: 0; }
+.running p { margin: 3px 0 1px; font-size: 14.5px; max-width: 60ch; }
+.running .meta { font-size: 13px; color: var(--muted); }
+/* Club tab (host) */
+.forms-status { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 3px; font-size: 13.5px; color: var(--muted); max-width: 70ch; }
+details.sim-edit > summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.club-editors input[type="checkbox"] { width: auto; padding: 0; }
+.btn.link.rm { color: var(--danger); }
+.club-editors .field b { color: var(--ink); font-weight: 600; }
+@media (max-width: 860px) { .plan-row.upnext .field:nth-child(4) { grid-column: 1 / -1; } }
 </style>
 </head>
 <body>
@@ -512,10 +537,11 @@ function normalizeData(d) {
     club: obj(d.club),
     exportedAt: str(d.exportedAt),
     settings: { clubName: str(st.clubName), blurb: str(st.blurb), rsvpUrl: str(st.rsvpUrl), voteUrl: str(st.voteUrl),
-                voteLabel: str(st.voteLabel), timezone: str(st.timezone), questionsUrl: str(st.questionsUrl) },
+                voteLabel: str(st.voteLabel), timezone: str(st.timezone), questionsUrl: str(st.questionsUrl), suggestUrl: str(st.suggestUrl) },
     schedule: arr(d.schedule).map(p => ({ id: str(p.id), book: str(p.book), author: str(p.author), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1),
                                           chapters: str(p.chapters), date: str(p.date), time: str(p.time), type: p.type === "wrapup" ? "wrapup" : "chapters" })),
-    shelf: { upNext: arr(sh.upNext).map(b => ({ title: str(b.title), author: str(b.author) })), books: obj(sh.books) }
+    // upNext = books in the running for the next vote (title, author, who suggested it, their one-line reason)
+    shelf: { upNext: arr(sh.upNext).map(b => ({ title: str(b?.title), author: str(b?.author), by: str(b?.by), why: str(b?.why) })), books: obj(sh.books) }
   };
 }
 function readData() {
@@ -1171,14 +1197,15 @@ function jumpNav(g, extra = {}) {
   let ticking = false;
   const mark = () => {
     ticking = false;
-    const nav = document.querySelector(".jump"); if (!nav || nav.offsetParent === null) return;
+    // Whichever jump bar is on screen: the guide's, or the host's Club tab (which names its own sections).
+    const nav = [...document.querySelectorAll(".jump")].find(n => n.offsetParent !== null); if (!nav) return;
     const line = nav.getBoundingClientRect().bottom + 12;
     let cur = null;
-    const secs = [...document.querySelectorAll("#guide .sec")];
-    for (const s of secs) if (s.getBoundingClientRect().top <= line) cur = s.id.slice(4);
-    if (secs.length && innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = secs[secs.length - 1].id.slice(4);   // at the bottom: last section
+    const secs = [...document.querySelectorAll(nav.dataset.secs || "#guide .sec")];
+    for (const s of secs) if (s.getBoundingClientRect().top <= line) cur = s.id;
+    if (!nav.dataset.secs && secs.length && innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = secs[secs.length - 1].id;   // guide, at the bottom: last section
     for (const btn of nav.querySelectorAll(".jump-btn")) {
-      const on = btn.dataset.key === cur;
+      const on = (btn.dataset.target || "sec-" + btn.dataset.key) === cur;
       if (on && btn.getAttribute("aria-current") !== "true") btn.scrollIntoView({ block: "nearest", inline: "nearest" });
       if (on) btn.setAttribute("aria-current", "true"); else btn.removeAttribute("aria-current");
     }
@@ -1241,19 +1268,65 @@ function parsePastedQuestions(text) {
   }
   return out;
 }
+// A collapsed "paste from your form's responses" box. onAdd gets the pasted text.
+function pasteDetails({ id, label, hint, placeholder, button, onAdd, attrs = {} }) {
+  const ta = el("textarea", { id, rows: "4", placeholder });
+  return el("details", { class: "paste-q", ...attrs }, el("summary", {}, "Paste from your form's responses"),
+    el("p", { class: "hint", style: "margin:8px 0" }, hint),
+    el("label", { class: "sr-only", for: id }, label), ta,
+    el("div", {}, el("button", { class: "btn small", type: "button", style: "margin-top:8px", onclick: () => onAdd(ta.value) }, button)));
+}
 function pasteBox() {
-  const ta = el("textarea", { id: "mq-paste", rows: "4", placeholder: "Paste here: one question per line, or rows copied from the responses sheet" });
-  return el("details", { class: "paste-q" }, el("summary", {}, "Paste from your form's responses"),
-    el("p", { class: "hint", style: "margin:8px 0" }, "In the form, open Responses, then View in Sheets. Select the rows, copy, and paste here. Dates and the header row are skipped."),
-    el("label", { class: "sr-only", for: "mq-paste" }, "Questions to add"), ta,
-    el("div", {}, el("button", { class: "btn small", type: "button", style: "margin-top:8px", onclick: () => {
+  return pasteDetails({ id: "mq-paste", label: "Questions to add", button: "Add these questions",
+    placeholder: "Paste here: one question per line, or rows copied from the responses sheet",
+    hint: "In the form, open Responses, then View in Sheets. Select the rows, copy, and paste here. Dates and the header row are skipped.",
+    onAdd: (text) => {
       const have = new Set(S.current.guide.memberQuestions.map(q => q.question.trim().toLowerCase()));
-      const add = parsePastedQuestions(ta.value).filter(q => { const k = q.question.toLowerCase(); if (have.has(k)) return false; have.add(k); return true; });
+      const add = parsePastedQuestions(text).filter(q => { const k = q.question.toLowerCase(); if (have.has(k)) return false; have.add(k); return true; });
       if (!add.length) { setStatus("No new questions found in what you pasted.", true); return; }
       S.current.guide.memberQuestions.push(...add); S.unsaved = true;
       setStatus(`Added ${add.length} question${add.length === 1 ? "" : "s"}. Tap Save changes to share them.`);
       renderGuide();
-    } }, "Add these questions")));
+    } });
+}
+// Book suggestions pasted from the suggestion form's responses sheet, or typed one per line ("Title by Author").
+// With the sheet's header row included, columns are matched by name; without it, by position: title, author, why, name.
+function parsePastedBooks(text) {
+  const stamp = /^\d{1,4}[\/.-]\d{1,2}[\/.-]\d{1,4}(?:[ ,T]+\d{1,2}:\d{2}(?::\d{2})?(?:\s?[AP]M)?)?$/i;
+  const email = /^\S+@\S+\.\S+$/;
+  const headerCell = /^(timestamp|email( address)?|book|book title|title|author|the author|your name|name|suggested by|why.*|reason.*)\??$/i;
+  const rows = str(text).split(/\r?\n/).map(l => l.split("\t").map(c => c.trim())).filter(r => r.some(Boolean));
+  const out = [];
+  let map = null;
+  for (const r of rows) {
+    if (r.some(c => /^timestamp$/i.test(c)) || r.filter(c => headerCell.test(c)).length >= 2) {
+      map = {};
+      r.forEach((c, i) => {
+        const h = c.toLowerCase();
+        if (!h || /timestamp|email/.test(h)) return;
+        if (map.why == null && /why|reason|pitch|comment|note/.test(h)) map.why = i;
+        else if (map.author == null && /author|written|writer|wrote/.test(h)) map.author = i;
+        else if (map.by == null && /name|suggested by/.test(h) && !/book|title/.test(h)) map.by = i;
+        else if (map.title == null && /title|book/.test(h)) map.title = i;
+      });
+      continue;
+    }
+    let b;
+    if (map && map.title != null) b = { title: r[map.title], author: r[map.author], why: r[map.why], by: r[map.by] };
+    else {
+      const c = r.filter(x => x && !stamp.test(x) && !email.test(x));
+      if (!c.length) continue;
+      if (c.length === 1) {
+        const m = c[0].match(/^(.*\S)\s+by\s+(\S.*)$/i) || c[0].match(/^(.*\S)\s+[-–—]\s+(\S.*)$/);
+        b = m ? { title: m[1], author: m[2] } : { title: c[0] };
+      } else if (c.length === 2) b = { title: c[0], author: c[1] };
+      else if (c.length === 3) { const name = c[2].length <= 30 && c[2].split(/\s+/).length <= 3; b = { title: c[0], author: c[1], why: name ? "" : c[2], by: name ? c[2] : "" }; }
+      else b = { title: c[0], author: c[1], why: c[2], by: c[3] };
+    }
+    b = { title: str(b.title).trim().replace(/^["“]+|["”]+$/g, ""), author: str(b.author).trim(), by: str(b.by).trim().slice(0, 40), why: clip(str(b.why), 200) };
+    if (b.title) out.push(b);
+  }
+  return out;
 }
 
 // ---------- Similar books: picks per book, kept on the shelf (every guide for the book shows them, plus the Bookshelf) ----------
@@ -1276,7 +1349,9 @@ function similarBlock(m, list) {
     el("ul", { class: "similar" }, list.map(b => el("li", {}, cover(b.title, b.author, "sm"),
       el("div", {}, el("b", {}, b.title), (b.author || b.year) ? el("span", { class: "hint" }, [b.author, b.year].filter(Boolean).join(" \u00b7 ")) : null,
         b.why ? el("p", {}, b.why) : null)))),
-    isUrl(st.voteUrl) ? el("div", { class: "actions", style: "margin-top:12px" }, el("a", { class: "btn", href: st.voteUrl, target: "_blank", rel: "noopener" }, st.voteLabel.trim() || "Vote on our next book")) : null,
+    (isUrl(st.suggestUrl) || isUrl(st.voteUrl)) ? el("div", { class: "actions", style: "margin-top:12px" },
+      isUrl(st.suggestUrl) ? el("a", { class: "btn", id: "similar-suggest", href: st.suggestUrl, target: "_blank", rel: "noopener" }, "Suggest one for our next book") : null,
+      isUrl(st.voteUrl) ? el("a", { class: "btn", href: st.voteUrl, target: "_blank", rel: "noopener" }, st.voteLabel.trim() || "Vote on our next book") : null) : null,
     canManage() ? el("p", { class: "hint", style: "margin:10px 0 0" }, "Edit or replace these in the ", el("button", { class: "btn link", type: "button", onclick: () => showView("club") }, "Club tab"), ".") : null);
 }
 function similarPrompt(book, author) {
@@ -1555,26 +1630,52 @@ async function downloadIcs(m) {
   }
   if (S.downloads) { try { await S.downloads.save({ filename: name, data: text }); } catch {} }
 }
-// The club's own strip at the top of the home tab: name, blurb, and the two forms (RSVP, vote).
+// The club's own strip at the top of the home tab: name, blurb, and the club's forms in two groups:
+// the next meeting (RSVP, send a question) and the next book (suggest a book, vote).
+const orList = (a) => (a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " or " + a[a.length - 1]);
+function formLink(id, url, label, opts = {}) {
+  return el("a", { class: "btn" + (opts.primary ? " primary" : ""), id, href: url, target: "_blank", rel: "noopener", "aria-label": opts.aria || null }, label);
+}
+// What members still can't do because a form link is missing (host-only reminder).
+function missingForms(st = S.data.settings) {
+  return [!isUrl(st.rsvpUrl) && "RSVP", !isUrl(st.questionsUrl) && "send questions", !isUrl(st.suggestUrl) && "suggest books", !isUrl(st.voteUrl) && "vote"].filter(Boolean);
+}
+function openClubSection(id) {
+  showView("club");
+  requestAnimationFrame(() => { const n = $(id); if (n) n.scrollIntoView({ behavior: "auto", block: "start" }); });
+}
 function clubBar() {
   const st = S.data.settings, named = !!st.clubName.trim();
-  const rsvp = isUrl(st.rsvpUrl), vote = isUrl(st.voteUrl);
+  const rsvp = isUrl(st.rsvpUrl), vote = isUrl(st.voteUrl), suggest = isUrl(st.suggestUrl);
   const nx = nextMeeting();
   const ask = isUrl(st.questionsUrl) && !!nx?.date;   // questions are for the next meeting, so only while one is coming up
-  if (!named && !rsvp && !vote && !ask && !S.isHost) return null;
-  const rsvpLabel = nx && nx.date ? `RSVP for ${fmtDate(nx.date).replace(/,? \d{4}$/, "")}` : "RSVP";
+  if (!named && !rsvp && !vote && !ask && !suggest && !S.isHost) return null;
+  const day = nx?.date ? new Date(nx.date + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }) : "";
+  const voteLabel = st.voteLabel.trim();
+  const groups = [
+    (rsvp || ask) ? el("div", { class: "club-group" },
+      el("p", { class: "club-cap" }, day ? `Next meeting · ${day}` : "Meetings"),
+      el("div", { class: "club-forms" },
+        rsvp ? formLink("club-rsvp", st.rsvpUrl, "RSVP", { primary: true, aria: day ? `RSVP for ${day}` : null }) : null,
+        ask ? formLink("club-ask", st.questionsUrl, "Send a question") : null)) : null,
+    (suggest || vote) ? el("div", { class: "club-group" },
+      el("p", { class: "club-cap" }, "Our next book"),
+      el("div", { class: "club-forms" },
+        suggest ? formLink("club-suggest", st.suggestUrl, "Suggest a book") : null,
+        vote ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book" }) : null)) : null
+  ].filter(Boolean);
+  // Host-only reminder, in plain terms, of what members can't do yet. Hidden once dismissed (until the list changes).
+  const cant = missingForms(st), sig = (named ? "" : "name|") + cant.join("|");
+  const remind = S.isHost && !PUBLIC && (!named || cant.length) && ls.get("bc-setup-hide") !== sig;
   return el("div", { class: "club-bar", id: "club-bar" },
     el("div", { class: "club-id" },
       el("p", { class: "club-name", id: "club-name" }, clubName()),
-      st.blurb.trim() ? el("p", { class: "club-blurb" }, st.blurb.trim()) : null,
-      S.isHost && (!named || !rsvp || !vote || !isUrl(st.questionsUrl))
-        ? el("p", { class: "hint", style: "margin:0" }, "Add your club name and form links in the ",
-            el("button", { class: "btn link", type: "button", onclick: () => showView("club") }, "Club tab"), ".")
-        : null),
-    (rsvp || vote || ask) ? el("div", { class: "club-forms" },
-      rsvp ? el("a", { class: "btn primary", id: "club-rsvp", href: st.rsvpUrl, target: "_blank", rel: "noopener" }, rsvpLabel) : null,
-      ask ? el("a", { class: "btn", id: "club-ask", href: st.questionsUrl, target: "_blank", rel: "noopener" }, "Send a question") : null,
-      vote ? el("a", { class: "btn", id: "club-vote", href: st.voteUrl, target: "_blank", rel: "noopener" }, st.voteLabel.trim() || "Vote on our next book") : null) : null);
+      st.blurb.trim() ? el("p", { class: "club-blurb" }, st.blurb.trim()) : null),
+    groups.length ? el("div", { class: "club-groups" }, groups) : null,
+    remind ? el("p", { class: "hint club-setup", id: "club-setup" },
+      el("span", {}, [named ? "" : "Your club has no name yet. ", cant.length ? `Members can't ${orList(cant)} yet.` : ""].join("")),
+      el("button", { class: "btn link", type: "button", onclick: () => openClubSection(cant.length ? "club-forms-sec" : "club-details-sec") }, cant.length ? "Set up forms" : "Add a name"),
+      el("button", { class: "btn link quiet", type: "button", onclick: () => { ls.set("bc-setup-hide", sig); renderGuide(); } }, "Hide")) : null);
 }
 function meetingButtons(m) {
   if (!m.date || !isUpcoming(m)) return null;
@@ -1721,6 +1822,34 @@ function renderSaved() {
 }
 
 // ---------- Bookshelf (members) and Club settings (host) ----------
+// Books in the running for the next vote: members suggest them through the suggestion form, the host keeps the list.
+const runningList = (data = S.data) => arr(obj(data.shelf).upNext).filter(b => str(b.title).trim());
+// Suggest + Vote buttons. Suggesting is the main action while the list is empty; voting once there is something to vote on.
+function nextBookActions(data = S.data, ids = "") {
+  const s = data.settings, suggest = isUrl(s.suggestUrl), vote = isUrl(s.voteUrl);
+  if (!suggest && !vote) return null;
+  const voteMain = vote && (runningList(data).length > 0 || !suggest);
+  return el("div", { class: "actions" },
+    suggest ? el("a", { class: "btn" + (voteMain ? "" : " primary"), id: ids ? ids + "-suggest" : null, href: s.suggestUrl, target: "_blank", rel: "noopener" }, "Suggest a book") : null,
+    vote ? el("a", { class: "btn" + (voteMain ? " primary" : ""), id: ids ? ids + "-vote" : null, href: s.voteUrl, target: "_blank", rel: "noopener",
+      "aria-label": s.voteLabel.trim() ? null : "Vote on our next book" }, s.voteLabel.trim() || "Vote") : null);
+}
+function nextBookSection(data = S.data) {
+  const s = data.settings, list = runningList(data), suggest = isUrl(s.suggestUrl), vote = isUrl(s.voteUrl);
+  if (!list.length && !suggest && !vote) return null;
+  const lead = suggest && vote ? "Suggest a book any time. When it’s time to choose, vote for your favorite."
+    : suggest ? "Have a book in mind for our next read? Suggest it."
+    : vote ? "Help choose what we read next." : "Books the club is considering for its next read.";
+  return el("section", { class: "sec", id: "shelf-next" }, el("div", { class: "sec-head" }, el("h2", {}, "Our next book")),
+    el("p", { class: "next-lead" }, lead),
+    nextBookActions(data, "shelf"),
+    list.length ? el("h3", { class: "running-title" }, `In the running (${list.length})`) : null,
+    list.length ? el("ul", { class: "running" }, list.map(b => el("li", {}, cover(b.title, b.author, "sm"),
+      el("div", {}, el("b", {}, b.title), b.author.trim() ? el("span", { class: "hint" }, b.author.trim()) : null,
+        b.why.trim() ? el("p", {}, b.why.trim()) : null,
+        b.by.trim() ? el("span", { class: "meta" }, "Suggested by " + b.by.trim()) : null))))
+      : suggest ? el("p", { class: "hint", id: "running-empty", style: "margin:0" }, "No books in the running yet. Be the first to suggest one.") : null);
+}
 function bookshelf(data = S.data) {
   const books = allBooks(data), shelfBooks = obj(data.shelf.books);
   const cur = data.meetings.find(m => m.id === obj(data.club).currentId);
@@ -1732,8 +1861,8 @@ function bookshelf(data = S.data) {
   const parts = [
     el("div", { class: "shelf-head" },
       el("h1", {}, s.clubName.trim() || "Book Club"),
-      s.blurb ? el("p", { class: "lead" }, s.blurb) : null,
-      isUrl(s.voteUrl) ? el("div", { class: "actions" }, el("a", { class: "btn primary", href: s.voteUrl, target: "_blank", rel: "noopener" }, s.voteLabel.trim() || "Vote on our next book")) : null)
+      s.blurb ? el("p", { class: "lead" }, s.blurb) : null),
+    nextBookSection(data)
   ];
   if (reading.length) parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Reading now")),
     el("div", { class: "shelf" }, reading.map(b => {
@@ -1745,9 +1874,6 @@ function bookshelf(data = S.data) {
           n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtMeetTime(n.date, n.time) : ""}`) : null,
           similarLine(b.book, data)));
     }))));
-  if (data.shelf.upNext.filter(b => b.title.trim()).length) parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Up next")),
-    el("div", { class: "shelf" }, data.shelf.upNext.filter(b => b.title.trim()).map(b => el("div", { class: "shelf-item" }, cover(b.title, b.author),
-      el("div", {}, el("b", {}, b.title), b.author ? el("span", { class: "hint" }, b.author) : null))))));
   parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Books we've read")),
     finished.length ? el("div", { class: "shelf" }, finished.map(b => {
       const info = shelfBooks[b.key];
@@ -1757,19 +1883,22 @@ function bookshelf(data = S.data) {
           stars(info.rating), info.verdict ? el("span", { class: "verdict" }, info.verdict) : null,
           last ? el("span", { class: "meta" }, "Finished " + new Date(last + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })) : null));
     })) : el("p", { class: "hint", style: "margin:0" }, "Finished books and the club's ratings will show up here.")));
-  return parts;
+  return parts.filter(Boolean);
 }
 
 let clubDraft = null;
+const clubOpen = new Set();   // which collapsible editors are open; kept across re-renders of the Club tab
+const keepOpen = (key) => ({ open: clubOpen.has(key), ontoggle: (e) => { if (e.currentTarget.open) clubOpen.add(key); else clubOpen.delete(key); } });
 function similarEditor(b, info) {
   const list = info.similar = arr(info.similar);
   const dirty = () => { $("club-save").disabled = false; };
-  const busy = S.suggesting === b.key;
-  return el("div", { class: "sim-edit" },
-    el("div", { class: "sim-head" }, el("b", {}, "Similar books"),
-      S.sample ? el("button", { class: "btn small", type: "button", disabled: !!S.suggesting, onclick: () => suggestForClub(b, info) },
-        busy ? [el("span", { class: "thinking" }), " Finding books\u2026"] : (normSimilar(list).length ? "Suggest new picks" : "Suggest with Claude")) : null),
-    el("p", { class: "hint", style: "margin:0" }, "Shown at the end of every guide for this book and on the Bookshelf. Keep the reasons spoiler-free."),
+  const busy = S.suggesting === b.key, n = normSimilar(list).length, key = "sim:" + b.key;
+  return el("details", { class: "sim-edit", ...keepOpen(key) },
+    el("summary", {}, `Similar books (${n})`),
+    el("div", { class: "sim-head" },
+      el("p", { class: "hint", style: "margin:0" }, "Shown at the end of every guide for this book and on the Bookshelf. Keep the reasons spoiler-free."),
+      S.sample ? el("button", { class: "btn small", type: "button", disabled: !!S.suggesting, onclick: () => { clubOpen.add(key); suggestForClub(b, info); } },
+        busy ? [el("span", { class: "thinking" }), " Finding books…"] : (n ? "Suggest new picks" : "Suggest with Claude")) : null),
     list.length ? el("div", { class: "plan-rows" }, list.map((x, i) => el("div", { class: "plan-row sim-row" },
       field("Title", bindText(x, "title", { type: "text" })), field("Author", bindText(x, "author", { type: "text" })),
       field("Year", bindText(x, "year", { type: "text", inputmode: "numeric", maxlength: "6" })),
@@ -1777,6 +1906,46 @@ function similarEditor(b, info) {
       el("button", { class: "btn link rm", type: "button", "aria-label": `Remove ${x.title || "book"} from similar books`, onclick: () => { list.splice(i, 1); renderClub(); dirty(); } }, "Remove")))) : null,
     el("div", {}, el("button", { class: "btn link", type: "button", onclick: () => { list.push({ title: "", author: "", year: "", why: "" }); renderClub(); dirty(); } }, "+ Add a similar book")));
 }
+// Books in the running for the next vote. Suggestions arrive in the host's form; the host decides what goes on the list.
+function nextBookEditor(d) {
+  const list = d.shelf.upNext;
+  const dirty = () => { $("club-save").disabled = false; };
+  const hasForm = isUrl(S.data.settings.suggestUrl);
+  return el("section", { class: "sec", id: "club-next-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Next book")),
+    el("ol", { class: "steps" },
+      el("li", {}, "Members suggest books with your suggestion form", hasForm ? "." : [" (add its link under ", el("button", { class: "btn link inline", type: "button", onclick: () => $("club-forms-sec").scrollIntoView({ block: "start" }) }, "Forms"), ")."]),
+      el("li", {}, "Add the books that are in the running here. Members see the list on the Bookshelf."),
+      el("li", {}, "List the same books in your vote form, then ask the group to vote.")),
+    list.length ? el("div", { class: "plan-rows", id: "running-rows" }, list.map((b, i) => el("div", { class: "plan-row upnext" },
+      field("Title", bindText(b, "title", { type: "text" })), field("Author", bindText(b, "author", { type: "text" })),
+      field("Suggested by (optional)", bindText(b, "by", { type: "text", maxlength: "40" })),
+      field("Why this book (optional)", bindText(b, "why", { type: "text", maxlength: "200" })),
+      el("button", { class: "btn link rm", type: "button", "aria-label": `Remove ${b.title || "book"} from the running`, onclick: () => { list.splice(i, 1); renderClub(); dirty(); } }, "Remove"))))
+      : el("p", { class: "hint", style: "margin:0" }, "No books in the running yet."),
+    el("p", { class: "hint", style: "margin:0" }, "Names you enter show on the public page. Leave “Suggested by” empty to keep a suggestion anonymous."),
+    el("div", { class: "actions" }, el("button", { class: "btn", id: "club-add-book", type: "button", onclick: () => { list.push({ title: "", author: "", by: "", why: "" }); renderClub(); dirty(); const rows = document.querySelectorAll("#running-rows .plan-row"); rows[rows.length - 1]?.querySelector("input")?.focus(); } }, "+ Add a book")),
+    pasteDetails({ id: "book-paste", label: "Book suggestions to add", button: "Add these books", attrs: keepOpen("paste-books"),
+      placeholder: "Paste here: rows copied from the responses sheet, or one book per line (Title by Author)",
+      hint: "In your suggestion form, open Responses, then View in Sheets. Select the rows (the header row too, if you can), copy, and paste here. Books already on the list are skipped.",
+      onAdd: (text) => {
+        const have = new Set(list.map(b => bookKey(b.title)).filter(Boolean));
+        const add = parsePastedBooks(text).filter(b => { const k = bookKey(b.title); if (have.has(k)) return false; have.add(k); return true; });
+        if (!add.length) { setStatus("No new books found in what you pasted.", true); return; }
+        list.push(...add); clubOpen.delete("paste-books");
+        renderClub(); dirty();
+        setStatus(`Added ${add.length} book${add.length === 1 ? "" : "s"}. Check them, then tap Save club changes.`);
+      } }));
+}
+// Which of the club's four forms are live on the public page (from what's saved, not what's being typed).
+function formsStatus() {
+  const st = S.data.settings;
+  const all = [["RSVP", st.rsvpUrl], ["Questions", st.questionsUrl], ["Book suggestions", st.suggestUrl], ["Vote", st.voteUrl]];
+  const on = all.filter(x => isUrl(x[1])).map(x => x[0]), off = all.filter(x => !isUrl(x[1])).map(x => x[0]);
+  return el("p", { class: "forms-status", id: "forms-status" },
+    on.length ? el("span", { class: "chip" }, "On your page: " + on.join(", ")) : null,
+    off.length ? el("span", { class: "chip planned" }, "Not set up: " + off.join(", ")) : null);
+}
+const CLUB_NAV = [["club-details-sec", "Club details"], ["club-forms-sec", "Forms"], ["club-schedule-sec", "Schedule"], ["club-next-sec", "Next book"], ["club-shelf-sec", "Bookshelf"]];
 function tzOptions(current) {
   const here = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const us = ["America/New_York", "America/Chicago", "America/Denver", "America/Phoenix", "America/Los_Angeles", "America/Anchorage", "Pacific/Honolulu"];
@@ -1807,7 +1976,7 @@ function addPlanned() {
 }
 async function saveClub() {
   const d = clubDraft;
-  const names = { rsvpUrl: "RSVP", voteUrl: "vote", questionsUrl: "question form" };
+  const names = { rsvpUrl: "RSVP", voteUrl: "vote", questionsUrl: "question form", suggestUrl: "book suggestion form" };
   for (const k of Object.keys(names)) {
     d.settings[k] = str(d.settings[k]).trim();
     if (d.settings[k] && !isUrl(d.settings[k])) { setStatus(`The ${names[k]} link must start with https:// (paste the form's share link).`, true); return; }
@@ -1816,31 +1985,41 @@ async function saveClub() {
   const data = withCurrentSaved(cloneData());
   data.settings = { ...d.settings, timezone: d.settings.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone };
   data.schedule = d.schedule.filter(p => p.book.trim()).map(p => ({ ...p, book: p.book.trim(), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1) }));
-  data.shelf = { upNext: d.shelf.upNext.filter(b => b.title.trim()), books: d.shelf.books };
+  data.shelf = { upNext: d.shelf.upNext.filter(b => str(b.title).trim()).map(b => ({ title: str(b.title).trim(), author: str(b.author).trim(), by: str(b.by).trim(), why: str(b.why).trim() })), books: d.shelf.books };
   const ok = await publishState(data, "Club changes saved. The public site picks them up at its next update (within about 3 hours).");
   if (ok) { clubDraft = null; renderClub(); applyRole(); renderGuide(); }
 }
 function renderClub() {
   const root = $("club-root");
   if (!S.isHost || PUBLIC) { root.replaceChildren(...bookshelf()); return; }
+  // Unsaved edits survive a re-render (adding a row, switching tabs and back); a fresh draft starts clean.
+  const wasDirty = !!clubDraft && !!$("club-save") && !$("club-save").disabled;
   if (!clubDraft) clubDraft = draftFromData();
   const d = clubDraft, s = d.settings;
   const books = allBooks({ ...S.data, schedule: d.schedule });
+  const dirty = () => { $("club-save").disabled = false; };
+  const formField = (key, label, ask, sees) => field(label,
+    bindText(s, key, { type: "url", placeholder: "https://forms.gle/…", inputmode: "url", autocapitalize: "off", spellcheck: "false", "data-form": key }),
+    [el("b", {}, "Ask: "), ask, " ", sees]);
   const editors = el("div", { class: "club-editors" },
-    el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Club details")),
-      el("div", { class: "grid2" },
-        field("Club name", bindText(s, "clubName", { type: "text", placeholder: "Book Club", maxlength: "60" })),
-        field("Vote button text", bindText(s, "voteLabel", { type: "text", placeholder: "Vote on our next book", maxlength: "40" }))),
-      field("Welcome message", bindText(s, "blurb", { multiline: true, maxlength: "240", placeholder: "e.g. We meet every other Friday. New members welcome." }), "Shown on the public Bookshelf page."),
-      field("Club time zone", el("select", { onchange: (e) => { s.timezone = e.currentTarget.value; $("club-save").disabled = false; } },
+    el("nav", { class: "jump", "aria-label": "Jump to section", "data-secs": "#club-root .club-editors > .sec" },
+      CLUB_NAV.map(([id, label]) => el("button", { type: "button", class: "jump-btn", "data-target": id, onclick: () => $(id)?.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }) }, label))),
+    el("section", { class: "sec", id: "club-details-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Club details")),
+      field("Club name", bindText(s, "clubName", { type: "text", placeholder: "Book Club", maxlength: "60" })),
+      field("Welcome message", bindText(s, "blurb", { multiline: true, maxlength: "240", placeholder: "e.g. We meet every other Friday. New members welcome." }), "Shown under the club name on the public page."),
+      field("Club time zone", el("select", { onchange: (e) => { s.timezone = e.currentTarget.value; dirty(); } },
         tzOptions(s.timezone).map(z => el("option", { value: z, selected: z === (s.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone) }, z.replace(/_/g, " ")))),
-        "Meeting times and calendar invites use this time zone, even when you plan from somewhere else."),
-      field("RSVP form link", bindText(s, "rsvpUrl", { type: "url", placeholder: "https://forms.gle/…" }), "A Google Form with a name field and Yes/No. Members see an RSVP button on upcoming meetings."),
-      field("Next-book vote form link", bindText(s, "voteUrl", { type: "url", placeholder: "https://forms.gle/…" }), "A Google Form listing book choices. Shown on the Bookshelf page."),
-      field("Question form link", bindText(s, "questionsUrl", { type: "url", placeholder: "https://forms.gle/…" }),
-        ["A Google Form with a \u201cYour question\u201d paragraph field and an optional \u201cYour name\u201d field. Members see a Send a question button before each meeting. ",
-         el("a", { href: "https://forms.new", target: "_blank", rel: "noopener" }, "Start a new form"), "."])),
-    el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Reading schedule")),
+        "Meeting times and calendar invites use this time zone, even when you plan from somewhere else.")),
+    el("section", { class: "sec", id: "club-forms-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Forms")),
+      el("p", { class: "hint", style: "margin:0" }, "Each button on your public page opens a Google Form that you make once. In Google Forms, tap Send, copy the link and paste it here. Leave a box empty to hide its button. ",
+        el("a", { href: "https://forms.new", target: "_blank", rel: "noopener" }, "Start a new form"), "."),
+      formsStatus(),
+      formField("rsvpUrl", "RSVP form link", "Your name · Are you coming? (Yes / No / Maybe).", "Members see RSVP on the home page."),
+      formField("questionsUrl", "Question form link", "Your question (paragraph) · Your name (optional).", "Members see Send a question before each meeting."),
+      formField("suggestUrl", "Book suggestion form link", "Book title · Author · Why this book? (optional) · Your name (optional).", "Members see Suggest a book on the home page and the Bookshelf."),
+      formField("voteUrl", "Next-book vote form link", "One multiple-choice question listing the books in the running.", "Members see Vote on the home page and the Bookshelf."),
+      field("Vote button text (optional)", bindText(s, "voteLabel", { type: "text", placeholder: "Vote", maxlength: "40" }), "Leave empty for \u201cVote\u201d. Example: Pick our January book.")),
+    el("section", { class: "sec", id: "club-schedule-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Reading schedule")),
       el("p", { class: "hint", style: "margin:0" }, "Plan meetings ahead. Members see them on the Schedule tab; tap Write the guide in Meetings when one comes up."),
       d.schedule.length ? el("div", { class: "plan-rows" }, d.schedule.map((p, i) => el("div", { class: "plan-row" },
         field("Book", bindText(p, "book", { type: "text", list: "book-list" })),
@@ -1848,34 +2027,31 @@ function renderClub() {
         field("Chapters", bindText(p, "chapters", { type: "text" })),
         field("Date", bindText(p, "date", { type: "date" })),
         field(`Time (${tzGeneric(s.timezone || undefined)})`, bindText(p, "time", { type: "time" })),
-        field("Type", el("select", { onchange: (e) => { p.type = e.currentTarget.value; $("club-save").disabled = false; } },
+        field("Type", el("select", { onchange: (e) => { p.type = e.currentTarget.value; dirty(); } },
           el("option", { value: "chapters", selected: p.type !== "wrapup" }, "Chapters"), el("option", { value: "wrapup", selected: p.type === "wrapup" }, "Final wrap-up"))),
-        el("button", { class: "btn link rm", type: "button", "aria-label": `Remove planned meeting ${p.meetingNumber}`, onclick: () => { d.schedule.splice(i, 1); renderClub(); $("club-save").disabled = false; } }, "Remove")))) : null,
+        el("button", { class: "btn link rm", type: "button", "aria-label": `Remove planned meeting ${p.meetingNumber}`, onclick: () => { d.schedule.splice(i, 1); renderClub(); dirty(); } }, "Remove")))) : null,
       el("datalist", { id: "book-list" }, books.map(b => el("option", { value: b.book }))),
       el("div", {}, el("button", { class: "btn", type: "button", onclick: addPlanned }, "+ Add planned meeting"))),
-    el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Bookshelf")),
+    nextBookEditor(d),
+    el("section", { class: "sec", id: "club-shelf-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Bookshelf")),
       books.length ? el("div", { class: "plan-rows" }, books.map(b => {
         const info = d.shelf.books[b.key] || (d.shelf.books[b.key] = { finished: false, rating: "", verdict: "", about: "" });
         return el("div", { class: "plan-row shelf-edit" },
           el("div", { class: "book-mini" }, cover(b.book, b.author, "xs"), el("b", {}, b.book)),
-          el("label", { class: "follow" }, el("input", { type: "checkbox", checked: !!info.finished, onchange: (e) => { info.finished = e.currentTarget.checked; $("club-save").disabled = false; } }), "Finished"),
-          field("Club rating", el("select", { onchange: (e) => { info.rating = e.currentTarget.value; $("club-save").disabled = false; } },
+          el("label", { class: "follow" }, el("input", { type: "checkbox", checked: !!info.finished, onchange: (e) => { info.finished = e.currentTarget.checked; dirty(); } }), "Finished"),
+          field("Club rating", el("select", { onchange: (e) => { info.rating = e.currentTarget.value; dirty(); } },
             el("option", { value: "" }, "None"), ["5", "4.5", "4", "3.5", "3", "2.5", "2", "1.5", "1"].map(v => el("option", { value: v, selected: str(info.rating) === v }, v + " / 5")))),
           field("One-line verdict", bindText(info, "verdict", { type: "text", maxlength: "120", placeholder: "e.g. Slow start, unforgettable ending" })),
           el("div", { class: "about-edit" }, field("About this book (no spoilers)", bindText(info, "about", { multiline: true, maxlength: "500", placeholder: "Shown on the Bookshelf while the club is reading it." }))),
           similarEditor(b, info));
-      })) : el("p", { class: "hint", style: "margin:0" }, "Books appear here once you save or plan a meeting."),
-      el("h3", { style: "font-size:16px;margin-top:6px" }, "Up next"),
-      el("div", { class: "plan-rows" }, d.shelf.upNext.map((b, i) => el("div", { class: "plan-row upnext" },
-        field("Title", bindText(b, "title", { type: "text" })), field("Author", bindText(b, "author", { type: "text" })),
-        el("button", { class: "btn link rm", type: "button", "aria-label": `Remove ${b.title || "book"} from Up next`, onclick: () => { d.shelf.upNext.splice(i, 1); renderClub(); $("club-save").disabled = false; } }, "Remove")))),
-      el("div", {}, el("button", { class: "btn", type: "button", onclick: () => { d.shelf.upNext.push({ title: "", author: "" }); renderClub(); $("club-save").disabled = false; } }, "+ Add a book"))),
+      })) : el("p", { class: "hint", style: "margin:0" }, "Books appear here once you save or plan a meeting.")),
     el("div", { class: "actions club-actions" },
       el("button", { class: "btn primary", id: "club-save", type: "button", disabled: true, onclick: saveClub }, "Save club changes"),
       el("button", { class: "btn", type: "button", onclick: () => { clubDraft = null; renderClub(); } }, "Discard")));
   root.replaceChildren(editors,
     el("h2", { class: "preview-label" }, "What members see on the Bookshelf tab"),
     el("div", { class: "preview" }, ...bookshelf({ ...S.data, settings: d.settings, schedule: d.schedule, shelf: d.shelf })));
+  if (wasDirty) $("club-save").disabled = false;
 }
 
 // ---------- Saved list ----------
