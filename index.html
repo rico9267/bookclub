@@ -1733,8 +1733,10 @@ function suggestFormUrl(b, raw = S.data.settings.suggestUrl) {
 // ---------- Book search (Open Library: free, no key, no account). Finds books by title or author. ----------
 const OL_SEARCH = "https://openlibrary.org/search.json";
 const authorKey = (a) => str(a).toLowerCase().replace(/[^a-z0-9]+/g, "");
+// Study guides and summaries of a book crowd out the book itself; skip them unless that is what was typed.
+const GUIDE_TITLE = /^(summary|study guide|workbook|analysis|sparknotes|cliffsnotes)\b|\b(summary|study guide|analysis|workbook|review)\s*(of|and|for|:|-)/i;
 async function searchBooks(q, { byAuthor = false, signal } = {}) {
-  const p = new URLSearchParams(byAuthor ? { author: `"${q}"`, sort: "editions", limit: "60" } : { q, limit: "20" });
+  const p = new URLSearchParams(byAuthor ? { author: `"${q}"`, sort: "editions", limit: "80" } : { q, limit: "30" });
   p.set("fields", "key,title,author_name,first_publish_year,number_of_pages_median");
   const r = await fetch(`${OL_SEARCH}?${p}`, { signal });
   if (!r.ok) throw new Error("search " + r.status);
@@ -1743,6 +1745,8 @@ async function searchBooks(q, { byAuthor = false, signal } = {}) {
     const title = oneLine(d?.title, 120), author = oneLine(arr(d?.author_name)[0], 80);
     if (!title || !author) continue;
     if (byAuthor && authorKey(author) !== authorKey(q)) continue;   // co-written editions listed under someone else
+    if (GUIDE_TITLE.test(title) && !GUIDE_TITLE.test(q)) continue;
+    if (/[a-z]/i.test(q) && !/[a-z]/i.test(title)) continue;   // a translation's record in another script
     const k = title.toLowerCase().replace(/^(the|a|an)\s+/, "").replace(/[^a-z0-9]+/g, "") + "|" + authorKey(author);
     if (seen.has(k)) continue;   // the same book under several records
     seen.add(k);
