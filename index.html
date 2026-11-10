@@ -1965,7 +1965,7 @@ function missingForms(st = S.data.settings) {
 function runningLink() {
   const n = runningList().length;
   if (S.isHost && !PUBLIC) return el("button", { class: "btn link club-more", id: "club-edit-list", type: "button", onclick: () => openClubSection("club-next-sec") },
-    n ? `Edit the books in the running (${n})` : "Add books to vote on");
+    n ? `Edit the books in the running (${n})` : ballotAuto() ? "List books on the Bookshelf (optional)" : "Add books to vote on");
   if (!n) return null;
   return el("button", { class: "btn link club-more", id: "club-see-list", type: "button",
     onclick: () => { showView("club"); requestAnimationFrame(() => $("shelf-next")?.scrollIntoView({ behavior: "auto", block: "start" })); } },
@@ -2280,6 +2280,7 @@ function nextBookEditor(d) {
         : el("li", { id: "next-step-3" }, "Put the same books in your vote form (Copy the list, below, saves the typing), then ask the group to vote.")),
     mode === "form" && isUrl(d.settings.voteUrl) ? el("label", { class: "check" }, el("input", { type: "checkbox", id: "ballot-auto", checked: !!d.settings.ballotAuto,
       onchange: (e) => { d.settings.ballotAuto = e.currentTarget.checked; renderClub(); dirty(); } }), "My vote form adds submitted books by itself (ballot script)") : null,
+    ballotAuto(d.settings) ? el("p", { class: "hint", id: "ballot-round", style: "margin:0" }, "Starting a new round after the club has picked? In your suggestion form, open Responses, then the ⋮ menu, and delete all responses. The vote form starts over with the next book someone submits.") : null,
     list.length ? el("div", { class: "plan-rows", id: "running-rows" }, list.map((b, i) => el("div", { class: "plan-row upnext" },
       field("Title", bindText(b, "title", { type: "text" })), field("Author", bindText(b, "author", { type: "text" })),
       field("Suggested by (optional)", bindText(b, "by", { type: "text", maxlength: "40" })),
@@ -2289,7 +2290,8 @@ function nextBookEditor(d) {
     el("p", { class: "hint", style: "margin:0" }, "Names you enter show on the public page. Leave “Suggested by” empty to keep a suggestion anonymous."),
     el("div", { class: "actions" },
       el("button", { class: "btn", id: "club-add-book", type: "button", onclick: () => { list.push({ title: "", author: "", by: "", why: "" }); renderClub(); dirty(); const rows = document.querySelectorAll("#running-rows .plan-row"); rows[rows.length - 1]?.querySelector("input")?.focus(); } }, "+ Add a book"),
-      el("button", { class: "btn", id: "club-copy-titles", type: "button", disabled: !list.some(b => str(b.title).trim()), onclick: () => copyVoteList(list) }, "Copy the list for your vote form")),
+      ballotAuto(d.settings) ? null   // the vote form fills itself: nothing to copy
+        : el("button", { class: "btn", id: "club-copy-titles", type: "button", disabled: !list.some(b => str(b.title).trim()), onclick: () => copyVoteList(list) }, "Copy the list for your vote form")),
     pasteDetails({ id: "book-paste", label: "Book suggestions to add", button: "Add these books", summary: "Paste suggestions", attrs: keepOpen("paste-books"),
       placeholder: "Paste here: suggestion messages, rows from the responses sheet, or one book per line (Title by Author)",
       hint: "Copy the suggestion messages from your chat and paste them here, several at once if you like. From a Google Form: open Responses, then View in Sheets, select the rows (the header row too, if you can) and copy. Books already on the list are skipped.",
