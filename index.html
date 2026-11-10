@@ -383,6 +383,19 @@ details.sim-edit > summary { cursor: pointer; font-weight: 600; color: var(--acc
 .btn.link.rm { color: var(--danger); }
 .club-editors .field b { color: var(--ink); font-weight: 600; }
 @media (max-width: 860px) { .plan-row.upnext .field:nth-child(4) { grid-column: 1 / -1; } }
+/* Suggest a book: the page's own form (used when the club has no suggestion form link) */
+.dialog.wide { max-width: 440px; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); overflow: auto; }
+.dialog form { display: grid; gap: 12px; }
+.dialog p { margin: 0; }
+.dialog .field input[aria-invalid="true"] { border-color: var(--danger); }
+.sg-text { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; resize: none; }
+html.modal-open { overflow: hidden; }
+.btn.link.club-more { justify-self: start; padding-left: 0; padding-right: 0; font-size: 13.5px; }
+.btn.link.sim-suggest { padding-left: 0; font-size: 13.5px; }
+.club-setup > span { flex-basis: 100%; }
+label.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14.5px; color: var(--ink); }
+.form-block { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; }
+@media print { .dialog-backdrop, .club-more, .sim-suggest { display: none !important; } }
 </style>
 </head>
 <body>
@@ -492,7 +505,7 @@ details.sim-edit > summary { cursor: pointer; font-weight: 600; color: var(--acc
 </div>
 
 </template>
-<script type="application/json" id="club-data">{"meetings":[{"author":"C.S. Lewis","book":"The Magician's Nephew","chapters":"1–5","createdAt":"2026-11-08T22:30:00.000Z","date":"2026-11-08","guide":{"accuracy":{"confidence":"high","note":""},"adaptations":[{"detail":"As of Nov 2026, set for theaters and IMAX on Feb 12, 2027 and Netflix on Apr 2, 2027, after a delay from Thanksgiving 2026. Cast includes David McKenna (Digory), Beatrice Campbell (Polly) and Emma Mackey. Check current news.","title":"Narnia: The Magician's Nephew (Greta Gerwig)"}],"agenda":[{"details":"Introductions, one icebreaker round","segment":"Welcome + icebreaker","time":"0:00–0:10"},{"details":"Someone walks through chapters 1–5 in five minutes","segment":"Recap","time":"0:10–0:20"},{"details":"Pick 2–3 questions per chapter","segment":"Chapter questions","time":"0:20–0:55"},{"details":"Choose two talking points to go deep on","segment":"Big themes","time":"0:55–1:15"},{"details":"Lewis's life, reading order, the 2027 film","segment":"Context + the movie","time":"1:15–1:25"},{"details":"Predictions, set the next reading","segment":"Wrap-up","time":"1:25–1:30"}],"chapterQuestions":[{"chapter":"1","questions":["How does opening in real London around 1900 change the feel compared with fantasy that starts in another world?","What does it tell us about Digory that Polly first sees him crying about his mother?","Was it fair of Uncle Andrew to use Polly as a test subject? Did he trick her, or did she walk into it?","Who is the more cautious of the two kids, and does that surprise you?"],"title":"The Wrong Door"},{"chapter":"2","questions":["Uncle Andrew says people with secret knowledge are free from ordinary rules. Have you met anyone who reasons that way?","He broke a promise to his dying godmother to destroy the box. Does that change how you see him?","Is he a scary villain, a comic one, or both?","Would you have gone after Polly?"],"title":"Digory and His Uncle"},{"chapter":"3","questions":["The wood makes them so content they nearly forget who they are. Peaceful or creepy?","What other in-between places, real or fictional, does it remind you of?","What does Polly's insistence on marking the pool home say about her compared with Digory?","How does Lewis's version of many worlds compare with modern multiverse stories?"],"title":"The Wood Between the Worlds"},{"chapter":"4","questions":["Which details made Charn feel most real to you?","What is Lewis saying with faces that start kind and grow crueler down the line?","The verse dares the reader to strike or wonder forever. Is curiosity a good enough reason to take a risk?","Digory hurts Polly to get his way. Does that change how you feel about him as the hero?"],"title":"The Bell and the Hammer"},{"chapter":"5","questions":["What makes the Queen frightening beyond her power?","She uses almost the same excuse as Uncle Andrew. Why do you think Lewis echoed it on purpose?","She quickly decides whoever sent the children must be a powerful magician. What does that show about how she sees the world?","Who is to blame for bringing her along: Digory, Uncle Andrew, or both?"],"title":"The Deplorable Word"}],"context":[{"detail":"Published in 1955 as the sixth Narnia book, but it takes place before all the others. Lewis finished it in 1954.","title":"Written late, set first"},{"detail":"In 1957 Lewis told a young fan, Laurence Krieg, he leaned toward reading the books in story order. HarperCollins later renumbered the series to put this book first.","title":"The reading-order fight"},{"detail":"Lewis's mother died of cancer when he was a boy, and many readers see that loss in Digory's sick mother.","title":"A real loss behind Digory's grief"},{"detail":"The opening mentions Sherlock Holmes and Nesbit's Bastable children. Her 1906 book The Story of the Amulet follows a strikingly similar pattern.","title":"A nod to E. Nesbit"}],"icebreakers":[{"prompt":"Show of hands before anyone explains: would you have struck the bell?","title":"The bell vote"},{"prompt":"What kind of world do you hope is under the next pool in the Wood?","title":"Pick a pool"},{"prompt":"Is this your first trip to Narnia? Books, movies, or neither?","title":"Narnia history"},{"prompt":"What secret or forbidden spot did you explore as a kid?","title":"Your attic tunnel"}],"lead":"In five chapters, a London attic adventure turns into a trip to a dead world, and the children bring back the most dangerous person in it.","recap":[{"chapter":"1","summary":"London, around 1900. Polly meets Digory, who is staying with Uncle Andrew and Aunt Letty while his mother is seriously ill. They crawl through the attic tunnel, end up in Uncle Andrew's study, and he tricks Polly into touching a yellow ring. She vanishes.","title":"The Wrong Door"},{"chapter":"2","summary":"Uncle Andrew explains the rings came from dust out of Atlantis, in a box he promised his godmother to destroy. Too scared to test them himself, he pressures Digory into following Polly with green rings.","title":"Digory and His Uncle"},{"chapter":"3","summary":"Digory finds Polly in a sleepy wood full of pools. They nearly forget who they are, work out that the wood is an in-between place, mark the pool home, and try another.","title":"The Wood Between the Worlds"},{"chapter":"4","summary":"In Charn, a ruined city under a dying red sun, they find a hall of seated royals and a bell with a verse daring them to strike it. Digory hurts Polly to stop her and rings it. A terrifying queen wakes.","title":"The Bell and the Hammer"},{"chapter":"5","summary":"The Queen explains she destroyed every living thing in her world with one word to win a war against her sister. She plans to rule the children's world, and grabs hold as they escape.","title":"The Deplorable Word"}],"spoilerNote":"Digory grows up to be someone the Pevensie children meet, and the Queen is a character Narnia fans already know. Ask the group before going here.","themes":[{"prompt":"Every disaster so far starts with someone who can't leave something alone. Where does healthy curiosity end and temptation begin?","title":"Curiosity vs. temptation"},{"prompt":"Both believe they live by different rules than ordinary people. Is Uncle Andrew a small, cowardly version of her?","title":"Uncle Andrew and the Queen as a matched pair"},{"prompt":"Guinea pigs, then Polly, then Digory. What does the book say about treating people as means to an end?","title":"Using others as test subjects"},{"prompt":"How might Digory's fear for his mother be shaping his choices, including the bell?","title":"Grief under the surface"},{"prompt":"They argue, compete, and he hurts her. Is it a realistic kid friendship? How does it hold up today?","title":"Polly and Digory's friendship"},{"prompt":"Written in the shadow of the atomic bomb, the Deplorable Word reads to many as a world-ending weapon. Does that work for you?","title":"A dead world as a warning"},{"prompt":"Lewis often talks straight to the reader. Charming, or does it pull you out of the story?","title":"The narrator's voice"}],"wrapUp":{"bring":"One moment you'd want to see on screen.","nextReading":"Chapters 6–10","predictions":["What happens when the Queen arrives in London?","Does Uncle Andrew finally get what he deserves?","Will Digory find a way to help his mother?"]}},"meetingNumber":1,"minutes":90,"updatedAt":"2026-11-09T03:15:00.000Z","id":"m-magicians-nephew-1","time":"18:00","type":"chapters"},{"id":"m-magicians-nephew-2","book":"The Magician's Nephew","author":"C.S. Lewis","chapters":"6–10","meetingNumber":2,"minutes":90,"date":"2026-11-15","time":"18:00","type":"chapters","guide":{"lead":"The Queen arrives in London, chaos follows her to Digory's front door, and everyone tumbles into a dark, empty world just as a Lion begins to sing it into life.","accuracy":{"confidence":"high","note":""},"agenda":[{"time":"0:00–0:10","segment":"Welcome + icebreaker","details":"One quick round from the icebreakers"},{"time":"0:10–0:20","segment":"Recap","details":"Someone walks through chapters 6–10 in five minutes"},{"time":"0:20–0:55","segment":"Chapter questions","details":"Pick 2–3 questions per chapter"},{"time":"0:55–1:15","segment":"Big themes","details":"Choose two talking points to go deep on"},{"time":"1:15–1:25","segment":"Context + the movie","details":"Lewis, Tolkien and creation through song; the 2027 film"},{"time":"1:25–1:30","segment":"Wrap-up","details":"Predictions, set chapters 11–15 for next time"}],"recap":[{"chapter":"6","title":"The Beginning of Uncle Andrew's Troubles","summary":"Back in London, Digory and Polly talk through their fight over the bell and make up. Uncle Andrew, scared but dazzled by the Queen, dresses up and tries to borrow money from Aunt Letty. The Queen bursts in and orders him to take her into the city."},{"chapter":"7","title":"What Happened at the Front Door","summary":"Aunt Letty is no match for the Queen, whose magic doesn't work in our world but whose strength does. Digory waits at the door with the rings, hoping to send her home. She returns standing on a runaway hansom cab, with a battered Uncle Andrew, a robbed shopkeeper, police and a crowd behind her."},{"chapter":"8","title":"The Fight at the Lamp-Post","summary":"The Queen tears an iron bar off a lamp-post and fights the crowd. Digory grabs her ankle, and the rings pull her, Uncle Andrew, the cabby and his horse Strawberry into the Wood and then into a dark, empty world. A voice begins to sing, and stars and a sun appear. The singer is a great Lion."},{"chapter":"9","title":"The Founding of Narnia","summary":"The Lion's song brings up grass, trees and animals from the bare earth. The iron bar from London grows into a lamp-post, and Uncle Andrew starts scheming about how to make money from soil like this. The Lion chooses some of the animals and gives them the gift of speech."},{"chapter":"10","title":"The First Joke and Other Matters","summary":"A jackdaw makes the first joke in the new world, and the Talking Beasts learn to laugh. The animals can't work out what Uncle Andrew is, and their attempts to look after him go comically wrong. Digory works up the courage to ask the Lion for something to cure his mother."}],"icebreakers":[{"title":"First words","prompt":"If you could give one animal the power of speech, which one, and what would it say first?"},{"title":"Relative roulette","prompt":"Uncle Andrew or Aunt Letty: who would you rather have over for dinner?"},{"title":"Funniest moment","prompt":"What was the funniest part of the Queen loose in London?"},{"title":"The sound of it","prompt":"What did the Lion's song sound like in your head while you read?"}],"chapterQuestions":[{"chapter":"6","title":"The Beginning of Uncle Andrew's Troubles","questions":["Digory and Polly make up after their fight over the bell. Did the apology feel real to you?","Uncle Andrew is frightened of the Queen and flattered by her at the same time. What does that say about him?","Why does Lewis play this chapter mostly for laughs after the horror of Charn?"]},{"chapter":"7","title":"What Happened at the Front Door","questions":["The Queen's magic fails in our world but her strength doesn't. Is she more or less frightening in London?","Aunt Letty stands up to her. What did you make of Aunt Letty?","Digory waits at the door to fix his mistake. Is this where he starts to grow up?","How does the chaos at the front door read to you: comedy, danger, or both?"]},{"chapter":"8","title":"The Fight at the Lamp-Post","questions":["Digory grabs the Queen's ankle and takes her along. Brave, reckless, or both?","The cabby and his horse end up in another world by accident. Why do you think Lewis brings ordinary people along?","How did you picture the moment the singing begins in total darkness?"]},{"chapter":"9","title":"The Founding of Narnia","questions":["Everyone hears the same song, yet reacts differently. Who reacts how, and why?","The iron bar becomes a lamp-post. What does that detail add?","Uncle Andrew looks at a new world and sees a money-making scheme. What does that tell us about him?","Which image from the creation scene has stuck with you most?"]},{"chapter":"10","title":"The First Joke and Other Matters","questions":["Why might Lewis make a joke one of the first things a talking creature does?","The animals can't decide what Uncle Andrew is. Why can't he understand them either?","Digory wants to ask the Lion for help with his mother. What do you think he should ask for, and what might it cost him?"]}],"themes":[{"title":"Same song, different ears","prompt":"The cabby and Polly hear something beautiful; Uncle Andrew hears roaring he wants to ignore. Does what we notice depend on who we are?"},{"title":"Wonder vs. greed","prompt":"Faced with a newborn world, Uncle Andrew thinks about profit. Where else in the book do characters miss wonder because they want to own things?"},{"title":"Creation as music","prompt":"Lewis makes creation a song rather than a command. What does that change about how the world feels?"},{"title":"Power out of its element","prompt":"In London the Queen is strong but her magic fails. What is Lewis saying about where her power really comes from?"},{"title":"Ordinary goodness","prompt":"The cabby is one of the kindest people in the story. What makes him stand out next to Uncle Andrew?"},{"title":"Hope and responsibility","prompt":"Digory brought the Queen into this world. Can he still ask for help for his mother? How do guilt and hope sit together?"}],"context":[{"title":"Lewis and Tolkien","detail":"Lewis and J.R.R. Tolkien were close friends at Oxford and members of the Inklings writing group. Tolkien also imagined a world created through music, in the myth that opens The Silmarillion."},{"title":"The lamp-post","detail":"Readers of The Lion, the Witch and the Wardrobe will recognize this lamp-post. This book shows where it came from."},{"title":"Written late, set first","detail":"Published in 1955 as the sixth Narnia book, but set first in Narnia's history."},{"title":"A dig at Uncle Andrew's kind","detail":"Lewis often wrote against people who treat the world only as raw material. Uncle Andrew's money scheme in a newborn world is a sharp example."}],"spoilerNote":"Several of the people who arrive in Narnia in these chapters have bigger parts to play later in this book and in the series. Ask the group before going there.","adaptations":[{"title":"Narnia: The Magician's Nephew (Greta Gerwig)","detail":"As of Nov 2026, set for theaters and IMAX on Feb 12, 2027 and Netflix on Apr 2, 2027. The creation scene will be one to watch for. Check current news."}],"wrapUp":{"predictions":["Will the Lion help Digory's mother?","What happens to Uncle Andrew in Narnia?","Where did the Queen go, and what will she do next?"],"nextReading":"Chapters 11–15 (the end of the book)","bring":"Your favorite moment from the creation scene."}},"createdAt":"2026-11-09T03:15:00.000Z","updatedAt":"2026-11-09T03:15:00.000Z"}],"club":{"currentId":"m-magicians-nephew-2","now":""},"settings":{"blurb":"","clubName":"Novel Relations","questionsUrl":"","rsvpUrl":"https://forms.gle/ceJnWhykB2uRWs8fA","suggestUrl":"","timezone":"America/New_York","voteLabel":"","voteUrl":"https://forms.gle/LTvpAKNpVVYo7N9a8"},"schedule":[{"author":"C.S. Lewis","book":"The Magician's Nephew","chapters":"11–15","date":"","id":"p-mn-3","meetingNumber":3,"time":"18:00","type":"chapters"}],"shelf":{"books":{"the magician's nephew":{"about":"C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.","finished":false,"rating":"","similar":[{"author":"E. Nesbit","title":"The Story of the Amulet","why":"Edwardian London children, a magic charm, and trips to far-off times and places. Lewis tips his hat to Nesbit on our book's first page.","year":"1906"},{"author":"Diana Wynne Jones","title":"The Lives of Christopher Chant","why":"A boy slips through the Place Between into other worlds, and his charming uncle has him run experiments there. Sound familiar?","year":"1988"},{"author":"Madeleine L'Engle","title":"A Wrinkle in Time","why":"Children cross into other worlds to find a missing parent, in a cosmic fight between light and darkness with a faith thread like Lewis's.","year":"1962"},{"author":"C.S. Lewis","title":"Out of the Silent Planet","why":"Lewis's science fiction for adults: a man is carried off to Mars by a scientist who thinks progress excuses anything. Uncle Andrew would approve.","year":"1938"},{"author":"Susanna Clarke","title":"Piranesi","why":"An adult novel that opens with an Uncle Andrew quote. Its endless house of halls and statues will feel familiar after Charn.","year":"2020"},{"author":"Philip Pullman","title":"The Golden Compass","why":"Parallel worlds from one of Narnia's sharpest critics (called Northern Lights in the UK). Good fuel for a debate night.","year":"1995"}],"verdict":""}},"upNext":[]},"public":true,"exportedAt":"2026-11-10T00:44:47.872164Z"}</script>
+<script type="application/json" id="club-data">{"meetings":[{"author":"C.S. Lewis","book":"The Magician's Nephew","chapters":"1–5","createdAt":"2026-11-08T22:30:00.000Z","date":"2026-11-08","guide":{"accuracy":{"confidence":"high","note":""},"adaptations":[{"detail":"As of Nov 2026, set for theaters and IMAX on Feb 12, 2027 and Netflix on Apr 2, 2027, after a delay from Thanksgiving 2026. Cast includes David McKenna (Digory), Beatrice Campbell (Polly) and Emma Mackey. Check current news.","title":"Narnia: The Magician's Nephew (Greta Gerwig)"}],"agenda":[{"details":"Introductions, one icebreaker round","segment":"Welcome + icebreaker","time":"0:00–0:10"},{"details":"Someone walks through chapters 1–5 in five minutes","segment":"Recap","time":"0:10–0:20"},{"details":"Pick 2–3 questions per chapter","segment":"Chapter questions","time":"0:20–0:55"},{"details":"Choose two talking points to go deep on","segment":"Big themes","time":"0:55–1:15"},{"details":"Lewis's life, reading order, the 2027 film","segment":"Context + the movie","time":"1:15–1:25"},{"details":"Predictions, set the next reading","segment":"Wrap-up","time":"1:25–1:30"}],"chapterQuestions":[{"chapter":"1","questions":["How does opening in real London around 1900 change the feel compared with fantasy that starts in another world?","What does it tell us about Digory that Polly first sees him crying about his mother?","Was it fair of Uncle Andrew to use Polly as a test subject? Did he trick her, or did she walk into it?","Who is the more cautious of the two kids, and does that surprise you?"],"title":"The Wrong Door"},{"chapter":"2","questions":["Uncle Andrew says people with secret knowledge are free from ordinary rules. Have you met anyone who reasons that way?","He broke a promise to his dying godmother to destroy the box. Does that change how you see him?","Is he a scary villain, a comic one, or both?","Would you have gone after Polly?"],"title":"Digory and His Uncle"},{"chapter":"3","questions":["The wood makes them so content they nearly forget who they are. Peaceful or creepy?","What other in-between places, real or fictional, does it remind you of?","What does Polly's insistence on marking the pool home say about her compared with Digory?","How does Lewis's version of many worlds compare with modern multiverse stories?"],"title":"The Wood Between the Worlds"},{"chapter":"4","questions":["Which details made Charn feel most real to you?","What is Lewis saying with faces that start kind and grow crueler down the line?","The verse dares the reader to strike or wonder forever. Is curiosity a good enough reason to take a risk?","Digory hurts Polly to get his way. Does that change how you feel about him as the hero?"],"title":"The Bell and the Hammer"},{"chapter":"5","questions":["What makes the Queen frightening beyond her power?","She uses almost the same excuse as Uncle Andrew. Why do you think Lewis echoed it on purpose?","She quickly decides whoever sent the children must be a powerful magician. What does that show about how she sees the world?","Who is to blame for bringing her along: Digory, Uncle Andrew, or both?"],"title":"The Deplorable Word"}],"context":[{"detail":"Published in 1955 as the sixth Narnia book, but it takes place before all the others. Lewis finished it in 1954.","title":"Written late, set first"},{"detail":"In 1957 Lewis told a young fan, Laurence Krieg, he leaned toward reading the books in story order. HarperCollins later renumbered the series to put this book first.","title":"The reading-order fight"},{"detail":"Lewis's mother died of cancer when he was a boy, and many readers see that loss in Digory's sick mother.","title":"A real loss behind Digory's grief"},{"detail":"The opening mentions Sherlock Holmes and Nesbit's Bastable children. Her 1906 book The Story of the Amulet follows a strikingly similar pattern.","title":"A nod to E. Nesbit"}],"icebreakers":[{"prompt":"Show of hands before anyone explains: would you have struck the bell?","title":"The bell vote"},{"prompt":"What kind of world do you hope is under the next pool in the Wood?","title":"Pick a pool"},{"prompt":"Is this your first trip to Narnia? Books, movies, or neither?","title":"Narnia history"},{"prompt":"What secret or forbidden spot did you explore as a kid?","title":"Your attic tunnel"}],"lead":"In five chapters, a London attic adventure turns into a trip to a dead world, and the children bring back the most dangerous person in it.","recap":[{"chapter":"1","summary":"London, around 1900. Polly meets Digory, who is staying with Uncle Andrew and Aunt Letty while his mother is seriously ill. They crawl through the attic tunnel, end up in Uncle Andrew's study, and he tricks Polly into touching a yellow ring. She vanishes.","title":"The Wrong Door"},{"chapter":"2","summary":"Uncle Andrew explains the rings came from dust out of Atlantis, in a box he promised his godmother to destroy. Too scared to test them himself, he pressures Digory into following Polly with green rings.","title":"Digory and His Uncle"},{"chapter":"3","summary":"Digory finds Polly in a sleepy wood full of pools. They nearly forget who they are, work out that the wood is an in-between place, mark the pool home, and try another.","title":"The Wood Between the Worlds"},{"chapter":"4","summary":"In Charn, a ruined city under a dying red sun, they find a hall of seated royals and a bell with a verse daring them to strike it. Digory hurts Polly to stop her and rings it. A terrifying queen wakes.","title":"The Bell and the Hammer"},{"chapter":"5","summary":"The Queen explains she destroyed every living thing in her world with one word to win a war against her sister. She plans to rule the children's world, and grabs hold as they escape.","title":"The Deplorable Word"}],"spoilerNote":"Digory grows up to be someone the Pevensie children meet, and the Queen is a character Narnia fans already know. Ask the group before going here.","themes":[{"prompt":"Every disaster so far starts with someone who can't leave something alone. Where does healthy curiosity end and temptation begin?","title":"Curiosity vs. temptation"},{"prompt":"Both believe they live by different rules than ordinary people. Is Uncle Andrew a small, cowardly version of her?","title":"Uncle Andrew and the Queen as a matched pair"},{"prompt":"Guinea pigs, then Polly, then Digory. What does the book say about treating people as means to an end?","title":"Using others as test subjects"},{"prompt":"How might Digory's fear for his mother be shaping his choices, including the bell?","title":"Grief under the surface"},{"prompt":"They argue, compete, and he hurts her. Is it a realistic kid friendship? How does it hold up today?","title":"Polly and Digory's friendship"},{"prompt":"Written in the shadow of the atomic bomb, the Deplorable Word reads to many as a world-ending weapon. Does that work for you?","title":"A dead world as a warning"},{"prompt":"Lewis often talks straight to the reader. Charming, or does it pull you out of the story?","title":"The narrator's voice"}],"wrapUp":{"bring":"One moment you'd want to see on screen.","nextReading":"Chapters 6–10","predictions":["What happens when the Queen arrives in London?","Does Uncle Andrew finally get what he deserves?","Will Digory find a way to help his mother?"]}},"meetingNumber":1,"minutes":90,"updatedAt":"2026-11-09T03:15:00.000Z","id":"m-magicians-nephew-1","time":"18:00","type":"chapters"},{"id":"m-magicians-nephew-2","book":"The Magician's Nephew","author":"C.S. Lewis","chapters":"6–10","meetingNumber":2,"minutes":90,"date":"2026-11-15","time":"18:00","type":"chapters","guide":{"lead":"The Queen arrives in London, chaos follows her to Digory's front door, and everyone tumbles into a dark, empty world just as a Lion begins to sing it into life.","accuracy":{"confidence":"high","note":""},"agenda":[{"time":"0:00–0:10","segment":"Welcome + icebreaker","details":"One quick round from the icebreakers"},{"time":"0:10–0:20","segment":"Recap","details":"Someone walks through chapters 6–10 in five minutes"},{"time":"0:20–0:55","segment":"Chapter questions","details":"Pick 2–3 questions per chapter"},{"time":"0:55–1:15","segment":"Big themes","details":"Choose two talking points to go deep on"},{"time":"1:15–1:25","segment":"Context + the movie","details":"Lewis, Tolkien and creation through song; the 2027 film"},{"time":"1:25–1:30","segment":"Wrap-up","details":"Predictions, set chapters 11–15 for next time"}],"recap":[{"chapter":"6","title":"The Beginning of Uncle Andrew's Troubles","summary":"Back in London, Digory and Polly talk through their fight over the bell and make up. Uncle Andrew, scared but dazzled by the Queen, dresses up and tries to borrow money from Aunt Letty. The Queen bursts in and orders him to take her into the city."},{"chapter":"7","title":"What Happened at the Front Door","summary":"Aunt Letty is no match for the Queen, whose magic doesn't work in our world but whose strength does. Digory waits at the door with the rings, hoping to send her home. She returns standing on a runaway hansom cab, with a battered Uncle Andrew, a robbed shopkeeper, police and a crowd behind her."},{"chapter":"8","title":"The Fight at the Lamp-Post","summary":"The Queen tears an iron bar off a lamp-post and fights the crowd. Digory grabs her ankle, and the rings pull her, Uncle Andrew, the cabby and his horse Strawberry into the Wood and then into a dark, empty world. A voice begins to sing, and stars and a sun appear. The singer is a great Lion."},{"chapter":"9","title":"The Founding of Narnia","summary":"The Lion's song brings up grass, trees and animals from the bare earth. The iron bar from London grows into a lamp-post, and Uncle Andrew starts scheming about how to make money from soil like this. The Lion chooses some of the animals and gives them the gift of speech."},{"chapter":"10","title":"The First Joke and Other Matters","summary":"A jackdaw makes the first joke in the new world, and the Talking Beasts learn to laugh. The animals can't work out what Uncle Andrew is, and their attempts to look after him go comically wrong. Digory works up the courage to ask the Lion for something to cure his mother."}],"icebreakers":[{"title":"First words","prompt":"If you could give one animal the power of speech, which one, and what would it say first?"},{"title":"Relative roulette","prompt":"Uncle Andrew or Aunt Letty: who would you rather have over for dinner?"},{"title":"Funniest moment","prompt":"What was the funniest part of the Queen loose in London?"},{"title":"The sound of it","prompt":"What did the Lion's song sound like in your head while you read?"}],"chapterQuestions":[{"chapter":"6","title":"The Beginning of Uncle Andrew's Troubles","questions":["Digory and Polly make up after their fight over the bell. Did the apology feel real to you?","Uncle Andrew is frightened of the Queen and flattered by her at the same time. What does that say about him?","Why does Lewis play this chapter mostly for laughs after the horror of Charn?"]},{"chapter":"7","title":"What Happened at the Front Door","questions":["The Queen's magic fails in our world but her strength doesn't. Is she more or less frightening in London?","Aunt Letty stands up to her. What did you make of Aunt Letty?","Digory waits at the door to fix his mistake. Is this where he starts to grow up?","How does the chaos at the front door read to you: comedy, danger, or both?"]},{"chapter":"8","title":"The Fight at the Lamp-Post","questions":["Digory grabs the Queen's ankle and takes her along. Brave, reckless, or both?","The cabby and his horse end up in another world by accident. Why do you think Lewis brings ordinary people along?","How did you picture the moment the singing begins in total darkness?"]},{"chapter":"9","title":"The Founding of Narnia","questions":["Everyone hears the same song, yet reacts differently. Who reacts how, and why?","The iron bar becomes a lamp-post. What does that detail add?","Uncle Andrew looks at a new world and sees a money-making scheme. What does that tell us about him?","Which image from the creation scene has stuck with you most?"]},{"chapter":"10","title":"The First Joke and Other Matters","questions":["Why might Lewis make a joke one of the first things a talking creature does?","The animals can't decide what Uncle Andrew is. Why can't he understand them either?","Digory wants to ask the Lion for help with his mother. What do you think he should ask for, and what might it cost him?"]}],"themes":[{"title":"Same song, different ears","prompt":"The cabby and Polly hear something beautiful; Uncle Andrew hears roaring he wants to ignore. Does what we notice depend on who we are?"},{"title":"Wonder vs. greed","prompt":"Faced with a newborn world, Uncle Andrew thinks about profit. Where else in the book do characters miss wonder because they want to own things?"},{"title":"Creation as music","prompt":"Lewis makes creation a song rather than a command. What does that change about how the world feels?"},{"title":"Power out of its element","prompt":"In London the Queen is strong but her magic fails. What is Lewis saying about where her power really comes from?"},{"title":"Ordinary goodness","prompt":"The cabby is one of the kindest people in the story. What makes him stand out next to Uncle Andrew?"},{"title":"Hope and responsibility","prompt":"Digory brought the Queen into this world. Can he still ask for help for his mother? How do guilt and hope sit together?"}],"context":[{"title":"Lewis and Tolkien","detail":"Lewis and J.R.R. Tolkien were close friends at Oxford and members of the Inklings writing group. Tolkien also imagined a world created through music, in the myth that opens The Silmarillion."},{"title":"The lamp-post","detail":"Readers of The Lion, the Witch and the Wardrobe will recognize this lamp-post. This book shows where it came from."},{"title":"Written late, set first","detail":"Published in 1955 as the sixth Narnia book, but set first in Narnia's history."},{"title":"A dig at Uncle Andrew's kind","detail":"Lewis often wrote against people who treat the world only as raw material. Uncle Andrew's money scheme in a newborn world is a sharp example."}],"spoilerNote":"Several of the people who arrive in Narnia in these chapters have bigger parts to play later in this book and in the series. Ask the group before going there.","adaptations":[{"title":"Narnia: The Magician's Nephew (Greta Gerwig)","detail":"As of Nov 2026, set for theaters and IMAX on Feb 12, 2027 and Netflix on Apr 2, 2027. The creation scene will be one to watch for. Check current news."}],"wrapUp":{"predictions":["Will the Lion help Digory's mother?","What happens to Uncle Andrew in Narnia?","Where did the Queen go, and what will she do next?"],"nextReading":"Chapters 11–15 (the end of the book)","bring":"Your favorite moment from the creation scene."}},"createdAt":"2026-11-09T03:15:00.000Z","updatedAt":"2026-11-09T03:15:00.000Z"}],"club":{"currentId":"m-magicians-nephew-2","now":""},"settings":{"clubName":"Novel Relations","blurb":"","rsvpUrl":"https://forms.gle/ceJnWhykB2uRWs8fA","voteUrl":"https://forms.gle/LTvpAKNpVVYo7N9a8","voteLabel":"","timezone":"America/New_York","questionsUrl":"","suggestUrl":"","suggestOff":false},"schedule":[{"id":"p-mn-3","book":"The Magician's Nephew","author":"C.S. Lewis","meetingNumber":3,"chapters":"11–15","date":"","time":"18:00","type":"chapters"}],"shelf":{"upNext":[],"books":{"the magician's nephew":{"finished":false,"rating":"","verdict":"","about":"C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.","similar":[{"title":"The Story of the Amulet","author":"E. Nesbit","year":"1906","why":"Edwardian London children, a magic charm, and trips to far-off times and places. Lewis tips his hat to Nesbit on our book's first page."},{"title":"The Lives of Christopher Chant","author":"Diana Wynne Jones","year":"1988","why":"A boy slips through the Place Between into other worlds, and his charming uncle has him run experiments there. Sound familiar?"},{"title":"A Wrinkle in Time","author":"Madeleine L'Engle","year":"1962","why":"Children cross into other worlds to find a missing parent, in a cosmic fight between light and darkness with a faith thread like Lewis's."},{"title":"Out of the Silent Planet","author":"C.S. Lewis","year":"1938","why":"Lewis's science fiction for adults: a man is carried off to Mars by a scientist who thinks progress excuses anything. Uncle Andrew would approve."},{"title":"Piranesi","author":"Susanna Clarke","year":"2020","why":"An adult novel that opens with an Uncle Andrew quote. Its endless house of halls and statues will feel familiar after Charn."},{"title":"The Golden Compass","author":"Philip Pullman","year":"1995","why":"Parallel worlds from one of Narnia's sharpest critics (called Northern Lights in the UK). Good fuel for a debate night."}]}}},"public":true,"exportedAt":"2026-11-10T01:04:41.580179Z"}</script>
 <script id="app-script">// Mount the page markup (kept pristine in <template id="shell"> so the page can republish itself).
 document.body.prepend(document.getElementById("shell").content.cloneNode(true));
 
@@ -538,7 +551,7 @@ function normalizeData(d) {
     club: obj(d.club),
     exportedAt: str(d.exportedAt),
     settings: { clubName: str(st.clubName), blurb: str(st.blurb), rsvpUrl: str(st.rsvpUrl), voteUrl: str(st.voteUrl),
-                voteLabel: str(st.voteLabel), timezone: str(st.timezone), questionsUrl: str(st.questionsUrl), suggestUrl: str(st.suggestUrl) },
+                voteLabel: str(st.voteLabel), timezone: str(st.timezone), questionsUrl: str(st.questionsUrl), suggestUrl: str(st.suggestUrl), suggestOff: !!st.suggestOff },
     schedule: arr(d.schedule).map(p => ({ id: str(p.id), book: str(p.book), author: str(p.author), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1),
                                           chapters: str(p.chapters), date: str(p.date), time: str(p.time), type: p.type === "wrapup" ? "wrapup" : "chapters" })),
     // upNext = books in the running for the next vote (title, author, who suggested it, their one-line reason)
@@ -1278,9 +1291,9 @@ function parsePastedQuestions(text) {
   return out;
 }
 // A collapsed "paste from your form's responses" box. onAdd gets the pasted text.
-function pasteDetails({ id, label, hint, placeholder, button, onAdd, attrs = {} }) {
+function pasteDetails({ id, label, hint, placeholder, button, onAdd, summary, attrs = {} }) {
   const ta = el("textarea", { id, rows: "4", placeholder });
-  return el("details", { class: "paste-q", ...attrs }, el("summary", {}, "Paste from your form's responses"),
+  return el("details", { class: "paste-q", ...attrs }, el("summary", {}, summary || "Paste from your form's responses"),
     el("p", { class: "hint", style: "margin:8px 0" }, hint),
     el("label", { class: "sr-only", for: id }, label), ta,
     el("div", {}, el("button", { class: "btn small", type: "button", style: "margin-top:8px", onclick: () => onAdd(ta.value) }, button)));
@@ -1298,7 +1311,8 @@ function pasteBox() {
       renderGuide();
     } });
 }
-// Book suggestions pasted from the suggestion form's responses sheet, or typed one per line ("Title by Author").
+// Book suggestions pasted from the suggestion form's responses sheet, typed one per line ("Title by Author"),
+// or pasted as the messages the page's own Suggest a book form sends (see suggestionText).
 // With the sheet's header row included, columns are matched by name; without it, by position: title, author, why, name.
 function parsePastedBooks(text) {
   const stamp = /^\d{1,4}[\/.-]\d{1,2}[\/.-]\d{1,4}(?:[ ,T]+\d{1,2}:\d{2}(?::\d{2})?(?:\s?[AP]M)?)?$/i;
@@ -1308,6 +1322,13 @@ function parsePastedBooks(text) {
   const out = [];
   let map = null;
   for (const r of rows) {
+    const cells = r.filter(Boolean);
+    if (cells.length === 1) {   // a suggestion message: heading line, the book, then "Why: …" and "From: …" lines
+      let mm;
+      if (/book suggestion for\b/i.test(cells[0])) continue;   // the heading (a chat app may put a time and a name in front of it)
+      if (out.length && (mm = cells[0].match(/^why:\s*(\S.*)$/i))) { out[out.length - 1].why = clip(mm[1], 200); continue; }
+      if (out.length && (mm = cells[0].match(/^(?:from|suggested by):\s*(\S.*)$/i))) { out[out.length - 1].by = mm[1].trim().slice(0, 40); continue; }
+    }
     if (r.some(c => /^timestamp$/i.test(c)) || r.filter(c => headerCell.test(c)).length >= 2) {
       map = {};
       r.forEach((c, i) => {
@@ -1326,7 +1347,8 @@ function parsePastedBooks(text) {
       const c = r.filter(x => x && !stamp.test(x) && !email.test(x));
       if (!c.length) continue;
       if (c.length === 1) {
-        const m = c[0].match(/^(.*\S)\s+by\s+(\S.*)$/i) || c[0].match(/^(.*\S)\s+[-–—]\s+(\S.*)$/);
+        const m = c[0].match(/^[“"]([^”"]+)[”"](?:\s+by\s+(\S.*))?$/i)   // “Stand by Me” by Stephen King: the quotes settle where the title ends
+          || c[0].match(/^(.*\S)\s+by\s+(\S.*)$/i) || c[0].match(/^(.*\S)\s+[-–—]\s+(\S.*)$/);
         b = m ? { title: m[1], author: m[2] } : { title: c[0] };
       } else if (c.length === 2) b = { title: c[0], author: c[1] };
       else if (c.length === 3) { const name = c[2].length <= 30 && c[2].split(/\s+/).length <= 3; b = { title: c[0], author: c[1], why: name ? "" : c[2], by: name ? c[2] : "" }; }
@@ -1348,7 +1370,7 @@ function similarLine(book, data) {
 }
 function similarFor(book, data = S.data) { return normSimilar(obj(obj(obj(data.shelf).books)[bookKey(book)]).similar); }
 function similarBlock(m, list) {
-  const st = S.data.settings;
+  const st = S.data.settings, mode = suggestMode(st);
   if (!list.length) return el("div", {},
     el("p", { class: "hint", style: "margin:0 0 10px" }, "No picks yet. Claude can suggest books like this one. Members see them here and on the Bookshelf."),
     el("button", { class: "btn", type: "button", id: "btn-similar", disabled: !!S.suggesting || S.publishing, onclick: () => suggestForGuide(m) },
@@ -1357,9 +1379,10 @@ function similarBlock(m, list) {
     el("p", { class: "hint", style: "margin:0 0 12px" }, `If you like ${m.book}, try these next. No spoilers.`),
     el("ul", { class: "similar" }, list.map(b => el("li", {}, cover(b.title, b.author, "sm"),
       el("div", {}, el("b", {}, b.title), (b.author || b.year) ? el("span", { class: "hint" }, [b.author, b.year].filter(Boolean).join(" \u00b7 ")) : null,
-        b.why ? el("p", {}, b.why) : null)))),
-    (isUrl(st.suggestUrl) || isUrl(st.voteUrl)) ? el("div", { class: "actions", style: "margin-top:12px" },
-      isUrl(st.suggestUrl) ? el("a", { class: "btn", id: "similar-suggest", href: st.suggestUrl, target: "_blank", rel: "noopener" }, "Suggest one for our next book") : null,
+        b.why ? el("p", {}, b.why) : null,
+        mode === "builtin" ? el("div", {}, suggestButton(st, "Suggest this one", { cls: "link sim-suggest", aria: `Suggest ${b.title} for our next book`, prefill: { title: b.title, author: b.author } })) : null)))),
+    (mode === "form" || isUrl(st.voteUrl)) ? el("div", { class: "actions", style: "margin-top:12px" },
+      mode === "form" ? suggestButton(st, "Suggest one for our next book", { id: "similar-suggest" }) : null,
       isUrl(st.voteUrl) ? el("a", { class: "btn", href: st.voteUrl, target: "_blank", rel: "noopener" }, st.voteLabel.trim() || "Vote on our next book") : null) : null,
     canManage() ? el("p", { class: "hint", style: "margin:10px 0 0" }, "Edit or replace these in the ", el("button", { class: "btn link", type: "button", onclick: () => showView("club") }, "Club tab"), ".") : null);
 }
@@ -1639,6 +1662,121 @@ async function downloadIcs(m) {
   }
   if (S.downloads) { try { await S.downloads.save({ filename: name, data: text }); } catch {} }
 }
+// ---------- Suggest a book ----------
+// How members suggest books: the host's Google Form when a link is set; otherwise the page's own short form, whose
+// result goes out as a message (the phone's share menu, or the clipboard). The host can turn suggestions off.
+const suggestMode = (st = S.data.settings) => (isUrl(st.suggestUrl) ? "form" : st.suggestOff ? "off" : "builtin");
+function suggestButton(st, label, o = {}) {
+  const mode = suggestMode(st);
+  if (mode === "off") return null;
+  const a = { class: "btn" + (o.primary ? " primary" : "") + (o.cls ? " " + o.cls : ""), id: o.id || null, "aria-label": o.aria || null };
+  return mode === "form"
+    ? el("a", { ...a, href: st.suggestUrl, target: "_blank", rel: "noopener" }, label)
+    : el("button", { ...a, type: "button", "aria-haspopup": "dialog", onclick: () => openSuggest(o.prefill) }, label);
+}
+// The message a suggestion goes out as. parsePastedBooks reads it back when the host pastes it under Next book.
+const oneLine = (v, n) => clip(str(v).replace(/\s+/g, " "), n);
+function suggestionText(b) {
+  const L = [`Book suggestion for ${S.data.settings.clubName.trim() || "our book club"}`, `“${b.title}”${b.author ? " by " + b.author : ""}`];
+  if (b.why) L.push("Why: " + b.why);
+  if (b.by) L.push("From: " + b.by);
+  return L.join("\n");
+}
+
+// A small modal built on demand (the confirm dialog in the page shell stays as it is).
+let modal = null;
+function closeModal() {
+  if (!modal) return;
+  const { node, back } = modal; modal = null;
+  node.remove();
+  document.documentElement.classList.remove("modal-open");
+  if (back?.isConnected) back.focus({ preventScroll: true });
+}
+function openModal(labelledBy, ...content) {
+  const back = modal ? modal.back : document.activeElement;
+  if (modal) modal.node.remove();
+  const node = el("div", { class: "dialog-backdrop", id: "modal" },
+    el("div", { class: "dialog wide", role: "dialog", "aria-modal": "true", "aria-labelledby": labelledBy }, content));
+  node.addEventListener("mousedown", (e) => { if (e.target === node) closeModal(); });
+  document.body.append(node);
+  document.documentElement.classList.add("modal-open");
+  modal = { node, back };
+}
+document.addEventListener("keydown", (e) => {
+  if (!modal) return;
+  if (e.key === "Escape") { e.preventDefault(); closeModal(); return; }
+  if (e.key !== "Tab") return;   // keep focus inside the dialog
+  const f = [...modal.node.querySelectorAll("a[href], button:not([disabled]), input, textarea, select")].filter(n => n.offsetParent !== null);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1], at = document.activeElement;
+  if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+  else if (!modal.node.contains(at)) { e.preventDefault(); first.focus(); }
+});
+
+const suggestDraft = { title: "", author: "", why: "", by: "" };   // kept while the page is open, so a stray tap outside loses nothing
+const canShare = () => typeof navigator.share === "function";
+function openSuggest(prefill) {
+  if (prefill) Object.assign(suggestDraft, { title: str(prefill.title), author: str(prefill.author), why: "" });
+  if (!suggestDraft.by) suggestDraft.by = ls.get("bc-my-name") || "";
+  suggestForm(!!prefill);
+}
+function suggestForm(prefilled) {
+  const d = suggestDraft, share = canShare();
+  const inp = (key, a) => el("input", { ...a, type: "text", autocomplete: a.autocomplete || "off", value: d[key], oninput: (e) => {
+    d[key] = e.currentTarget.value;
+    if (key === "title" && d.title.trim()) { e.currentTarget.removeAttribute("aria-invalid"); $("sg-msg").hidden = true; }
+  } });
+  const fld = (id, label, input) => el("div", { class: "field" }, el("label", { for: id }, label), input);
+  const send = async (how) => {
+    const b = { title: oneLine(d.title, 120).replace(/^["“]+|["”]+$/g, ""), author: oneLine(d.author, 80), why: oneLine(d.why, 200), by: oneLine(d.by, 40) };
+    if (!b.title) {
+      const m = $("sg-msg"); m.textContent = "Add the book’s title first."; m.hidden = false;
+      $("sg-title").setAttribute("aria-invalid", "true"); $("sg-title").focus(); return;
+    }
+    if (b.by) ls.set("bc-my-name", b.by);
+    const text = suggestionText(b);
+    if (how === "share") {
+      try { await navigator.share({ text }); suggestDone("sent", text); return; }
+      catch (e) { if (e?.name === "AbortError") return; }   // share menu closed: stay on the form. Any other failure: copy instead
+    }
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch {}
+    suggestDone(ok ? "copied" : "manual", text);
+  };
+  openModal("suggest-title", el("form", { id: "suggest-form", novalidate: true, onsubmit: (e) => { e.preventDefault(); send(share ? "share" : "copy"); } },
+    el("h3", { id: "suggest-title" }, "Suggest a book"),
+    el("p", { class: "hint" }, "What should we read next? Fill this in and send it to your club."),
+    S.isHost && !PUBLIC ? el("p", { class: "hint", id: "sg-host" }, "You’re the host, and this is what members see. To put a book on the list yourself, ",
+      el("button", { class: "btn link inline", type: "button", onclick: () => { closeModal(); openClubSection("club-next-sec"); } }, "add it under Next book"), ".") : null,
+    fld("sg-title", "Book title", inp("title", { id: "sg-title", required: true, maxlength: "120", "aria-describedby": "sg-msg" })),
+    fld("sg-author", "Author", inp("author", { id: "sg-author", maxlength: "80" })),
+    fld("sg-why", "Why this book? (optional)", el("textarea", { id: "sg-why", rows: "2", maxlength: "200", oninput: (e) => { d.why = e.currentTarget.value; } }, d.why)),
+    fld("sg-by", "Your name (optional)", inp("by", { id: "sg-by", maxlength: "40", autocomplete: "name" })),
+    el("p", { class: "status warn", id: "sg-msg", role: "alert", hidden: true }),
+    el("div", { class: "actions" },
+      el("button", { class: "btn primary", type: "submit", id: "sg-send" }, share ? "Send to my club" : "Copy my suggestion"),
+      share ? el("button", { class: "btn", type: "button", id: "sg-copy", onclick: () => send("copy") }, "Copy instead") : null,
+      el("button", { class: "btn", type: "button", id: "sg-cancel", onclick: closeModal }, "Cancel")),
+    el("p", { class: "hint", id: "sg-how" }, share ? "Send opens your share menu. Pick your club’s group chat, or your host." : "Then paste it into your club’s group chat, or into a message to your host.")));
+  $(prefilled && d.title ? "sg-send" : "sg-title").focus();
+}
+function suggestDone(kind, text) {
+  Object.assign(suggestDraft, { title: "", author: "", why: "" });   // the name stays for next time
+  const where = "Once your host adds it, it shows under “In the running” on the Bookshelf.";
+  const box = kind === "sent" ? null : el("textarea", { id: "sg-text", class: "sg-text", readonly: true, rows: String(text.split("\n").length + 1), "aria-label": "Your suggestion" }, text);
+  openModal("suggest-title",
+    el("h3", { id: "suggest-title" }, kind === "sent" ? "Thanks for the suggestion!" : kind === "copied" ? "Copied" : "Copy your suggestion"),
+    el("p", { id: "sg-result", role: "status" }, kind === "sent" ? where
+      : kind === "copied" ? "Now paste it into your club’s group chat, or into a message to your host. " + where
+      : "Your browser blocked copying. Select the text below, copy it, and send it to your club’s group chat or your host."),
+    box,
+    el("div", { class: "actions" },
+      el("button", { class: "btn primary", type: "button", id: "sg-done", onclick: closeModal }, "Done"),
+      el("button", { class: "btn", type: "button", id: "sg-again", onclick: () => suggestForm(false) }, "Suggest another")));
+  if (kind === "manual") { box.focus(); box.select(); } else $("sg-done").focus();
+}
+
 // The club's own strip at the top of the home tab: name, blurb, and the club's forms in two groups:
 // the next meeting (RSVP, send a question) and the next book (suggest a book, vote).
 const orList = (a) => (a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " or " + a[a.length - 1]);
@@ -1647,7 +1785,17 @@ function formLink(id, url, label, opts = {}) {
 }
 // What members still can't do because a form link is missing (host-only reminder).
 function missingForms(st = S.data.settings) {
-  return [!isUrl(st.rsvpUrl) && "RSVP", !isUrl(st.questionsUrl) && "send questions", !isUrl(st.suggestUrl) && "suggest books", !isUrl(st.voteUrl) && "vote"].filter(Boolean);
+  return [!isUrl(st.rsvpUrl) && "RSVP", !isUrl(st.questionsUrl) && "send questions", !isUrl(st.voteUrl) && "vote"].filter(Boolean);
+}
+// Under the next-book buttons: the way to the books being considered (members) or to the list's editor (host).
+function runningLink() {
+  const n = runningList().length;
+  if (S.isHost && !PUBLIC) return el("button", { class: "btn link club-more", id: "club-edit-list", type: "button", onclick: () => openClubSection("club-next-sec") },
+    n ? `Edit the books in the running (${n})` : "Add books to vote on");
+  if (!n) return null;
+  return el("button", { class: "btn link club-more", id: "club-see-list", type: "button",
+    onclick: () => { showView("club"); requestAnimationFrame(() => $("shelf-next")?.scrollIntoView({ behavior: "auto", block: "start" })); } },
+    `See the ${n} book${n === 1 ? "" : "s"} in the running`);
 }
 function openClubSection(id) {
   showView("club");
@@ -1655,7 +1803,7 @@ function openClubSection(id) {
 }
 function clubBar() {
   const st = S.data.settings, named = !!st.clubName.trim();
-  const rsvp = isUrl(st.rsvpUrl), vote = isUrl(st.voteUrl), suggest = isUrl(st.suggestUrl);
+  const rsvp = isUrl(st.rsvpUrl), vote = isUrl(st.voteUrl), suggest = suggestMode(st) !== "off";
   const nx = nextMeeting();
   const ask = isUrl(st.questionsUrl) && !!nx?.date;   // questions are for the next meeting, so only while one is coming up
   // A club that puts dates on its meetings, with nothing dated coming up: an RSVP button would be an RSVP to nothing.
@@ -1675,11 +1823,12 @@ function clubBar() {
       el("div", { class: "club-forms" },
         rsvp ? formLink("club-rsvp", st.rsvpUrl, "RSVP", { primary: true, aria: day ? `RSVP for ${day}` : null }) : null,
         ask ? formLink("club-ask", st.questionsUrl, "Send a question") : null)) : null,
-    (suggest || vote) ? el("div", { class: "club-group" },
+    (suggest || vote) ? el("div", { class: "club-group", id: "club-nextbook" },
       el("p", { class: "club-cap" }, "Our next book"),
       el("div", { class: "club-forms" },
-        suggest ? formLink("club-suggest", st.suggestUrl, "Suggest a book") : null,
-        vote ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book" }) : null)) : null
+        suggestButton(st, "Suggest a book", { id: "club-suggest" }),
+        vote ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book" }) : null),
+      runningLink()) : null
   ].filter(Boolean);
   // Host-only reminder, in plain terms, of what members can't do yet. Hidden once dismissed (until the list changes).
   const cant = missingForms(st), sig = (named ? "" : "name|") + cant.join("|");
@@ -1843,16 +1992,16 @@ function renderSaved() {
 const runningList = (data = S.data) => arr(obj(data.shelf).upNext).filter(b => str(b.title).trim());
 // Suggest + Vote buttons. Suggesting is the main action while the list is empty; voting once there is something to vote on.
 function nextBookActions(data = S.data, ids = "") {
-  const s = data.settings, suggest = isUrl(s.suggestUrl), vote = isUrl(s.voteUrl);
+  const s = data.settings, suggest = suggestMode(s) !== "off", vote = isUrl(s.voteUrl);
   if (!suggest && !vote) return null;
   const voteMain = vote && (runningList(data).length > 0 || !suggest);
   return el("div", { class: "actions" },
-    suggest ? el("a", { class: "btn" + (voteMain ? "" : " primary"), id: ids ? ids + "-suggest" : null, href: s.suggestUrl, target: "_blank", rel: "noopener" }, "Suggest a book") : null,
+    suggestButton(s, "Suggest a book", { primary: !voteMain, id: ids ? ids + "-suggest" : null }),
     vote ? el("a", { class: "btn" + (voteMain ? " primary" : ""), id: ids ? ids + "-vote" : null, href: s.voteUrl, target: "_blank", rel: "noopener",
       "aria-label": s.voteLabel.trim() ? null : "Vote on our next book" }, s.voteLabel.trim() || "Vote") : null);
 }
 function nextBookSection(data = S.data) {
-  const s = data.settings, list = runningList(data), suggest = isUrl(s.suggestUrl), vote = isUrl(s.voteUrl);
+  const s = data.settings, list = runningList(data), suggest = suggestMode(s) !== "off", vote = isUrl(s.voteUrl);
   if (!list.length && !suggest && !vote) return null;
   const lead = suggest && vote ? "Suggest a book any time. When it’s time to choose, vote for your favorite."
     : suggest ? "Have a book in mind for our next read? Suggest it."
@@ -1865,8 +2014,8 @@ function nextBookSection(data = S.data) {
       el("div", {}, el("b", {}, b.title), b.author.trim() ? el("span", { class: "hint" }, b.author.trim()) : null,
         b.why.trim() ? el("p", {}, b.why.trim()) : null,
         b.by.trim() ? el("span", { class: "meta" }, "Suggested by " + b.by.trim()) : null))))
-      : suggest ? el("p", { class: "hint", id: "running-empty", style: "margin:0" }, "No books in the running yet. Be the first to suggest one.") : null,
-    suggest ? el("p", { class: "hint", id: "running-note", style: "margin:0" }, "Suggested a book? It shows up here once the host adds it to the list.") : null);
+      : suggest ? el("p", { class: "hint", id: "running-empty", style: "margin:0" }, "No books in the running yet. Suggest one, and it shows up here once your host adds it to the list.") : null,
+    suggest && list.length ? el("p", { class: "hint", id: "running-note", style: "margin:0" }, "Suggested a book? It shows up here once your host adds it to the list.") : null);
 }
 function bookshelf(data = S.data) {
   const books = allBooks(data), shelfBooks = obj(data.shelf.books);
@@ -1928,11 +2077,13 @@ function similarEditor(b, info) {
 function nextBookEditor(d) {
   const list = d.shelf.upNext;
   const dirty = () => { $("club-save").disabled = false; };
-  const hasForm = isUrl(S.data.settings.suggestUrl);
+  const mode = suggestMode(d.settings);
   return el("section", { class: "sec", id: "club-next-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Next book")),
     el("ol", { class: "steps" },
-      el("li", {}, "Members suggest books with your suggestion form", hasForm ? "." : [" (add its link under ", el("button", { class: "btn link inline", type: "button", onclick: () => $("club-forms-sec").scrollIntoView({ block: "start" }) }, "Forms"), ")."]),
-      el("li", {}, "Add the books that are in the running here. Members see the list on the Bookshelf."),
+      el("li", { id: "next-step-1" }, mode === "form" ? "Members tap Suggest a book and fill in your suggestion form. Their answers collect in the form’s responses."
+        : mode === "builtin" ? "Members tap Suggest a book and fill in a short form on your page. Each suggestion reaches you as a message: in your group chat, or sent straight to you."
+        : ["Suggestions are turned off. Turn them on under ", el("button", { class: "btn link inline", type: "button", onclick: () => $("club-forms-sec").scrollIntoView({ block: "start" }) }, "Forms"), "."]),
+      el("li", {}, "Put the books that are in the running here: type them, or paste the suggestions below. Members see the list on the Bookshelf."),
       el("li", {}, "List the same books in your vote form, then ask the group to vote.")),
     list.length ? el("div", { class: "plan-rows", id: "running-rows" }, list.map((b, i) => el("div", { class: "plan-row upnext" },
       field("Title", bindText(b, "title", { type: "text" })), field("Author", bindText(b, "author", { type: "text" })),
@@ -1942,9 +2093,9 @@ function nextBookEditor(d) {
       : el("p", { class: "hint", style: "margin:0" }, "No books in the running yet."),
     el("p", { class: "hint", style: "margin:0" }, "Names you enter show on the public page. Leave “Suggested by” empty to keep a suggestion anonymous."),
     el("div", { class: "actions" }, el("button", { class: "btn", id: "club-add-book", type: "button", onclick: () => { list.push({ title: "", author: "", by: "", why: "" }); renderClub(); dirty(); const rows = document.querySelectorAll("#running-rows .plan-row"); rows[rows.length - 1]?.querySelector("input")?.focus(); } }, "+ Add a book")),
-    pasteDetails({ id: "book-paste", label: "Book suggestions to add", button: "Add these books", attrs: keepOpen("paste-books"),
-      placeholder: "Paste here: rows copied from the responses sheet, or one book per line (Title by Author)",
-      hint: "In your suggestion form, open Responses, then View in Sheets. Select the rows (the header row too, if you can), copy, and paste here. Books already on the list are skipped.",
+    pasteDetails({ id: "book-paste", label: "Book suggestions to add", button: "Add these books", summary: "Paste suggestions", attrs: keepOpen("paste-books"),
+      placeholder: "Paste here: suggestion messages, rows from the responses sheet, or one book per line (Title by Author)",
+      hint: "Copy the suggestion messages from your chat and paste them here, several at once if you like. From a Google Form: open Responses, then View in Sheets, select the rows (the header row too, if you can) and copy. Books already on the list are skipped.",
       onAdd: (text) => {
         const have = new Set(list.map(b => bookKey(b.title)).filter(Boolean));
         const add = parsePastedBooks(text).filter(b => { const k = bookKey(b.title); if (have.has(k)) return false; have.add(k); return true; });
@@ -1956,12 +2107,13 @@ function nextBookEditor(d) {
 }
 // Which of the club's four forms are live on the public page (from what's saved, not what's being typed).
 function formsStatus() {
-  const st = S.data.settings;
-  const all = [["RSVP", st.rsvpUrl], ["Questions", st.questionsUrl], ["Book suggestions", st.suggestUrl], ["Vote", st.voteUrl]];
-  const on = all.filter(x => isUrl(x[1])).map(x => x[0]), off = all.filter(x => !isUrl(x[1])).map(x => x[0]);
+  const st = S.data.settings, mode = suggestMode(st);
+  const all = [["RSVP", isUrl(st.rsvpUrl)], ["Questions", isUrl(st.questionsUrl)],
+    [mode === "builtin" ? "Book suggestions (built in)" : mode === "off" ? "Book suggestions (turned off)" : "Book suggestions", mode !== "off"], ["Vote", isUrl(st.voteUrl)]];
+  const on = all.filter(x => x[1]).map(x => x[0]), off = all.filter(x => !x[1]).map(x => x[0]);
   return el("p", { class: "forms-status", id: "forms-status" },
     on.length ? el("span", { class: "chip" }, "On your page: " + on.join(", ")) : null,
-    off.length ? el("span", { class: "chip planned" }, "Not set up: " + off.join(", ")) : null);
+    off.length ? el("span", { class: "chip planned" }, "Not on your page: " + off.join(", ")) : null);
 }
 const CLUB_NAV = [["club-details-sec", "Club details"], ["club-forms-sec", "Forms"], ["club-schedule-sec", "Schedule"], ["club-next-sec", "Next book"], ["club-shelf-sec", "Bookshelf"]];
 function tzOptions(current) {
@@ -2001,7 +2153,7 @@ async function saveClub() {
   }
   for (const info of Object.values(d.shelf.books)) if (info && "similar" in info) info.similar = normSimilar(info.similar);
   const data = withCurrentSaved(cloneData());
-  data.settings = { ...d.settings, timezone: d.settings.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone };
+  data.settings = { ...d.settings, suggestOff: !!d.settings.suggestOff, timezone: d.settings.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone };
   data.schedule = d.schedule.filter(p => p.book.trim()).map(p => ({ ...p, book: p.book.trim(), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1) }));
   data.shelf = { upNext: d.shelf.upNext.filter(b => str(b.title).trim()).map(b => ({ title: str(b.title).trim(), author: str(b.author).trim(), by: str(b.by).trim(), why: str(b.why).trim() })), books: d.shelf.books };
   const ok = await publishState(data, "Club changes saved. The public site picks them up at its next update (within about 3 hours).");
@@ -2029,12 +2181,15 @@ function renderClub() {
         tzOptions(s.timezone).map(z => el("option", { value: z, selected: z === (s.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone) }, z.replace(/_/g, " ")))),
         "Meeting times and calendar invites use this time zone, even when you plan from somewhere else.")),
     el("section", { class: "sec", id: "club-forms-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Forms")),
-      el("p", { class: "hint", style: "margin:0" }, "Each button on your public page opens a Google Form that you make once. In Google Forms, tap Send, copy the link and paste it here. Leave a box empty to hide its button. ",
+      el("p", { class: "hint", style: "margin:0" }, "Each button on your public page opens a Google Form that you make once. In Google Forms, tap Send, copy the link and paste it here. Leave a box empty to hide its button. Book suggestions work without a form. ",
         el("a", { href: "https://forms.new", target: "_blank", rel: "noopener" }, "Start a new form"), "."),
       formsStatus(),
       formField("rsvpUrl", "RSVP form link", "Your name · Are you coming? (Yes / No / Maybe).", "Members see RSVP on the home page."),
       formField("questionsUrl", "Question form link", "Your question (paragraph) · Your name (optional).", "Members see Send a question before each meeting."),
-      formField("suggestUrl", "Book suggestion form link", "Book title · Author · Why this book? (optional) · Your name (optional).", "Members see Suggest a book on the home page and the Bookshelf."),
+      el("div", { class: "form-block", id: "suggest-block" },
+        el("label", { class: "check" }, el("input", { type: "checkbox", id: "suggest-on", checked: !s.suggestOff, onchange: (e) => { s.suggestOff = !e.currentTarget.checked; dirty(); } }), "Members can suggest books"),
+        el("p", { class: "hint", style: "margin:0" }, "Works without a form: Suggest a book (on the home page and the Bookshelf) opens a short form on your page, and the member sends the suggestion as a message to your group chat or to you."),
+        formField("suggestUrl", "Book suggestion form link (optional)", "Book title · Author · Why this book? (optional) · Your name (optional).", "With a link, Suggest a book opens your Google Form instead, and the answers collect in one place.")),
       formField("voteUrl", "Next-book vote form link", "One multiple-choice question listing the books in the running.", "Members see Vote on the home page and the Bookshelf."),
       field("Vote button text (optional)", bindText(s, "voteLabel", { type: "text", placeholder: "Vote", maxlength: "40" }), "Leave empty for \u201cVote\u201d. Example: Pick our January book.")),
     el("section", { class: "sec", id: "club-schedule-sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Reading schedule")),
