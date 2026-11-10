@@ -414,6 +414,7 @@ label.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 
 .sg-hit span:empty { display: none; }
 .sg-picked { margin: 0; font-size: 14px; }
 #sg-all-by { justify-self: start; }
+.similar-group + .similar-group { margin-top: 22px; }
 </style>
 </head>
 <body>
@@ -1080,8 +1081,6 @@ function toMarkdown(m) {
     if (w.nextReading) L.push(`- Next reading: ${w.nextReading}`);
     if (w.bring) L.push(`- Bring next time: ${w.bring}`);
   }
-  const sim = similarFor(m.book);
-  if (sim.length) { L.push("", "## Similar books", ""); sim.forEach(b => L.push(`- **${b.title}**${b.author ? " by " + b.author : ""}${b.year ? ` (${b.year})` : ""}${b.why ? ": " + b.why : ""}`)); }
   return L.join("\n") + "\n";
 }
 function fileName(m) {
@@ -1109,8 +1108,6 @@ function toPlainText(m) {
     if (w.nextReading) L.push(`- Next reading: ${w.nextReading}`);
     if (w.bring) L.push(`- Bring next time: ${w.bring}`);
   }
-  const sim = similarFor(m.book);
-  if (sim.length) { section("Similar books"); sim.forEach(b => L.push(`- ${b.title}${b.author ? " by " + b.author : ""}${b.year ? ` (${b.year})` : ""}${b.why ? ": " + b.why : ""}`)); }
   return L.join("\n") + "\n";   // the spoiler note is left out on purpose: copies get forwarded
 }
 async function copyGuide(btn) {
@@ -1234,10 +1231,10 @@ function whenText(d, time, o = {}) {
   return `${over ? "Met" : "Meeting"} ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}${time ? " · " + fmtMeetTime(d, time, o.local !== false) : ""} · ${rel}`;
 }
 // Jump between sections on long guides (a phone guide runs ~7,000px). Buttons, not #links, so the URL stays clean.
-const JUMP_LABELS = { agenda: "Agenda", recap: "Recap", icebreakers: "Icebreakers", chapterQuestions: "Questions", memberQuestions: "Your questions", themes: "Themes", context: "Context", adaptations: "Movie & TV", wrapUp: "Wrap-up", similar: "Similar books" };
+const JUMP_LABELS = { agenda: "Agenda", recap: "Recap", icebreakers: "Icebreakers", chapterQuestions: "Questions", memberQuestions: "Your questions", themes: "Themes", context: "Context", adaptations: "Movie & TV", wrapUp: "Wrap-up" };
 function jumpNav(g, extra = {}) {
   const has = {
-    memberQuestions: extra.memberQuestions, similar: extra.similar,
+    memberQuestions: extra.memberQuestions,
     agenda: g.agenda.length, recap: g.recap.length, icebreakers: g.icebreakers.length, chapterQuestions: g.chapterQuestions.length,
     themes: g.themes.length, context: g.context.length || g.spoilerNote, adaptations: g.adaptations.length,
     wrapUp: g.wrapUp.predictions.length || g.wrapUp.nextReading || g.wrapUp.bring
@@ -1401,30 +1398,22 @@ function parsePastedBooks(text) {
   return out;
 }
 
-// ---------- Similar books: picks per book, kept on the shelf (every guide for the book shows them, plus the Bookshelf) ----------
+// ---------- Similar books: picks per book, kept on the shelf (shown on the Bookshelf, under Reading now) ----------
 const normSimilar = (list) => arr(list).map(b => ({ title: str(b?.title).trim(), author: str(b?.author).trim(), year: str(b?.year).trim(), why: str(b?.why).trim() })).filter(b => b.title);
-function similarLine(book, data) {
-  const sim = similarFor(book, data);
-  if (!sim.length) return null;
-  const names = sim.slice(0, 3).map(x => x.title).join(", ");
-  return el("span", { class: "meta similar-line" }, `If you like it: ${names}${sim.length > 3 ? ` and ${sim.length - 3} more in the guide` : ""}`);
-}
 function similarFor(book, data = S.data) { return normSimilar(obj(obj(obj(data.shelf).books)[bookKey(book)]).similar); }
-function similarBlock(m, list) {
-  const st = S.data.settings, mode = suggestMode(st);
-  if (!list.length) return el("div", {},
-    el("p", { class: "hint", style: "margin:0 0 10px" }, "No picks yet. Claude can suggest books like this one. Members see them here and on the Bookshelf."),
-    el("button", { class: "btn", type: "button", id: "btn-similar", disabled: !!S.suggesting || S.publishing, onclick: () => suggestForGuide(m) },
-      S.suggesting ? [el("span", { class: "thinking" }), " Finding books\u2026"] : "Suggest similar books"));
-  return el("div", {},
-    el("p", { class: "hint", style: "margin:0 0 12px" }, `If you like ${m.book}, try these next. No spoilers.`),
-    el("ul", { class: "similar" }, list.map(b => el("li", {}, cover(b.title, b.author, "sm"),
-      el("div", {}, el("b", {}, b.title), (b.author || b.year) ? el("span", { class: "hint" }, [b.author, b.year].filter(Boolean).join(" \u00b7 ")) : null,
-        b.why ? el("p", {}, b.why) : null,
-        mode !== "off" ? el("div", {}, suggestButton(st, "Suggest this one", { cls: "link sim-suggest", aria: `Suggest ${b.title} for our next book`, prefill: { title: b.title, author: b.author } })) : null)))),
-    isUrl(st.voteUrl) ? el("div", { class: "actions", style: "margin-top:12px" },
-      isUrl(st.voteUrl) ? el("a", { class: "btn", href: st.voteUrl, target: "_blank", rel: "noopener" }, st.voteLabel.trim() || "Vote on our next book") : null) : null,
-    canManage() ? el("p", { class: "hint", style: "margin:10px 0 0" }, "Edit or replace these in the ", el("button", { class: "btn link", type: "button", onclick: () => showView("club") }, "Club tab"), ".") : null);
+// Similar books live on the Bookshelf (v5.6), under Reading now: picks for each book the club is reading.
+function similarSection(reading, data) {
+  const st = data.settings, mode = suggestMode(st);
+  const groups = reading.map(b => ({ b, list: similarFor(b.book, data) })).filter(g => g.list.length);
+  if (!groups.length) return null;
+  return el("section", { class: "sec", id: "sec-similar" }, el("div", { class: "sec-head" }, el("h2", {}, "Similar books")),
+    groups.map(({ b, list }) => el("div", { class: "similar-group" },
+      el("p", { class: "hint", style: "margin:0 0 12px" }, `If you like ${b.book}, try these next. No spoilers.`),
+      el("ul", { class: "similar" }, list.map(x => el("li", {}, cover(x.title, x.author, "sm"),
+        el("div", {}, el("b", {}, x.title), (x.author || x.year) ? el("span", { class: "hint" }, [x.author, x.year].filter(Boolean).join(" \u00b7 ")) : null,
+          x.why ? el("p", {}, x.why) : null,
+          mode !== "off" ? el("div", {}, suggestButton(st, "Suggest this one", { cls: "link sim-suggest", aria: `Suggest ${x.title} for our next book`, prefill: { title: x.title, author: x.author } })) : null)))))),
+    S.isHost && !PUBLIC ? el("p", { class: "hint", style: "margin:10px 0 0" }, "Edit or replace these under Books, above.") : null);
 }
 function similarPrompt(book, author) {
   return `A book club is reading "${book}"${author ? " by " + author : ""}. Recommend 6 books its members would enjoy next.
@@ -1440,21 +1429,6 @@ const SAMPLE_BLOCKED = ["not_granted", "sampling_disabled", "not_declared", "cap
 async function suggestSimilar(book, author) {
   const out = await S.sample.json(similarPrompt(book, author), { cache: false });
   return normSimilar(out?.books).slice(0, 8);
-}
-async function suggestForGuide(m) {
-  if (!S.sample || !canManage() || S.suggesting) return;
-  S.suggesting = "guide"; setStatus(""); renderGuide();
-  let list = [];
-  try { list = await suggestSimilar(m.book, m.author); }
-  catch (e) { if (e?.code !== "cancelled") setStatus(SAMPLE_BLOCKED.includes(e?.code) ? errorCopy(e) : "Claude couldn't suggest books right now. Try again.", true); }
-  S.suggesting = null;
-  if (!list.length) { if ($("status").hidden) setStatus("Claude couldn't suggest books right now. Try again.", true); renderGuide(); return; }
-  const data = withCurrentSaved(cloneData());
-  const key = bookKey(m.book), books = obj(data.shelf.books);
-  books[key] = { finished: false, rating: "", verdict: "", about: "", ...obj(books[key]), similar: list };
-  data.shelf = { ...data.shelf, books };
-  await publishState(data, "Similar books saved. The public site shows them at its next update (within about 3 hours).");
-  renderGuide();
 }
 async function suggestForClub(b, info) {
   if (!S.sample || S.suggesting) return;
@@ -1554,8 +1528,7 @@ function renderGuide() {
   ];
 
   const showMQ = E || showMemberQuestions(m);
-  const sim = similarFor(m.book), showSim = !E && (sim.length > 0 || (canManage() && !!S.sample && !!m.id));
-  if (!E) { const nav = jumpNav(g, { memberQuestions: showMQ, similar: showSim }); if (nav) parts.push(nav); }   // sibling of the sections, so it can stick while they scroll
+  if (!E) { const nav = jumpNav(g, { memberQuestions: showMQ }); if (nav) parts.push(nav); }   // sibling of the sections, so it can stick while they scroll
   if (g.agenda.length) parts.push(sec("agenda", el("div", { class: "scroll" },
     el("table", { class: "agenda" },
       el("thead", {}, el("tr", {}, el("th", {}, "Time"), el("th", {}, "Segment"), el("th", {}, "What happens"), E ? el("th", {}, el("span", { class: "sr-only" }, "Remove")) : null)),
@@ -1594,8 +1567,6 @@ function renderGuide() {
         : w.predictions.join(" ")) : null,
     (w.nextReading || E) ? el("li", {}, el("b", {}, "Next reading"), tx("span", "wrapUp.nextReading", "Next reading")) : null,
     (w.bring || E) ? el("li", {}, el("b", {}, "Bring next time"), tx("span", "wrapUp.bring", "Bring next time")) : null)));
-
-  if (showSim) parts.push(sec("similar", similarBlock(m, sim)));
 
   root.replaceChildren(...parts.filter(Boolean));
 }
@@ -2197,9 +2168,9 @@ function bookshelf(data = S.data) {
         el("div", {}, el("b", {}, b.book), b.author ? el("span", { class: "hint" }, b.author) : null,
           shelfBooks[b.key]?.about ? el("p", { class: "about" }, shelfBooks[b.key].about) : null,
           el("span", { class: "meta" }, (() => { const done = rows.filter(r => !r.planned && r.date && !isUpcoming(r)).length; return `${rows.length} meeting${rows.length === 1 ? "" : "s"}${done ? `, ${done} done` : ""}`; })()),
-          n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtMeetTime(n.date, n.time) : ""}`) : null,
-          similarLine(b.book, data)));
+          n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtMeetTime(n.date, n.time) : ""}`) : null));
     }))));
+  parts.push(similarSection(reading, data));
   parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Books we've read")),
     finished.length ? el("div", { class: "shelf" }, finished.map(b => {
       const info = shelfBooks[b.key];
@@ -2235,7 +2206,7 @@ function similarEditor(b, info) {
   return el("details", { class: "sim-edit", ...keepOpen(key) },
     el("summary", {}, `Similar books (${n})`),
     el("div", { class: "sim-head" },
-      el("p", { class: "hint", style: "margin:0" }, "Shown at the end of every guide for this book and on the Bookshelf. Keep the reasons spoiler-free."),
+      el("p", { class: "hint", style: "margin:0" }, "Shown on the Bookshelf, under Reading now. Keep the reasons spoiler-free."),
       S.sample ? el("button", { class: "btn small", type: "button", disabled: !!S.suggesting, onclick: () => { clubOpen.add(key); suggestForClub(b, info); } },
         busy ? [el("span", { class: "thinking" }), " Finding books…"] : (n ? "Suggest new picks" : "Suggest with Claude")) : null),
     list.length ? el("div", { class: "plan-rows" }, list.map((x, i) => el("div", { class: "plan-row sim-row" },
