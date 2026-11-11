@@ -440,7 +440,7 @@
   "suggestUrl": "https://docs.google.com/forms/d/e/1FAIpQLSftD75gFczIfeaXGNFHu5MjmLu3eCQO2JmfE81RGUrq8UW9aw/viewform?usp=pp_url&entry.1942427135=NAME&entry.2146332353=TITLE&entry.2114115816=AUTHOR&entry.180248078=WHY&entry.1826694680=LINK",
   "suggestOff": false,
   "ballotAuto": true,
-  "ballotUrl": ""
+  "ballotUrl": "https://script.google.com/macros/s/AKfycbxQUW0v5M-v6PraVJZeVSk8-RqKh4XIn9Qkh4Fn5igAtyCk-MLrwFZuZ5lMT1H0O8qTOQ/exec"
  },
  "schedule": [
   {
@@ -504,5 +504,5 @@
   }
  },
  "public": true,
- "exportedAt": "2026-11-11T04:52:38.943833Z"
+ "exportedAt": "2026-11-11T13:21:10.312247Z"
 }
