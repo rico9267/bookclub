@@ -255,10 +255,10 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 6px;
 /* Typographic covers: a hue per title, no images needed. */
 .cover { --hue: 160; flex: none; width: 72px; height: 104px; border-radius: 4px 8px 8px 4px; padding: 8px 7px; display: flex; flex-direction: column; justify-content: space-between;
   background: linear-gradient(90deg, hsl(var(--hue) 30% 22%) 0 6px, hsl(var(--hue) 38% 34%) 6px); color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); overflow: hidden; }
-.cover-title { font-family: var(--font-display); font-size: 11px; font-weight: 650; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; hyphens: auto; }
+.cover-title { font-family: var(--font-display); font-size: var(--cover-fs, 11px); font-weight: 650; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; hyphens: auto; }
 .cover-author { font-size: 8.5px; opacity: .85; line-height: 1.2; }
 .cover.sm { width: 48px; height: 70px; padding: 5px; }
-.cover.sm .cover-title { font-size: 8px; -webkit-line-clamp: 4; } .cover.sm .cover-author { display: none; }
+.cover.sm .cover-title { font-size: var(--cover-fs, 8px); -webkit-line-clamp: 4; } .cover.sm .cover-author { display: none; }
 .cover.xs { width: 30px; height: 44px; padding: 3px; } .cover.xs .cover-title, .cover.xs .cover-author { display: none; }
 
 .book-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
@@ -422,6 +422,8 @@ label.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 
 /* "Have your own question?" at the top of the discussion questions */
 .ask-callout { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 10px 12px; margin-bottom: 14px; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-weight: 600; }
 @media print { .ask-callout, .sec-shielded .btn { display: none !important; } }
+
+#sg-dup { margin: -4px 0 0; color: var(--ink); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -1848,10 +1850,17 @@ function suggestForm(prefilled) {
   const d = suggestDraft, share = canShare(), formMode = suggestMode() === "form";
   const inp = (key, a) => el("input", { ...a, type: "text", autocomplete: a.autocomplete || "off", value: d[key], oninput: (e) => {
     d[key] = e.currentTarget.value;
-    if (key === "title") d.link = "";   // typed over: the link of the book picked from the search no longer applies
+    if (key === "title") { d.link = ""; dupNote(); }   // typed over: the link of the book picked from the search no longer applies
     if (key === "title" && d.title.trim()) { e.currentTarget.removeAttribute("aria-invalid"); $("sg-msg").hidden = true; }
   } });
   const fld = (id, label, input) => el("div", { class: "field" }, el("label", { for: id }, label), input);
+  // The book is already in the running (the live ballot or the host's list): say so before they send it again.
+  const dupNote = () => {
+    const n = $("sg-dup"); if (!n) return;
+    const k = ballotKey(d.title), hit = k ? runningList().find(b => ballotKey(b.title) === k) : null;
+    n.hidden = !hit;
+    n.textContent = hit ? `“${hit.title}” is already in the running. No need to send it again${isUrl(S.data.settings.voteUrl) ? "; vote for it when the time comes" : ""}.` : "";
+  };
   const send = async (how) => {
     const b = { title: oneLine(d.title, 120).replace(/^["“]+|["”]+$/g, ""), author: oneLine(d.author, 80), why: oneLine(d.why, 200), by: oneLine(d.by, 40), link: d.link };
     if (!b.title) {
@@ -1886,7 +1895,7 @@ function suggestForm(prefilled) {
   const pick = (b) => {
     Object.assign(d, { title: b.title, author: b.author, link: b.link, q: "" });
     $("sg-q").value = ""; $("sg-title").value = b.title; $("sg-author").value = b.author;
-    $("sg-title").removeAttribute("aria-invalid"); $("sg-msg").hidden = true;
+    $("sg-title").removeAttribute("aria-invalid"); $("sg-msg").hidden = true; dupNote();
     box.replaceChildren(el("p", { class: "sg-picked", id: "sg-picked" }, el("b", {}, "Filled in: "), `${b.title} by ${b.author}. `,
       el("button", { class: "btn link inline", type: "button", id: "sg-more", onclick: () => run(b.author, true) }, `More by ${b.author}`)));
     say(`Filled in ${b.title} by ${b.author}.`);
@@ -1933,6 +1942,7 @@ function suggestForm(prefilled) {
       el("span", { class: "hint", id: "sg-q-hint" }, "Type a title or an author, then tap the book. Search by Open Library."),
       box, live),
     fld("sg-title", "Book title", inp("title", { id: "sg-title", required: true, maxlength: "120", "aria-describedby": "sg-msg" })),
+    el("p", { class: "hint", id: "sg-dup", role: "status", hidden: true }),
     fld("sg-author", "Author", inp("author", { id: "sg-author", maxlength: "80" })),
     fld("sg-why", "Why this book? (optional)", el("textarea", { id: "sg-why", rows: "2", maxlength: "200", oninput: (e) => { d.why = e.currentTarget.value; } }, d.why)),
     fld("sg-by", formMode ? "Your name" : "Your name (optional)", inp("by", { id: "sg-by", maxlength: "40", autocomplete: "name" })),
@@ -1943,6 +1953,7 @@ function suggestForm(prefilled) {
       el("button", { class: "btn", type: "button", id: "sg-cancel", onclick: closeModal }, "Cancel")),
     el("p", { class: "hint", id: "sg-how" }, formMode ? "The club’s Google Form opens with your book filled in. Tap Submit there to send it."
       : share ? "Send opens your share menu. Pick your club’s group chat, or your host." : "Then paste it into your club’s group chat, or into a message to your host.")));
+  dupNote();
   $(prefilled && d.title ? "sg-send" : "sg-q").focus();
 }
 function suggestDone(kind, text, url) {
@@ -2105,7 +2116,11 @@ function hiddenNote(m, chapter) {
 // Typographic book cover (no network needed, works inside Claude and on GitHub Pages).
 function cover(title, author, size = "") {
   let h = 0; for (const c of bookKey(title)) h = (h * 31 + c.charCodeAt(0)) % 360;
-  return el("div", { class: "cover " + size, style: `--hue:${h}`, "aria-hidden": "true" },
+  // A long word ("Christopher") must not be cut mid-word on a narrow cover: shrink the title just enough to fit it.
+  const longest = Math.max(0, ...str(title).split(/[\s\-\/]+/).map(w => w.length));
+  const [base, inner] = size === "sm" ? [8, 38] : [11, 58];
+  const fit = Math.max(base * 0.66, Math.min(base, inner / (longest * 0.6)));
+  return el("div", { class: "cover " + size, style: `--hue:${h}` + (fit < base ? `;--cover-fs:${fit.toFixed(2)}px` : ""), "aria-hidden": "true" },
     el("span", { class: "cover-title" }, title), author ? el("span", { class: "cover-author" }, author) : null);
 }
 function stars(r) {
