@@ -424,6 +424,17 @@ label.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 
 @media print { .ask-callout, .sec-shielded .btn { display: none !important; } }
 
 #sg-dup { margin: -4px 0 0; color: var(--ink); font-weight: 600; }
+
+/* v6.4: predictions, vote results, ratings */
+.preds { margin: 0; padding-left: 20px; display: grid; gap: 10px; max-width: 70ch; }
+.preds-edit .editable:first-child:empty::before { content: "What they predicted"; }
+.vote-line { margin: 0; font-size: 14.5px; color: var(--muted); }
+.vote-line.won, .club-note.won { color: var(--ink, inherit); font-weight: 600; }
+.running .votes { font-size: 13.5px; color: var(--muted); }
+.running li.winner b { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.rating-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
+.rate-sec .actions { margin-top: 4px; }
+.rating-line.members .rating-num { display: none; }
 </style>
 </head>
 <body>
@@ -541,10 +552,11 @@ const SECTION_LABELS = {
   agenda: "Agenda", recap: "Chapter recap", icebreakers: "Icebreakers",
   chapterQuestions: "Discussion questions", themes: "Big-picture talking points",
   context: "Interesting context", adaptations: "Film, TV and stage", wrapUp: "Wrap-up",
-  memberQuestions: "Your questions", similar: "Similar books"
+  memberQuestions: "Your questions", similar: "Similar books",
+  lastPredictions: "Last time we predicted", madePredictions: "Predictions we made"
 };
 // Sections that Claude doesn't rewrite: members' own questions, and the book's similar-book picks.
-const NO_REWRITE = new Set(["memberQuestions", "similar"]);
+const NO_REWRITE = new Set(["memberQuestions", "similar", "lastPredictions", "madePredictions"]);
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, attrs = {}, ...kids) => {
@@ -579,7 +591,8 @@ function normalizeData(d) {
     club: obj(d.club),
     exportedAt: str(d.exportedAt),
     settings: { clubName: str(st.clubName), blurb: str(st.blurb), rsvpUrl: str(st.rsvpUrl), voteUrl: str(st.voteUrl),
-                voteLabel: str(st.voteLabel), timezone: str(st.timezone), questionsUrl: str(st.questionsUrl), suggestUrl: str(st.suggestUrl), suggestOff: !!st.suggestOff, ballotAuto: !!st.ballotAuto, ballotUrl: str(st.ballotUrl) },
+                voteLabel: str(st.voteLabel), timezone: str(st.timezone), questionsUrl: str(st.questionsUrl), suggestUrl: str(st.suggestUrl), suggestOff: !!st.suggestOff, ballotAuto: !!st.ballotAuto, ballotUrl: str(st.ballotUrl),
+      voteCloses: /^\d{4}-\d{2}-\d{2}$/.test(str(st.voteCloses)) ? st.voteCloses : "", voteHideCounts: !!st.voteHideCounts, rateUrl: str(st.rateUrl) },
     schedule: arr(d.schedule).map(p => ({ id: str(p.id), book: str(p.book), author: str(p.author), meetingNumber: Math.max(1, parseInt(p.meetingNumber, 10) || 1),
                                           chapters: str(p.chapters), date: str(p.date), time: str(p.time), type: p.type === "wrapup" ? "wrapup" : "chapters" })),
     // upNext = books in the running for the next vote (title, author, who suggested it, their one-line reason)
@@ -843,7 +856,8 @@ function normalizeGuide(g) {
     spoilerNote: str(g.spoilerNote),
     adaptations: arr(g.adaptations).map(a => ({ title: str(a.title), detail: str(a.detail) })),
     wrapUp: { predictions: arr(g.wrapUp?.predictions).map(str), nextReading: str(g.wrapUp?.nextReading), bring: str(g.wrapUp?.bring) },
-    memberQuestions: arr(g.memberQuestions).map(q => ({ question: str(q?.question), from: str(q?.from) }))
+    memberQuestions: arr(g.memberQuestions).map(q => ({ question: str(q?.question), from: str(q?.from) })),
+    madePredictions: arr(g.madePredictions).map(q => ({ text: str(q?.text), by: str(q?.by) }))
   };
 }
 
@@ -1108,6 +1122,7 @@ function toMarkdown(m) {
     if (w.nextReading) L.push(`- Next reading: ${w.nextReading}`);
     if (w.bring) L.push(`- Bring next time: ${w.bring}`);
   }
+  if (g.madePredictions.length) { L.push("", "## Predictions we made", ""); g.madePredictions.forEach(q => L.push(`- ${q.text}${q.by ? ` (${q.by})` : ""}`)); }
   return L.join("\n") + "\n";
 }
 function fileName(m) {
@@ -1136,6 +1151,7 @@ function toPlainText(m) {
     if (w.nextReading) L.push(`- Next reading: ${w.nextReading}`);
     if (w.bring) L.push(`- Bring next time: ${w.bring}`);
   }
+  if (g.madePredictions.length) { section("Predictions we made"); g.madePredictions.forEach(q => L.push(`- ${q.text}${q.by ? ` (${q.by})` : ""}`)); }
   return L.join("\n") + "\n";   // the spoiler note is left out on purpose: copies get forwarded
 }
 async function copyGuide(btn) {
@@ -1215,6 +1231,7 @@ function cleanGuide(g) {
   g.chapterQuestions = g.chapterQuestions.map(c => ({ ...c, questions: c.questions.filter(q => q.trim()) }));
   g.wrapUp.predictions = g.wrapUp.predictions.filter(p => p.trim());
   g.memberQuestions = g.memberQuestions.filter(q => q.question.trim()).map(q => ({ question: q.question.trim(), from: q.from.trim() }));
+  g.madePredictions = g.madePredictions.filter(q => q.text.trim()).map(q => ({ text: q.text.trim(), by: q.by.trim() }));
   return g;
 }
 function toggleEdit() {
@@ -1259,10 +1276,10 @@ function whenText(d, time, o = {}) {
   return `${over ? "Met" : "Meeting"} ${day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}${time ? " · " + fmtMeetTime(d, time, o.local !== false) : ""} · ${rel}`;
 }
 // Jump between sections on long guides (a phone guide runs ~7,000px). Buttons, not #links, so the URL stays clean.
-const JUMP_LABELS = { agenda: "Agenda", recap: "Recap", icebreakers: "Icebreakers", chapterQuestions: "Questions", memberQuestions: "Your questions", themes: "Themes", context: "Context", adaptations: "Movie & TV", wrapUp: "Wrap-up" };
+const JUMP_LABELS = { agenda: "Agenda", recap: "Recap", icebreakers: "Icebreakers", chapterQuestions: "Questions", memberQuestions: "Your questions", themes: "Themes", context: "Context", adaptations: "Movie & TV", wrapUp: "Wrap-up", lastPredictions: "Last time", madePredictions: "Predictions" };
 function jumpNav(g, extra = {}) {
   const has = {
-    memberQuestions: extra.memberQuestions,
+    memberQuestions: extra.memberQuestions, lastPredictions: extra.lastPredictions, madePredictions: extra.madePredictions,
     agenda: g.agenda.length, recap: g.recap.length, icebreakers: g.icebreakers.length, chapterQuestions: g.chapterQuestions.length,
     themes: g.themes.length, context: g.context.length || g.spoilerNote, adaptations: g.adaptations.length,
     wrapUp: g.wrapUp.predictions.length || g.wrapUp.nextReading || g.wrapUp.bring
@@ -1565,7 +1582,13 @@ function renderGuide() {
   ];
 
   const showMQ = E || showMemberQuestions(m);
-  if (!E) { const nav = jumpNav(g, { memberQuestions: showMQ }); if (nav) parts.push(nav); }   // sibling of the sections, so it can stick while they scroll
+  const prev = m.id ? prevMeeting(m) : null, lastPreds = !E && prev ? predsOf(prev) : [];
+  const past = !!m.id && !!m.date && !isUpcoming(m);
+  const showMade = E || g.madePredictions.length > 0 || (past && canManage() && !PUBLIC);
+  if (!E) { const nav = jumpNav(g, { memberQuestions: showMQ, lastPredictions: lastPreds.length, madePredictions: g.madePredictions.length }); if (nav) parts.push(nav); }
+  if (lastPreds.length) parts.push(sec("lastPredictions", sectionHidden(m, "lastPredictions") ? hiddenSection(m, "lastPredictions") : [
+    el("p", { class: "hint", style: "margin:0" }, `From meeting ${prev.meetingNumber}${str(prev.chapters).trim() ? ` (chapters ${prev.chapters})` : ""}. Were we right?`),
+    predList(lastPreds)]));   // sibling of the sections, so it can stick while they scroll
   if (g.agenda.length) parts.push(sec("agenda", el("div", { class: "scroll" },
     el("table", { class: "agenda" },
       el("thead", {}, el("tr", {}, el("th", {}, "Time"), el("th", {}, "Segment"), el("th", {}, "What happens"), E ? el("th", {}, el("span", { class: "sr-only" }, "Remove")) : null)),
@@ -1610,6 +1633,30 @@ function renderGuide() {
         : w.predictions.join(" ")) : null,
     (w.nextReading || E) ? el("li", {}, el("b", {}, "Next reading"), tx("span", "wrapUp.nextReading", "Next reading")) : null,
     (w.bring || E) ? el("li", {}, el("b", {}, "Bring next time"), tx("span", "wrapUp.bring", "Bring next time")) : null)));
+
+  // After the meeting: what people actually predicted, by name. It opens the next meeting ("were we right?").
+  if (showMade) parts.push(sec("madePredictions", sectionHidden(m, "madePredictions") && !E ? hiddenSection(m, "madePredictions") : [
+    E ? el("p", { class: "hint", style: "margin:0" }, "What did people predict at this meeting? One line each, with a name if you like. They open the next meeting’s page as “Last time we predicted”.")
+      : !g.madePredictions.length ? el("p", { class: "hint", id: "preds-empty", style: "margin:0" }, "Nothing written down yet. Add what people predicted while you still remember; the next meeting opens with them.")
+      : !isFinalMeeting(m) ? el("p", { class: "hint", style: "margin:0" }, "We’ll check these at the next meeting.") : null,
+    E ? el("ol", { class: "mq preds-edit", "data-list": "madePredictions" }, g.madePredictions.map((_, i) => el("li", {},
+          tx("span", `madePredictions.${i}.text`, `Prediction ${i + 1}`),
+          el("span", { class: "mq-from" }, "By ", tx("span", `madePredictions.${i}.by`, `Prediction ${i + 1}, who said it (optional)`), " ", rmBtn("madePredictions", i, `prediction ${i + 1}`)))))
+      : g.madePredictions.length ? predList(g.madePredictions) : null,
+    E ? addBtn("madePredictions", "Add prediction", { text: "", by: "" })
+      : !g.madePredictions.length ? el("button", { class: "btn small", id: "preds-add", type: "button", onclick: () => {
+          S.editing = true; S.current.guide.madePredictions.push({ text: "", by: "" }); renderGuide();
+          const ed = document.querySelectorAll('[data-list="madePredictions"] .editable'); ed[0]?.focus(); ed[0]?.scrollIntoView({ block: "center" });
+        } }, "Add predictions") : null]));
+
+  // The last meeting of the book: rate it.
+  if (!E && isFinalMeeting(m) && isUrl(S.data.settings.rateUrl)) {
+    const r = clubRating(m.book, obj(S.data.shelf.books)[bookKey(m.book)]);
+    parts.push(el("section", { class: "sec rate-sec", id: "sec-rate" }, el("div", { class: "sec-head" }, el("h2", {}, "Rate the book")),
+      el("p", { style: "margin:0" }, `That’s the end of ${m.book}. How many stars, 1 to 5? It takes ten seconds, and the club’s average shows on the Bookshelf.`),
+      r ? el("p", { style: "margin:0" }, ratingLine(m.book, obj(S.data.shelf.books)[bookKey(m.book)])) : null,
+      el("div", { class: "actions" }, rateButton(m.book, "rate-book", true))));
+  }
 
   root.replaceChildren(...parts.filter(Boolean));
 }
@@ -2017,6 +2064,15 @@ function openClubSection(id) {
   showView("club");
   requestAnimationFrame(() => { const n = $(id); if (n) n.scrollIntoView({ behavior: "auto", block: "start" }); });
 }
+// One line under the next-book buttons: when voting closes, or who won.
+function clubVoteNote() {
+  const st = S.data.settings, v = voteStanding();
+  if (!isUrl(st.voteUrl) || !st.voteCloses) return null;
+  const day = new Date(st.voteCloses + "T12:00:00").toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  const text = v.winner ? `The votes are in: ${v.winner.title}${v.winner.author.trim() ? " by " + v.winner.author.trim() : ""}.`
+    : v.closed ? "Voting has closed." : `Voting closes ${day}.`;
+  return el("p", { class: "club-note" + (v.winner ? " won" : ""), id: "club-vote-note" }, text);
+}
 function clubBar() {
   const st = S.data.settings, named = !!st.clubName.trim();
   const rsvp = isUrl(st.rsvpUrl), vote = isUrl(st.voteUrl), suggest = suggestMode(st) !== "off";
@@ -2043,8 +2099,8 @@ function clubBar() {
       el("p", { class: "club-cap" }, "Our next book"),
       el("div", { class: "club-forms" },
         suggestButton(st, "Suggest a book", { id: "club-suggest" }),
-        vote ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book", primary: true }) : null),
-      runningLink()) : null
+        vote && !voteClosed(st) ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book", primary: true }) : null),
+      clubVoteNote(), runningLink()) : null
   ].filter(Boolean);
   // Host-only reminder, in plain terms, of what members can't do yet. Hidden once dismissed (until the list changes).
   const cant = missingForms(st), sig = (named ? "" : "name|") + cant.join("|");
@@ -2094,7 +2150,7 @@ function shielded(m, chapter) {
 }
 // Someone who has not started this meeting's chapters ("I've read nothing yet", or a place before the first chapter
 // here): the sections that talk about the whole reading are hidden too, not just the per-chapter parts.
-const SHIELD_SECTIONS = new Set(["recap", "icebreakers", "chapterQuestions", "memberQuestions", "themes", "context", "wrapUp"]);
+const SHIELD_SECTIONS = new Set(["recap", "icebreakers", "chapterQuestions", "memberQuestions", "themes", "context", "wrapUp", "lastPredictions", "madePredictions"]);
 function firstChapter(m) {
   const nums = [...obj(m.guide).recap || [], ...obj(m.guide).chapterQuestions || []].map(x => parseInt(x.chapter, 10)).filter(Number.isFinite);
   if (nums.length) return Math.min(...nums);
@@ -2262,6 +2318,85 @@ function allQuestions(m) {
   const mine = arr(obj(m.guide).memberQuestions), have = new Set(mine.map(q => str(q.question).trim().toLowerCase()));
   return [...mine, ...liveQuestions(m).filter(q => !have.has(q.question.toLowerCase()))];
 }
+// Vote counts from the feed: {key: {first, second}} by book, plus how many people voted. Choices read "Title by Author".
+function cleanVotes(json) {
+  const out = { total: Math.max(0, parseInt(obj(json).voters, 10) || 0), by: {} };
+  for (const v of arr(obj(json).votes)) {
+    // "Title by Author", "Title — Author" or "Title (Author)" all count for Title.
+    const k = ballotKey(str(v?.title).replace(/\s+(by\s|[—–-]\s|\().*$/i, "")) || ballotKey(v?.title);
+    if (!k) continue;
+    const cur = out.by[k] || (out.by[k] = { first: 0, second: 0 });
+    cur.first += Math.max(0, parseInt(v?.first, 10) || 0); cur.second += Math.max(0, parseInt(v?.second, 10) || 0);
+  }
+  return out;
+}
+// Ratings from the feed: {bookKey: {avg, count}}.
+function cleanRatings(json) {
+  const out = {};
+  for (const r of arr(obj(json).ratings)) {
+    const k = bookKey(str(r?.book)), avg = parseFloat(r?.avg), count = parseInt(r?.count, 10);
+    if (k && avg >= 1 && avg <= 5 && count > 0) out[k] = { avg, count };
+  }
+  return out;
+}
+const votesFor = (title) => (S.votes && S.votes.by[ballotKey(title)]) || { first: 0, second: 0 };
+// Voting is over at the end of the closing day, in the club's time zone.
+function voteClosed(st = S.data.settings) {
+  if (!st.voteCloses) return false;
+  const end = meetingStart({ date: st.voteCloses, time: "23:59" });
+  return !!end && !isNaN(end) && Date.now() > end.getTime() + 60000;
+}
+// The books in the running, most votes first (second choices break ties), and the winner once voting has closed.
+function voteStanding(data = S.data) {
+  const list = runningList(data).map((b, i) => ({ ...b, ...votesFor(b.title), i }));
+  const any = !!S.votes && list.some(b => b.first > 0);
+  const ranked = any ? [...list].sort((a, z) => z.first - a.first || z.second - a.second || a.i - z.i) : list;
+  const closed = voteClosed(data.settings);
+  const tie = any && ranked.length > 1 && ranked[0].first === ranked[1].first && ranked[0].second === ranked[1].second;
+  return { list: ranked, any, closed, total: S.votes ? S.votes.total : 0, winner: closed && any && !tie ? ranked[0] : null, tie: closed && tie ? ranked.filter(b => b.first === ranked[0].first && b.second === ranked[0].second) : null };
+}
+// The club's rating for a book: the host's own entry if there is one, otherwise the average of members' ratings.
+function clubRating(book, info) {
+  if (parseFloat(obj(info).rating)) return { value: parseFloat(info.rating), count: 0 };
+  const r = S.ratings && S.ratings[bookKey(book)];
+  return r ? { value: r.avg, count: r.count } : null;
+}
+function ratingLine(book, info) {
+  const r = clubRating(book, info);
+  if (!r) return null;
+  return el("span", { class: "rating-line" + (r.count ? " members" : "") }, stars(r.value), r.count ? el("span", { class: "hint" }, `${r.value.toFixed(1)} from ${r.count} member rating${r.count === 1 ? "" : "s"}`) : null);
+}
+// The rating form with the book (and the member's saved name) filled in; a plain link opens as it is.
+function rateFormUrl(book, raw = S.data.settings.rateUrl) {
+  let u; try { u = new URL(raw); } catch { return raw; }
+  const keys = [...new Set([...u.searchParams.keys()].filter(k => /^entry\.\d+$/.test(k)))];
+  for (const k of keys) {
+    const v = u.searchParams.get(k);
+    const fill = /book|title|which/i.test(v) ? str(book) : /name|from|who/i.test(v) ? str(ls.get("bc-my-name")).trim() : "";
+    if (fill) u.searchParams.set(k, fill); else u.searchParams.delete(k);
+  }
+  return u.toString();
+}
+// The last meeting of a book (a final wrap-up, or no later meeting saved or planned): where the club rates it.
+function isFinalMeeting(m) {
+  if (!m || !m.id) return false;
+  if (m.type === "wrapup") return true;
+  const b = allBooks().find(x => sameBook(x.book, m.book));
+  return !!b && !bookRows(b).some(r => (r.meetingNumber || 0) > (m.meetingNumber || 0));
+}
+function rateButton(book, id, primary) {
+  const st = S.data.settings;
+  return isUrl(st.rateUrl) ? el("a", { class: "btn" + (primary ? " primary" : " small"), id, href: rateFormUrl(book), target: "_blank", rel: "noopener", "aria-label": `Rate ${book} out of 5` }, "Rate this book") : null;
+}
+// The meeting before this one in the same book (for "Last time we predicted").
+function prevMeeting(m) {
+  return S.data.meetings.filter(x => x.id !== m.id && sameBook(x.book, m.book) && (x.meetingNumber || 0) < (m.meetingNumber || 0))
+    .sort((a, z) => (z.meetingNumber || 0) - (a.meetingNumber || 0))[0] || null;
+}
+const predsOf = (m) => arr(obj(obj(m).guide).madePredictions).filter(p => str(p?.text).trim());
+function predList(list) {
+  return el("ul", { class: "preds" }, list.map(p => el("li", {}, el("span", {}, p.text), str(p.by).trim() ? el("span", { class: "mq-from" }, p.by.trim()) : null)));
+}
 function cleanBallot(json) {
   const seen = new Set(), out = [];
   for (const b of arr(obj(json).books)) {
@@ -2277,7 +2412,7 @@ async function loadBallot() {
   const st = S.data.settings;
   if (!PUBLIC || !liveBallot(st)) return;   // the public site only: the planner preview cannot reach the feed
   const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author]));
-  try { const c = JSON.parse(ls.get("bc-ballot") || "null"); if (c && c.url === st.ballotUrl) { S.ballot = cleanBallot(c); S.feedQuestions = cleanQuestions(c); } } catch {}
+  try { const c = JSON.parse(ls.get("bc-ballot") || "null"); if (c && c.url === st.ballotUrl) { S.ballot = cleanBallot(c); S.feedQuestions = cleanQuestions(c); S.votes = cleanVotes(c); S.ratings = cleanRatings(c); } } catch {}
   if (S.ballot) refreshBallotViews();
   await fetchBallot();
   // A member who just sent a book or a question comes back to this tab: read the list again right away, and once
@@ -2297,9 +2432,12 @@ async function fetchBallot() {
     if (!r.ok) throw new Error("ballot " + r.status);
     const json = await r.json();
     const fresh = cleanBallot(json), qs = cleanQuestions(json);
-    const changed = sig(fresh) !== sig(S.ballot) || JSON.stringify(qs) !== JSON.stringify(S.feedQuestions || []);
-    S.ballot = fresh; S.feedQuestions = qs; S.ballotState = "ok";
-    ls.set("bc-ballot", JSON.stringify({ url: st.ballotUrl, books: fresh, questions: qs.map(q => ({ question: q.question, name: q.from, meeting: q.meeting })) }));
+    const votes = cleanVotes(json), ratings = cleanRatings(json);
+    const changed = sig(fresh) !== sig(S.ballot) || JSON.stringify(qs) !== JSON.stringify(S.feedQuestions || [])
+      || JSON.stringify(votes) !== JSON.stringify(S.votes || null) || JSON.stringify(ratings) !== JSON.stringify(S.ratings || null);
+    S.ballot = fresh; S.feedQuestions = qs; S.votes = votes; S.ratings = ratings; S.ballotState = "ok";
+    ls.set("bc-ballot", JSON.stringify({ url: st.ballotUrl, books: fresh, questions: qs.map(q => ({ question: q.question, name: q.from, meeting: q.meeting })),
+      votes: arr(obj(json).votes).slice(0, 60), voters: votes.total, ratings: arr(obj(json).ratings).slice(0, 60) }));
     if (changed || !S.ballotShown) refreshBallotViews();
   } catch { if (S.ballotState !== "ok") S.ballotState = "failed"; if (!S.ballotShown) refreshBallotViews(); }   // a later miss keeps what is on the page
 }
@@ -2314,14 +2452,28 @@ function refreshBallotViews() {
 function nextBookActions(data = S.data, ids = "") {
   const s = data.settings, suggest = suggestMode(s) !== "off", vote = isUrl(s.voteUrl);
   if (!suggest && !vote) return null;
-  const voteMain = vote && (runningList(data).length > 0 || !suggest);
+  const closed = voteClosed(s);
+  const voteMain = vote && !closed && (runningList(data).length > 0 || !suggest);
   return el("div", { class: "actions" },
     suggestButton(s, "Suggest a book", { primary: !voteMain, id: ids ? ids + "-suggest" : null }),
-    vote ? el("a", { class: "btn" + (voteMain ? " primary" : ""), id: ids ? ids + "-vote" : null, href: s.voteUrl, target: "_blank", rel: "noopener",
+    vote && !closed ? el("a", { class: "btn" + (voteMain ? " primary" : ""), id: ids ? ids + "-vote" : null, href: s.voteUrl, target: "_blank", rel: "noopener",
       "aria-label": s.voteLabel.trim() ? null : "Vote on our next book" }, s.voteLabel.trim() || "Vote") : null);
 }
+function voteLine(data = S.data) {
+  const s = data.settings, v = voteStanding(data);
+  if (!isUrl(s.voteUrl)) return null;
+  const day = s.voteCloses ? new Date(s.voteCloses + "T12:00:00").toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }) : "";
+  const count = v.total ? `${v.total} vote${v.total === 1 ? "" : "s"}` : "";
+  let text = "";
+  if (v.winner) text = `Voting closed ${day}. Our next book: ${v.winner.title}${v.winner.author.trim() ? " by " + v.winner.author.trim() : ""}${s.voteHideCounts || !v.total ? "" : ` (${v.winner.first} of ${count})`}.`;
+  else if (v.tie) text = `Voting closed ${day}. It’s a tie between ${v.tie.map(b => b.title).join(" and ")}. Your host will break it.`;
+  else if (v.closed) text = `Voting closed ${day}.${v.list.length ? " Your host will announce the pick." : ""}`;
+  else if (day) text = `Voting closes ${day}.${count && !s.voteHideCounts ? ` ${count} so far.` : ""}`;
+  else if (count && !s.voteHideCounts) text = `${count} so far.`;
+  return text ? el("p", { class: "vote-line" + (v.winner ? " won" : ""), id: "vote-line" }, text) : null;
+}
 function nextBookSection(data = S.data) {
-  const s = data.settings, list = runningList(data), suggest = suggestMode(s) !== "off", vote = isUrl(s.voteUrl);
+  const s = data.settings, standing = voteStanding(data), list = standing.list, showCounts = standing.any && (!s.voteHideCounts || standing.closed), suggest = suggestMode(s) !== "off", vote = isUrl(s.voteUrl);
   if (!list.length && !suggest && !vote) return null;
   const auto = ballotAuto(s);
   const lead = auto ? "Suggest a book any time. It goes straight onto the ballot. When it’s time to choose, vote for your favorite."
@@ -2331,9 +2483,12 @@ function nextBookSection(data = S.data) {
   return el("section", { class: "sec", id: "shelf-next" }, el("div", { class: "sec-head" }, el("h2", {}, "Our next book")),
     el("p", { class: "next-lead" }, lead),
     nextBookActions(data, "shelf"),
+    voteLine(data),
     list.length ? el("h3", { class: "running-title" }, `In the running (${list.length})`) : null,
-    list.length ? el("ul", { class: "running" }, list.map(b => el("li", {}, cover(b.title, b.author, "sm"),
+    list.length ? el("ul", { class: "running" }, list.map(b => el("li", { class: standing.winner && standing.winner.i === b.i ? "winner" : null }, cover(b.title, b.author, "sm"),
       el("div", {}, el("b", {}, b.title), b.author.trim() ? el("span", { class: "hint" }, b.author.trim()) : null,
+        showCounts ? el("span", { class: "votes" }, standing.winner && standing.winner.i === b.i ? el("span", { class: "chip next" }, "Winner") : null,
+          ` ${b.first} vote${b.first === 1 ? "" : "s"}${b.second ? ` · ${b.second} second choice${b.second === 1 ? "" : "s"}` : ""}`) : null,
         b.why.trim() ? el("p", {}, b.why.trim()) : null,
         b.by.trim() ? el("span", { class: "meta" }, "Suggested by " + b.by.trim()) : null))))
       : auto && liveBallot(s) && S.ballotState === "ok" ? el("p", { class: "hint", id: "running-empty", style: "margin:0" }, "No books suggested yet. Be the first.")
@@ -2346,7 +2501,7 @@ function bookshelf(data = S.data) {
   const cur = data.meetings.find(m => m.id === obj(data.club).currentId);
   const reading = books.filter(b => !shelfBooks[b.key]?.finished && (sameBook(b.book, cur?.book) || b.planned.length || b.meetings.length));
   const finished = books.filter(b => shelfBooks[b.key]?.finished)
-    .sort((a, b) => (parseFloat(shelfBooks[b.key].rating) || 0) - (parseFloat(shelfBooks[a.key].rating) || 0));
+    .sort((a, b) => (clubRating(b.book, shelfBooks[b.key])?.value || 0) - (clubRating(a.book, shelfBooks[a.key])?.value || 0));
   const s = data.settings;
   const next = nextMeeting();
   const parts = [
@@ -2362,7 +2517,9 @@ function bookshelf(data = S.data) {
         el("div", {}, el("b", {}, b.book), b.author ? el("span", { class: "hint" }, b.author) : null,
           shelfBooks[b.key]?.about ? el("p", { class: "about" }, shelfBooks[b.key].about) : null,
           el("span", { class: "meta" }, (() => { const done = rows.filter(r => !r.planned && r.date && !isUpcoming(r)).length; return `${rows.length} meeting${rows.length === 1 ? "" : "s"}${done ? `, ${done} done` : ""}`; })()),
-          n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtMeetTime(n.date, n.time) : ""}`) : null));
+          n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtMeetTime(n.date, n.time) : ""}`) : null,
+          ratingLine(b.book, shelfBooks[b.key]),
+          !n && rows.some(r => !r.planned) ? rateButton(b.book, null, false) : null));
     }))));
   parts.push(similarSection(reading, data));
   parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Books we've read")),
@@ -2371,8 +2528,9 @@ function bookshelf(data = S.data) {
       const last = [...b.meetings].map(m => m.date).filter(Boolean).sort().pop();
       return el("div", { class: "shelf-item" }, cover(b.book, b.author),
         el("div", {}, el("b", {}, b.book), b.author ? el("span", { class: "hint" }, b.author) : null,
-          stars(info.rating), info.verdict ? el("span", { class: "verdict" }, info.verdict) : null,
-          last ? el("span", { class: "meta" }, "Finished " + new Date(last + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })) : null));
+          ratingLine(b.book, info), info.verdict ? el("span", { class: "verdict" }, info.verdict) : null,
+          last ? el("span", { class: "meta" }, "Finished " + new Date(last + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })) : null,
+          rateButton(b.book, null, false)));
     })) : el("p", { class: "hint", style: "margin:0" }, "Finished books and the club's ratings will show up here.")));
   return parts.filter(Boolean);
 }
@@ -2428,6 +2586,10 @@ function nextBookEditor(d) {
       onchange: (e) => { d.settings.ballotAuto = e.currentTarget.checked; renderClub(); dirty(); } }), "My vote form adds submitted books by itself (ballot script)") : null,
     ballotAuto(d.settings) ? field("Ballot feed link (optional)", bindText(d.settings, "ballotUrl", { type: "url", placeholder: "https://script.google.com/macros/s/…/exec", inputmode: "url", autocapitalize: "off", spellcheck: "false", "data-form": "ballotUrl" }),
       "The web app link of your ballot script. With it, the public site lists the submitted books under In the running by itself (titles and authors only). It does not load inside this planner.") : null,
+    isUrl(d.settings.voteUrl) ? field("Voting closes (optional)", bindText(d.settings, "voteCloses", { type: "date", id: "vote-closes" }),
+      "Members see “Voting closes Sunday, Nov 22”. After that day the Vote button goes away and, with the ballot feed link set, the winner is announced by itself.") : null,
+    isUrl(d.settings.voteUrl) && liveBallot(d.settings) ? el("label", { class: "check" }, el("input", { type: "checkbox", id: "vote-hide", checked: !!d.settings.voteHideCounts,
+      onchange: (e) => { d.settings.voteHideCounts = e.currentTarget.checked; dirty(); } }), "Keep the vote counts hidden until voting closes") : null,
     ballotAuto(d.settings) ? el("p", { class: "hint", id: "ballot-round", style: "margin:0" }, "Starting a new round after the club has picked? In your suggestion form, open Responses, then the ⋮ menu, and delete all responses. The vote form starts over with the next book someone submits.") : null,
     list.length ? el("div", { class: "plan-rows", id: "running-rows" }, list.map((b, i) => el("div", { class: "plan-row upnext" },
       field("Title", bindText(b, "title", { type: "text" })), field("Author", bindText(b, "author", { type: "text" })),
@@ -2508,7 +2670,7 @@ async function copyVoteList(list) {
 }
 async function saveClub() {
   const d = clubDraft;
-  const names = { rsvpUrl: "RSVP", voteUrl: "vote", questionsUrl: "question form", suggestUrl: "book suggestion form", ballotUrl: "ballot feed" };
+  const names = { rsvpUrl: "RSVP", voteUrl: "vote", questionsUrl: "question form", suggestUrl: "book suggestion form", ballotUrl: "ballot feed", rateUrl: "rating form" };
   for (const k of Object.keys(names)) {
     d.settings[k] = str(d.settings[k]).trim();
     if (d.settings[k] && !isUrl(d.settings[k])) {
@@ -2552,6 +2714,7 @@ function renderClub() {
       formsStatus(),
       formField("rsvpUrl", "RSVP form link", "Your name · Are you coming? (Yes / No / Maybe).", "Members see RSVP on the home page."),
       formField("questionsUrl", "Question form link", "Your question (paragraph) · Your name (optional).", "Members see Send a question before each meeting."),
+      formField("rateUrl", "Rating form link", "Which book? · Your rating (1 to 5) · Your name (optional).", "Members see Rate this book on a book’s last meeting and on the Bookshelf. With the ballot feed link set, the average shows on the Bookshelf by itself. Best: a pre-filled link with BOOK typed into the book answer."),
       el("div", { class: "form-block", id: "suggest-block" },
         el("label", { class: "check" }, el("input", { type: "checkbox", id: "suggest-on", checked: !s.suggestOff, onchange: (e) => { s.suggestOff = !e.currentTarget.checked; dirty(); } }), "Members can suggest books"),
         el("p", { class: "hint", style: "margin:0" }, "Suggest a book (on the home page and the Bookshelf) lets members search by title or author and fills in the book for them. With your form link below, it then opens your Google Form with the book filled in, and the member taps Submit. Without a link, the suggestion goes out as a message to your group chat or to you."),
