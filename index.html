@@ -1096,7 +1096,7 @@ function toMarkdown(m) {
   if (g.recap.length) { L.push("", "## Chapter recap"); g.recap.forEach(r => L.push("", `**Ch. ${r.chapter}${r.title ? ": " + r.title : ""}** — ${r.summary}`)); }
   if (g.icebreakers.length) { L.push("", "## Icebreakers", ""); g.icebreakers.forEach(i => L.push(`- **${i.title}:** ${i.prompt}`)); }
   if (g.chapterQuestions.length) { L.push("", "## Discussion questions"); g.chapterQuestions.forEach(c => { L.push("", `### Chapter ${c.chapter}${c.title ? ": " + c.title : ""}`, ""); c.questions.forEach((q, i) => L.push(`${i + 1}. ${q}`)); }); }
-  if (g.memberQuestions.length) { L.push("", "## Your questions", ""); g.memberQuestions.forEach((q, i) => L.push(`${i + 1}. ${q.question}${q.from ? ` (${q.from})` : ""}`)); }
+  { const qs = allQuestions(m); if (qs.length) { L.push("", "## Your questions", ""); qs.forEach((q, i) => L.push(`${i + 1}. ${q.question}${q.from ? ` (${q.from})` : ""}`)); } }
   if (g.themes.length) { L.push("", "## Big-picture talking points", ""); g.themes.forEach(t => L.push(`- **${t.title}.** ${t.prompt}`)); }
   if (g.context.length) { L.push("", "## Interesting context", ""); g.context.forEach(c => L.push(`- **${c.title}.** ${c.detail}`)); }
   if (g.spoilerNote) L.push("", `> **Spoiler box (only if everyone has read further):** ${g.spoilerNote}`);
@@ -1125,7 +1125,7 @@ function toPlainText(m) {
   if (g.recap.length) { section("Chapter recap"); g.recap.forEach(r => L.push(`Ch. ${r.chapter}${r.title ? " (" + r.title + ")" : ""}: ${r.summary}`)); }
   if (g.icebreakers.length) { section("Icebreakers"); g.icebreakers.forEach(i => L.push(`- ${i.title}: ${i.prompt}`)); }
   if (g.chapterQuestions.length) { section("Discussion questions"); g.chapterQuestions.forEach(c => { L.push(`Ch. ${c.chapter}${c.title ? " (" + c.title + ")" : ""}`); c.questions.forEach((q, i) => L.push(`  ${i + 1}. ${q}`)); }); }
-  if (g.memberQuestions.length) { section("Your questions"); g.memberQuestions.forEach((q, i) => L.push(`${i + 1}. ${q.question}${q.from ? ` (${q.from})` : ""}`)); }
+  { const qs = allQuestions(m); if (qs.length) { section("Your questions"); qs.forEach((q, i) => L.push(`${i + 1}. ${q.question}${q.from ? ` (${q.from})` : ""}`)); } }
   if (g.themes.length) { section("Big-picture talking points"); g.themes.forEach(t => L.push(`- ${t.title}: ${t.prompt}`)); }
   if (g.context.length) { section("Interesting context"); g.context.forEach(c => L.push(`- ${c.title}: ${c.detail}`)); }
   if (g.adaptations.length) { section("Film, TV and stage"); g.adaptations.forEach(x => L.push(`- ${x.title}: ${x.detail}`)); }
@@ -1312,18 +1312,20 @@ function titledList(key, a, b, label) {
 
 // ---------- Your questions: sent in by members before the meeting (through the club's question form) ----------
 function showMemberQuestions(m) {
-  return S.current.guide.memberQuestions.length > 0 || (!!m.id && isUpcoming(m) && (isUrl(S.data.settings.questionsUrl) || canManage()));
+  return allQuestions(S.current).length > 0 || (!!m.id && isUpcoming(m) && (isUrl(S.data.settings.questionsUrl) || canManage()));
 }
 function memberQuestionsBlock(m) {
-  const list = S.current.guide.memberQuestions, E = S.editing, url = S.data.settings.questionsUrl;
+  const E = S.editing, url = S.data.settings.questionsUrl;
+  const list = E ? S.current.guide.memberQuestions : allQuestions(S.current);   // editing touches the host's own list only
+  const live = liveBallot() && isUrl(url);
   const open = !!m.id && isUpcoming(m) && isUrl(url);
   return el("div", { class: "mq-wrap" },
     !E && !list.length ? el("p", { class: "mq-empty" }, open
-      ? "No questions sent in yet. Have one for the group? Send it before the meeting and it will show up here."
+      ? (live ? "No questions sent in yet. Have one for the group? Send it in and it shows up here within a couple of minutes." : "No questions sent in yet. Have one for the group? Send it before the meeting and it will show up here.")
       : "Questions members send in before the meeting show up here.") : null,
     !E && list.length ? el("p", { class: "hint", style: "margin:0 0 10px" }, "Sent in by members before the meeting.") : null,
     (list.length || E) ? el("ol", { class: "mq", "data-list": "memberQuestions" }, list.map((q, i) => el("li", {},
-      tx("span", `memberQuestions.${i}.question`, `Member question ${i + 1}`),
+      E ? tx("span", `memberQuestions.${i}.question`, `Member question ${i + 1}`) : el("span", {}, q.question),
       E ? el("span", { class: "mq-from" }, "Asked by ", tx("span", `memberQuestions.${i}.from`, `Member question ${i + 1}, asked by (optional)`), " ", rmBtn("memberQuestions", i, `member question ${i + 1}`))
         : (q.from ? el("span", { class: "mq-from" }, "Asked by " + q.from) : null)))) : null,
     E ? el("div", { class: "mq-tools" }, addBtn("memberQuestions", "Add question", { question: "", from: "" }), pasteBox()) : null,
@@ -1331,7 +1333,9 @@ function memberQuestionsBlock(m) {
       el("a", { class: "btn" + (list.length ? "" : " primary"), id: "mq-send", href: questionFormUrl(m), target: "_blank", rel: "noopener" }, "Send a question")) : null,
     !E && canManage() && !isUrl(url) && m.id && isUpcoming(m) ? el("p", { class: "hint", style: "margin:10px 0 0" },
       "Members can send questions once you add a question form link in the ", el("button", { class: "btn link", type: "button", onclick: () => showView("club") }, "Club tab"), ".") : null,
-    !E && canManage() && isUrl(url) ? el("p", { class: "hint", style: "margin:10px 0 0" }, "When questions come in, tap Edit text, then paste them from your form's responses.") : null);
+    !E && canManage() && isUrl(url) ? el("p", { class: "hint", id: "mq-host", style: "margin:10px 0 0" }, live
+      ? "On the public site, questions sent through your form appear here by themselves within a couple of minutes (not inside this planner). To take one down, delete that response in the form. Edit text adds your own."
+      : "When questions come in, tap Edit text, then paste them from your form's responses.") : null);
 }
 // Rows copied from the form's responses sheet: drop timestamps and the header row; a short second column is the name.
 function parsePastedQuestions(text) {
@@ -1589,7 +1593,7 @@ function renderGuide() {
         el("ol", {}, c.questions.map((q, qi) => el("li", {}, tx("span", `chapterQuestions.${ci}.questions.${qi}`, `Chapter ${c.chapter} question ${qi + 1}`), rmBtn(`chapterQuestions.${ci}.questions`, qi, `question ${qi + 1}`)))),
         addBtn(`chapterQuestions.${ci}.questions`, "Add question", "")))))));
 
-  if (showMQ) parts.push(sec("memberQuestions", sectionHidden(m, "memberQuestions") && S.current.guide.memberQuestions.length ? hiddenSection(m, "memberQuestions") : memberQuestionsBlock(m)));
+  if (showMQ) parts.push(sec("memberQuestions", sectionHidden(m, "memberQuestions") && allQuestions(S.current).length ? hiddenSection(m, "memberQuestions") : memberQuestionsBlock(m)));
 
   if (g.themes.length || E) parts.push(sec("themes", sectionHidden(m, "themes") ? hiddenSection(m, "themes") : titledList("themes", "title", "prompt", "Talking point")));
 
@@ -2039,7 +2043,7 @@ function clubBar() {
       el("p", { class: "club-cap" }, "Our next book"),
       el("div", { class: "club-forms" },
         suggestButton(st, "Suggest a book", { id: "club-suggest" }),
-        vote ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book" }) : null),
+        vote ? formLink("club-vote", st.voteUrl, voteLabel || "Vote", { aria: voteLabel ? null : "Vote on our next book", primary: true }) : null),
       runningLink()) : null
   ].filter(Boolean);
   // Host-only reminder, in plain terms, of what members can't do yet. Hidden once dismissed (until the list changes).
@@ -2236,6 +2240,28 @@ function runningList(data = S.data) {
   const have = new Set(mine.map(b => ballotKey(b.title)));
   return [...mine, ...S.ballot.filter(b => !have.has(ballotKey(b.title)))];
 }
+// Questions members sent through the question form, as the feed gives them: [{meeting, question, name}].
+function cleanQuestions(json) {
+  const seen = new Set(), out = [];
+  for (const q of arr(obj(json).questions)) {
+    const question = oneLine(q?.question, 300), k = question.toLowerCase();
+    if (!question || seen.has(k)) continue;
+    seen.add(k); out.push({ question, from: oneLine(q?.name, 40), meeting: oneLine(q?.meeting, 160) });
+  }
+  return out.slice(-40);
+}
+// The form arrives with "Book, ch. 6–10 (Nov 15, 2026)" filled in; the date may change later, so match on the part before it.
+const meetingTag = (m) => `${str(m.book)}, ${m.type === "wrapup" ? "final wrap-up" : "ch. " + str(m.chapters)}`.toLowerCase();
+function liveQuestions(m) {
+  if (!S.feedQuestions || !m || !m.id) return [];
+  const tag = meetingTag(m), nx = nextMeeting();
+  return S.feedQuestions.filter(q => { const t = q.meeting.toLowerCase(); return t ? t.startsWith(tag) : (!!nx && nx.id === m.id); });   // no meeting given: the next one
+}
+// What the page shows under Your questions: the host's own list, then the ones sent in (each once).
+function allQuestions(m) {
+  const mine = arr(obj(m.guide).memberQuestions), have = new Set(mine.map(q => str(q.question).trim().toLowerCase()));
+  return [...mine, ...liveQuestions(m).filter(q => !have.has(q.question.toLowerCase()))];
+}
 function cleanBallot(json) {
   const seen = new Set(), out = [];
   for (const b of arr(obj(json).books)) {
@@ -2251,15 +2277,16 @@ async function loadBallot() {
   const st = S.data.settings;
   if (!PUBLIC || !liveBallot(st)) return;   // the public site only: the planner preview cannot reach the feed
   const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author]));
-  try { const c = JSON.parse(ls.get("bc-ballot") || "null"); if (c && c.url === st.ballotUrl) S.ballot = cleanBallot(c); } catch {}
+  try { const c = JSON.parse(ls.get("bc-ballot") || "null"); if (c && c.url === st.ballotUrl) { S.ballot = cleanBallot(c); S.feedQuestions = cleanQuestions(c); } } catch {}
   if (S.ballot) refreshBallotViews();
   try {
     const r = await fetch(st.ballotUrl, { redirect: "follow", credentials: "omit" });
     if (!r.ok) throw new Error("ballot " + r.status);
-    const fresh = cleanBallot(await r.json());
-    const changed = sig(fresh) !== sig(S.ballot);
-    S.ballot = fresh; S.ballotState = "ok";
-    ls.set("bc-ballot", JSON.stringify({ url: st.ballotUrl, books: fresh }));
+    const json = await r.json();
+    const fresh = cleanBallot(json), qs = cleanQuestions(json);
+    const changed = sig(fresh) !== sig(S.ballot) || JSON.stringify(qs) !== JSON.stringify(S.feedQuestions || []);
+    S.ballot = fresh; S.feedQuestions = qs; S.ballotState = "ok";
+    ls.set("bc-ballot", JSON.stringify({ url: st.ballotUrl, books: fresh, questions: qs.map(q => ({ question: q.question, name: q.from, meeting: q.meeting })) }));
     if (changed || !S.ballotShown) refreshBallotViews();
   } catch { S.ballotState = "failed"; if (!S.ballotShown) refreshBallotViews(); }
 }
