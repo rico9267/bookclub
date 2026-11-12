@@ -2279,6 +2279,19 @@ async function loadBallot() {
   const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author]));
   try { const c = JSON.parse(ls.get("bc-ballot") || "null"); if (c && c.url === st.ballotUrl) { S.ballot = cleanBallot(c); S.feedQuestions = cleanQuestions(c); } } catch {}
   if (S.ballot) refreshBallotViews();
+  await fetchBallot();
+  // A member who just sent a book or a question comes back to this tab: read the list again right away, and once
+  // more a little later (the script hands out the same answer for up to a minute).
+  let again = null;
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible" || Date.now() - (S.ballotAt || 0) < 15000) return;
+    fetchBallot(); clearTimeout(again); again = setTimeout(() => { if (document.visibilityState === "visible") fetchBallot(); }, 70000);
+  });
+}
+async function fetchBallot() {
+  const st = S.data.settings;
+  const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author]));
+  S.ballotAt = Date.now();
   try {
     const r = await fetch(st.ballotUrl, { redirect: "follow", credentials: "omit" });
     if (!r.ok) throw new Error("ballot " + r.status);
@@ -2288,11 +2301,11 @@ async function loadBallot() {
     S.ballot = fresh; S.feedQuestions = qs; S.ballotState = "ok";
     ls.set("bc-ballot", JSON.stringify({ url: st.ballotUrl, books: fresh, questions: qs.map(q => ({ question: q.question, name: q.from, meeting: q.meeting })) }));
     if (changed || !S.ballotShown) refreshBallotViews();
-  } catch { S.ballotState = "failed"; if (!S.ballotShown) refreshBallotViews(); }
+  } catch { if (S.ballotState !== "ok") S.ballotState = "failed"; if (!S.ballotShown) refreshBallotViews(); }   // a later miss keeps what is on the page
 }
 function refreshBallotViews() {
   S.ballotShown = true;
-  if ($("modal") || S.editing) return;   // not under an open dialog or mid-edit; the next render picks it up
+  if ($("modal") || S.editing) { clearTimeout(S.ballotRetry); S.ballotRetry = setTimeout(refreshBallotViews, 1500); return; }   // not under an open dialog or mid-edit: try again shortly
   const y = window.scrollY;
   renderGuide(); renderClub();
   window.scrollTo(0, y);
