@@ -430,79 +430,82 @@
   "now": ""
  },
  "settings": {
-  "clubName": "Novel Relations",
-  "blurb": "",
-  "rsvpUrl": "https://forms.gle/ceJnWhykB2uRWs8fA",
-  "voteUrl": "https://forms.gle/LTvpAKNpVVYo7N9a8",
-  "voteLabel": "",
-  "timezone": "America/New_York",
-  "questionsUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfMifFfgFJRbHxh-BWev01cFUrayQcMqMnHFpc1xS4crZ50dw/viewform?usp=pp_url&entry.1029236199=MEETING&entry.1937936920=NAME",
-  "suggestUrl": "https://docs.google.com/forms/d/e/1FAIpQLSftD75gFczIfeaXGNFHu5MjmLu3eCQO2JmfE81RGUrq8UW9aw/viewform?usp=pp_url&entry.1942427135=NAME&entry.2146332353=TITLE&entry.2114115816=AUTHOR&entry.180248078=WHY&entry.1826694680=LINK",
-  "suggestOff": false,
   "ballotAuto": true,
-  "ballotUrl": "https://script.google.com/macros/s/AKfycbxQUW0v5M-v6PraVJZeVSk8-RqKh4XIn9Qkh4Fn5igAtyCk-MLrwFZuZ5lMT1H0O8qTOQ/exec"
+  "ballotUrl": "https://script.google.com/macros/s/AKfycbxQUW0v5M-v6PraVJZeVSk8-RqKh4XIn9Qkh4Fn5igAtyCk-MLrwFZuZ5lMT1H0O8qTOQ/exec",
+  "blurb": "",
+  "clubName": "Novel Relations",
+  "questionsUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfMifFfgFJRbHxh-BWev01cFUrayQcMqMnHFpc1xS4crZ50dw/viewform?usp=pp_url&entry.1029236199=MEETING&entry.1937936920=NAME",
+  "rateUrl": "",
+  "rsvpUrl": "https://forms.gle/ceJnWhykB2uRWs8fA",
+  "suggestOff": false,
+  "suggestUrl": "https://docs.google.com/forms/d/e/1FAIpQLSftD75gFczIfeaXGNFHu5MjmLu3eCQO2JmfE81RGUrq8UW9aw/viewform?usp=pp_url&entry.1942427135=NAME&entry.2146332353=TITLE&entry.2114115816=AUTHOR&entry.180248078=WHY&entry.1826694680=LINK",
+  "timezone": "America/New_York",
+  "voteCloses": "",
+  "voteHideCounts": false,
+  "voteLabel": "",
+  "voteUrl": "https://forms.gle/LTvpAKNpVVYo7N9a8"
  },
  "schedule": [
   {
-   "id": "p-mn-3",
-   "book": "The Magician's Nephew",
    "author": "C.S. Lewis",
-   "meetingNumber": 3,
+   "book": "The Magician's Nephew",
    "chapters": "11–15",
    "date": "",
+   "id": "p-mn-3",
+   "meetingNumber": 3,
    "time": "18:00",
    "type": "chapters"
   }
  ],
  "shelf": {
-  "upNext": [],
   "books": {
    "the magician's nephew": {
+    "about": "C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.",
     "finished": false,
     "rating": "",
-    "verdict": "",
-    "about": "C.S. Lewis's 1955 prequel to the Chronicles of Narnia, set in London around 1900. Digory and Polly get caught up in his uncle's experiment with magic rings and end up far from home, in other worlds. Published sixth in the series but set first in Narnia's history. 15 chapters.",
     "similar": [
      {
-      "title": "The Story of the Amulet",
       "author": "E. Nesbit",
-      "year": "1906",
-      "why": "Edwardian London children, a magic charm, and trips to far-off times and places. Lewis tips his hat to Nesbit on our book's first page."
+      "title": "The Story of the Amulet",
+      "why": "Edwardian London children, a magic charm, and trips to far-off times and places. Lewis tips his hat to Nesbit on our book's first page.",
+      "year": "1906"
      },
      {
-      "title": "The Lives of Christopher Chant",
       "author": "Diana Wynne Jones",
-      "year": "1988",
-      "why": "A boy slips through the Place Between into other worlds, and his charming uncle has him run experiments there. Sound familiar?"
+      "title": "The Lives of Christopher Chant",
+      "why": "A boy slips through the Place Between into other worlds, and his charming uncle has him run experiments there. Sound familiar?",
+      "year": "1988"
      },
      {
-      "title": "A Wrinkle in Time",
       "author": "Madeleine L'Engle",
-      "year": "1962",
-      "why": "Children cross into other worlds to find a missing parent, in a cosmic fight between light and darkness with a faith thread like Lewis's."
+      "title": "A Wrinkle in Time",
+      "why": "Children cross into other worlds to find a missing parent, in a cosmic fight between light and darkness with a faith thread like Lewis's.",
+      "year": "1962"
      },
      {
-      "title": "Out of the Silent Planet",
       "author": "C.S. Lewis",
-      "year": "1938",
-      "why": "Lewis's science fiction for adults: a man is carried off to Mars by a scientist who thinks progress excuses anything. Uncle Andrew would approve."
+      "title": "Out of the Silent Planet",
+      "why": "Lewis's science fiction for adults: a man is carried off to Mars by a scientist who thinks progress excuses anything. Uncle Andrew would approve.",
+      "year": "1938"
      },
      {
-      "title": "Piranesi",
       "author": "Susanna Clarke",
-      "year": "2020",
-      "why": "An adult novel that opens with an Uncle Andrew quote. Its endless house of halls and statues will feel familiar after Charn."
+      "title": "Piranesi",
+      "why": "An adult novel that opens with an Uncle Andrew quote. Its endless house of halls and statues will feel familiar after Charn.",
+      "year": "2020"
      },
      {
-      "title": "The Golden Compass",
       "author": "Philip Pullman",
-      "year": "1995",
-      "why": "Parallel worlds from one of Narnia's sharpest critics (called Northern Lights in the UK). Good fuel for a debate night."
+      "title": "The Golden Compass",
+      "why": "Parallel worlds from one of Narnia's sharpest critics (called Northern Lights in the UK). Good fuel for a debate night.",
+      "year": "1995"
      }
-    ]
+    ],
+    "verdict": ""
    }
-  }
+  },
+  "upNext": []
  },
  "public": true,
- "exportedAt": "2026-11-11T13:21:10.312247Z"
+ "exportedAt": "2026-11-13T20:41:35.850842Z"
 }
