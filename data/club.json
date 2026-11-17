@@ -445,7 +445,8 @@
   "feedbackUrl": "https://docs.google.com/forms/d/e/1FAIpQLScl60fmFkk0eY2vzaIKzB5uTJ1XoObH8zU0d5W08WqnMnOA8A/viewform",
   "suggestLimit": 2,
   "voteCloses": "",
-  "voteHideCounts": false
+  "voteHideCounts": false,
+  "nextDateUrl": "https://docs.google.com/forms/d/e/1FAIpQLSd7Z6LE-WLQyaPWXwxEX39sV3DNhWlaZ4nU_tD32-licEPIrA/viewform"
  },
  "schedule": [
   {
@@ -509,5 +510,5 @@
   }
  },
  "public": true,
- "exportedAt": "2026-11-17T01:32:16.277438Z"
+ "exportedAt": "2026-11-17T01:59:18.679573Z"
 }
