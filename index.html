@@ -2121,9 +2121,21 @@ async function setNextDate(id, date, time) {
   if (ok) { clubDraft = null; applyRole(); renderGuide(); }
 }
 // On the public site the host sets (or changes) the date through a form that asks for the host code.
-function hostDateLink(label = "Host: set the date") {
+// Host tools on the public site show only on the host's own phone or computer: open the site once with ?host
+// (?host=off to undo). Members never see them; the forms still need the host code.
+const hostDevice = (() => {
+  try {
+    const u = new URL(location.href), v = u.searchParams.get("host");
+    if (v !== null) {
+      if (/^(off|no|0)$/i.test(v)) localStorage.removeItem("bc-host-device"); else localStorage.setItem("bc-host-device", "1");
+      u.searchParams.delete("host"); history.replaceState(null, "", u.pathname + u.search + u.hash);
+    }
+    return localStorage.getItem("bc-host-device") === "1";
+  } catch { return false; }
+})();
+function hostDateLink(label = "Set the date") {
   const u = S.data.settings.nextDateUrl;
-  return PUBLIC && liveBallot() && isUrl(u) ? el("a", { class: "host-date", id: "host-date", href: u, target: "_blank", rel: "noopener" }, label) : null;
+  return PUBLIC && hostDevice && liveBallot() && isUrl(u) ? el("a", { class: "host-date", id: "host-date", href: u, target: "_blank", rel: "noopener" }, label) : null;
 }
 function quickDate() {
   if (!S.isHost || PUBLIC || !canManage()) return null;
@@ -2157,7 +2169,7 @@ function clubBar() {
       tbd ? quickDate() : null, hostDateLink())
     : (rsvp || ask) ? el("div", { class: "club-group" },
       el("p", { class: "club-cap" }, day ? `Next meeting · ${day}` : "Meetings"),
-      nx?.feedDated ? hostDateLink("Host: change the date") : null,
+      nx?.feedDated ? hostDateLink("Change the date") : null,
       el("div", { class: "club-forms" },
         rsvp ? formLink("club-rsvp", st.rsvpUrl, "RSVP", { primary: true, aria: day ? `RSVP for ${day}` : null }) : null,
         ask ? formLink("club-ask", questionFormUrl(nx), "Send a question") : null)) : null,
@@ -2578,7 +2590,7 @@ function nextBookSection(data = S.data) {
     el("p", { class: "next-lead" }, lead),
     nextBookActions(data, "shelf"),
     voteLine(data),
-    PUBLIC && liveBallot() && isUrl(s.roundUrl) ? el("a", { class: "host-date", id: "host-round", href: s.roundUrl, target: "_blank", rel: "noopener" }, "Host: start a new vote") : null,
+    PUBLIC && hostDevice && liveBallot() && isUrl(s.roundUrl) ? el("a", { class: "host-date", id: "host-round", href: s.roundUrl, target: "_blank", rel: "noopener" }, "Start a new vote") : null,
     list.length ? el("h3", { class: "running-title" }, `In the running (${list.length})`) : null,
     list.length ? el("ul", { class: "running" }, list.map(b => el("li", { class: standing.winner && standing.winner.i === b.i ? "winner" : null }, cover(b.title, b.author, "sm"),
       el("div", {}, el("b", {}, b.title), b.author.trim() ? el("span", { class: "hint" }, b.author.trim()) : null,
@@ -2811,8 +2823,8 @@ function renderClub() {
       formField("questionsUrl", "Question form link", "Your question (paragraph) · Your name (optional).", "Members see Send a question before each meeting."),
       formField("rateUrl", "Rating form link", "Which book? · Your rating (1 to 5) · Your name (optional).", "Members see Rate this book on a book’s last meeting and on the Bookshelf. With the ballot feed link set, the average shows on the Bookshelf by itself. Best: a pre-filled link with BOOK typed into the book answer."),
       formField("feedbackUrl", "Site suggestions form link", "Your idea (paragraph) · Your name (optional).", "Members see “Have an idea for this site? Suggest an improvement” at the bottom of every page."),
-      formField("roundUrl", "New vote form link (host only)", "Host code.", "On the public site, “Host: start a new vote” under the vote line. Clears the books in the running and the counts for a new round; nothing is deleted."),
-      formField("nextDateUrl", "Next meeting form link (host only)", "Date · Start time · Host code.", "On the public site, “Host: set the date” appears when the next meeting has no date. The ballot script accepts it only with your host code."),
+      formField("roundUrl", "New vote form link (host only)", "Host code.", "On the public site, “Start a new vote” under the vote line, on your own devices only (open the site once with ?host at the end of the address). Clears the books in the running and the counts for a new round; nothing is deleted."),
+      formField("nextDateUrl", "Next meeting form link (host only)", "Date · Start time · Host code.", "On the public site, “Set the date” appears when the next meeting has no date, on your own devices only (open the site once with ?host at the end of the address). The ballot script accepts it only with your host code."),
       el("div", { class: "form-block", id: "suggest-block" },
         el("label", { class: "check" }, el("input", { type: "checkbox", id: "suggest-on", checked: !s.suggestOff, onchange: (e) => { s.suggestOff = !e.currentTarget.checked; dirty(); } }), "Members can suggest books"),
         el("p", { class: "hint", style: "margin:0" }, "Suggest a book (on the home page and the Bookshelf) lets members search by title or author and fills in the book for them. With your form link below, it then opens your Google Form with the book filled in, and the member taps Submit. Without a link, the suggestion goes out as a message to your group chat or to you."),
