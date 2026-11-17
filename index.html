@@ -2580,7 +2580,7 @@ function bookshelf(data = S.data) {
           el("span", { class: "meta" }, (() => { const done = rows.filter(r => !r.planned && r.date && !isUpcoming(r)).length; return `${rows.length} meeting${rows.length === 1 ? "" : "s"}${done ? `, ${done} done` : ""}`; })()),
           n ? el("span", { class: "meta" }, `Next: ${fmtDate(n.date)}${n.time ? " · " + fmtMeetTime(n.date, n.time) : ""}`) : null,
           ratingLine(b.book, shelfBooks[b.key]),
-          !n && rows.length && !rows.some(r => r.planned) ? rateButton(b.book, null, false) : null   // only once nothing more is planned));
+          !n && rows.length && !rows.some(r => r.planned) ? rateButton(b.book, null, false) : null));
     }))));
   parts.push(similarSection(reading, data));
   parts.push(el("section", { class: "sec" }, el("div", { class: "sec-head" }, el("h2", {}, "Books we've read")),
