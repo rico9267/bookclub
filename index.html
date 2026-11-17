@@ -442,6 +442,7 @@ label.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 
 .qd-row input { min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
 .gr-link, #pub-footer a { color: inherit; }
 .host-date { display: inline-block; margin-top: 4px; font-size: 13.5px; color: var(--muted); }
+.sim-actions { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 </style>
 </head>
 <body>
@@ -1469,7 +1470,7 @@ function similarSection(reading, data) {
       el("ul", { class: "similar" }, list.map(x => el("li", {}, cover(x.title, x.author, "sm"),
         el("div", {}, el("b", {}, x.title), (x.author || x.year) ? el("span", { class: "hint" }, [x.author, x.year].filter(Boolean).join(" \u00b7 ")) : null,
           x.why ? el("p", {}, x.why) : null,
-          mode !== "off" ? el("div", {}, suggestButton(st, "Suggest this one", { cls: "link sim-suggest", aria: `Suggest ${x.title} for our next book`, prefill: { title: x.title, author: x.author } })) : null)))))),
+          el("div", { class: "sim-actions" }, mode !== "off" ? suggestButton(st, "Suggest this one", { cls: "link sim-suggest", aria: `Suggest ${x.title} for our next book`, prefill: { title: x.title, author: x.author } }) : null, goodreadsLink(x)))))))),
     S.isHost && !PUBLIC ? el("p", { class: "hint", style: "margin:10px 0 0" }, "Edit or replace these under Books, above.") : null);
 }
 function similarPrompt(book, author) {
@@ -1898,8 +1899,45 @@ document.addEventListener("keydown", (e) => {
 });
 
 // Goodreads has no free lookup, so the link is a search for the title and author: one tap from the book's page.
-const goodreadsUrl = (title, author) => "https://www.goodreads.com/search?q=" + encodeURIComponent([str(title).trim(), str(author).trim()].filter(Boolean).join(" "));
-const goodreadsLink = (b) => el("a", { class: "gr-link", href: goodreadsUrl(b.title, b.author), target: "_blank", rel: "noopener", "aria-label": `${b.title} on Goodreads` }, "Goodreads");
+// Goodreads link straight to the book's own page. The ballot script finds it and checks it on Goodreads (same title,
+// same author, not a summary, study guide, box set or omnibus); books in the running come with it, and any other book
+// is looked up through the script once and kept on the device for 30 days. Until then, or when Goodreads has no
+// match, the link is a Goodreads search.
+const GR_PAGE = /^https:\/\/www\.goodreads\.com\/book\/show\/\d+[\w.-]*$/;
+const goodreadsSearch = (title, author) => "https://www.goodreads.com/search?q=" + encodeURIComponent([str(title).trim(), str(author).trim()].filter(Boolean).join(" "));
+const grKey = (title, author) => ballotKey(title) + "|" + authorKey(author);
+function grCache() { try { return obj(JSON.parse(ls.get("bc-gr") || "{}")); } catch { return {}; } }
+function grKnown(title, author) {
+  const k = ballotKey(title), b = arr(S.ballot).find(x => ballotKey(x.title) === k && GR_PAGE.test(str(x.goodreads)));
+  if (b) return b.goodreads;
+  const c = grCache()[grKey(title, author)];
+  return c && GR_PAGE.test(str(c.u)) && Date.now() - (c.at || 0) < 30 * 86400000 ? c.u : "";
+}
+const goodreadsUrl = (title, author) => grKnown(title, author) || goodreadsSearch(title, author);
+const grPending = new Map();
+function resolveGoodreads(title, author) {
+  const k = grKey(title, author), c = grCache()[k], st = S.data.settings;
+  if (!ballotKey(title) || grKnown(title, author)) return Promise.resolve(grKnown(title, author));
+  if (c && Date.now() - (c.at || 0) < 86400000) return Promise.resolve("");   // asked today, nothing found
+  if (!PUBLIC || !liveBallot(st)) return Promise.resolve("");   // the planner never calls out
+  if (grPending.has(k)) return grPending.get(k);
+  const u = new URL(st.ballotUrl); u.searchParams.set("gr", str(title).trim()); if (str(author).trim()) u.searchParams.set("a", str(author).trim());
+  const job = fetch(u).then(r => r.ok ? r.json() : Promise.reject(new Error("gr " + r.status))).then(j => {
+    const url = GR_PAGE.test(str(obj(j).url)) ? j.url : "", all = grCache();
+    all[k] = { u: url, at: Date.now() };
+    const keys = Object.keys(all); if (keys.length > 80) keys.sort((a, z) => all[a].at - all[z].at).slice(0, keys.length - 80).forEach(x => delete all[x]);
+    ls.set("bc-gr", JSON.stringify(all));
+    if (url) document.querySelectorAll(".gr-link").forEach(a => { if (a.dataset.gr === k) a.href = url; });
+    return url;
+  }).catch(() => "").finally(() => grPending.delete(k));
+  grPending.set(k, job);
+  return job;
+}
+function goodreadsLink(b) {
+  const k = grKey(b.title, b.author), href = GR_PAGE.test(str(b.goodreads)) ? b.goodreads : goodreadsUrl(b.title, b.author);
+  if (!href.includes("/book/")) resolveGoodreads(b.title, b.author);
+  return el("a", { class: "gr-link", href, "data-gr": k, target: "_blank", rel: "noopener", "aria-label": `${b.title} on Goodreads` }, "Goodreads");
+}
 // How many books this person has in the running: the ones under their saved name in the feed, plus the ones sent from this
 // device (still listed, or sent in the last ten minutes and not on the list yet). A new round starts the count over.
 const nameKey = (n) => str(n).trim().toLowerCase().replace(/\s+/g, " ");
@@ -1921,9 +1959,11 @@ const canShare = () => typeof navigator.share === "function";
 let nameLoaded = false;
 function openSuggest(prefill) {
   if (prefill) Object.assign(suggestDraft, { title: str(prefill.title), author: str(prefill.author), why: "", link: "", q: "" });
+  if (prefill) resolveGoodreads(prefill.title, prefill.author);
   if (!nameLoaded) { suggestDraft.by = ls.get("bc-my-name") || ""; nameLoaded = true; }   // once per visit: a name cleared on purpose stays cleared
   suggestForm(!!prefill);
 }
+let grTimer = 0;
 function suggestForm(prefilled) {
   const d = suggestDraft, share = canShare(), formMode = suggestMode() === "form";
   const limit = suggestLimit(), host = S.isHost && !PUBLIC, had = limit && !host ? mySuggested(d.by) : [];
@@ -1931,6 +1971,7 @@ function suggestForm(prefilled) {
     d[key] = e.currentTarget.value;
     if (key === "title") { d.link = ""; dupNote(); }   // typed over: the link of the book picked from the search no longer applies
     if (key === "title" && d.title.trim()) { e.currentTarget.removeAttribute("aria-invalid"); $("sg-msg").hidden = true; }
+    if (key === "title" || key === "author") { clearTimeout(grTimer); grTimer = setTimeout(() => resolveGoodreads(d.title, d.author), 900); }
   } });
   const fld = (id, label, input) => el("div", { class: "field" }, el("label", { for: id }, label), input);
   // The book is already in the running (the live ballot or the host's list): say so before they send it again.
@@ -1981,7 +2022,7 @@ function suggestForm(prefilled) {
   const note = (t) => { box.replaceChildren(el("p", { class: "hint sg-note" }, t)); say(t); };
   const pick = (b) => {
     Object.assign(d, { title: b.title, author: b.author, link: b.link, q: "" });
-    $("sg-q").value = ""; $("sg-title").value = b.title; $("sg-author").value = b.author;
+    $("sg-q").value = ""; $("sg-title").value = b.title; $("sg-author").value = b.author; resolveGoodreads(b.title, b.author);
     $("sg-title").removeAttribute("aria-invalid"); $("sg-msg").hidden = true; dupNote();
     box.replaceChildren(el("p", { class: "sg-picked", id: "sg-picked" }, el("b", {}, "Filled in: "), `${b.title} by ${b.author}. `,
       el("button", { class: "btn link inline", type: "button", id: "sg-more", onclick: () => run(b.author, true) }, `More by ${b.author}`)));
@@ -2502,7 +2543,7 @@ function cleanBallot(json) {
   for (const b of arr(obj(json).books)) {
     const title = oneLine(b?.title, 120), k = ballotKey(title);
     if (!title || !k || seen.has(k)) continue;
-    seen.add(k); out.push({ title, author: oneLine(b?.author, 80), by: oneLine(b?.by ?? b?.name, 40), why: "" });
+    seen.add(k); out.push({ title, author: oneLine(b?.author, 80), by: oneLine(b?.by ?? b?.name, 40), why: "", goodreads: GR_PAGE.test(str(b?.goodreads)) ? b.goodreads : "" });
     if (out.length >= 40) break;
   }
   return out;
@@ -2511,7 +2552,7 @@ function cleanBallot(json) {
 async function loadBallot() {
   const st = S.data.settings;
   if (!PUBLIC || !liveBallot(st)) return;   // the public site only: the planner preview cannot reach the feed
-  const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author, b.by]));
+  const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author, b.by, b.goodreads]));
   try { const c = JSON.parse(ls.get("bc-ballot") || "null"); if (c && c.url === st.ballotUrl) { S.roundStart = Date.parse(str(obj(c.round).start)) || 0; applyFeedNext(cleanNext(c)); S.feedRules = { oneVote: !!obj(c.rules).oneVote }; S.ballot = cleanBallot(c); S.feedQuestions = cleanQuestions(c); S.votes = cleanVotes(c); S.ratings = cleanRatings(c); } } catch {}
   if (S.ballot) refreshBallotViews();
   await fetchBallot();
@@ -2525,7 +2566,7 @@ async function loadBallot() {
 }
 async function fetchBallot() {
   const st = S.data.settings;
-  const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author, b.by]));
+  const sig = (l) => JSON.stringify(arr(l).map(b => [b.title, b.author, b.by, b.goodreads]));
   S.ballotAt = Date.now();
   try {
     const r = await fetch(st.ballotUrl, { redirect: "follow", credentials: "omit" });
