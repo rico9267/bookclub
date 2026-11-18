@@ -423,10 +423,216 @@
     "time": "18:00",
     "at": "2026-11-10T01:50:00.000Z"
    }
+  },
+  {
+   "id": "m-magicians-nephew-3",
+   "book": "The Magician's Nephew",
+   "author": "C.S. Lewis",
+   "chapters": "11–15",
+   "meetingNumber": 3,
+   "minutes": 90,
+   "date": "",
+   "time": "18:00",
+   "type": "chapters",
+   "guide": {
+    "lead": "Digory faces the Lion, flies west on a winged horse to fetch a silver apple, meets the Witch in a walled garden, and comes home with a gift for his mother.",
+    "accuracy": {
+     "confidence": "high",
+     "note": ""
+    },
+    "agenda": [
+     {
+      "time": "0:00–0:10",
+      "segment": "Welcome + icebreaker",
+      "details": "One quick round from the icebreakers"
+     },
+     {
+      "time": "0:10–0:20",
+      "segment": "Recap",
+      "details": "Someone walks through chapters 11–15 in five minutes"
+     },
+     {
+      "time": "0:20–0:50",
+      "segment": "Chapter questions",
+      "details": "Pick 2–3 questions per chapter"
+     },
+     {
+      "time": "0:50–1:10",
+      "segment": "Big themes",
+      "details": "Choose two talking points to go deep on"
+     },
+     {
+      "time": "1:10–1:20",
+      "segment": "The whole book",
+      "details": "Check last time's predictions, then everyone rates it 1 to 5"
+     },
+     {
+      "time": "1:20–1:30",
+      "segment": "Next book",
+      "details": "Look at the vote and settle what we read next"
+     }
+    ],
+    "recap": [
+     {
+      "chapter": "11",
+      "title": "Digory and His Uncle Are Both in Trouble",
+      "summary": "The new talking animals can't make sense of Uncle Andrew, who hears only roars and howls. They decide he must be a kind of tree and plant him in the ground. Digory asks Aslan for something to cure his mother, but Aslan first makes him admit that he woke the Witch and brought her into Narnia. The cabby's wife is called from London, and Aslan makes the cabby and his wife Narnia's first King and Queen."
+     },
+     {
+      "chapter": "12",
+      "title": "Strawberry's Adventure",
+      "summary": "Aslan asks Digory to undo the harm he did: fly west to a garden on a hill and bring back an apple. When Digory asks again about his mother, he sees tears in the Lion's eyes. Strawberry the cab-horse becomes Fledge, a winged horse, and carries Digory and Polly west. They camp for the night, hungry, and a toffee Polly plants grows into a toffee tree by morning."
+     },
+     {
+      "chapter": "13",
+      "title": "An Unexpected Meeting",
+      "summary": "Digory reads the verse on the garden's gold gates and goes in alone. He picks an apple for Aslan and is tempted by its smell, but keeps it. The Witch is already there, having climbed the wall and eaten one. She tempts him to take the apple home to cure his mother instead, and to leave Polly behind. That last part gives her away, and Digory refuses."
+     },
+     {
+      "chapter": "14",
+      "title": "The Planting of the Tree",
+      "summary": "Digory gives the apple to Aslan and throws it into the soft ground by the river. A tree springs up whose smell the Witch can't bear, which will keep her away from Narnia for a long time. Aslan explains why the stolen apple brought her no joy and would not have brought Digory's mother any either. Frank and Helen are crowned, and Digory is given an apple from the new tree to take home."
+     },
+     {
+      "chapter": "15",
+      "title": "The End of This Story and the Beginning of All the Others",
+      "summary": "Aslan takes the children back to the Wood between the Worlds and shows them a dry hollow where the pool to Charn used to be. He warns them about their own world and tells them to bury the rings. Back in London almost no time has passed. Digory's mother eats the apple and gets well, and he plants the core in the back garden. Years later, the tree that grows from it blows down and its wood is made into a wardrobe."
+     }
+    ],
+    "icebreakers": [
+     {
+      "title": "Fruit of choice",
+      "prompt": "If one piece of fruit could fix one thing in your life, what fruit and what thing?"
+     },
+     {
+      "title": "Winged ride",
+      "prompt": "Fledge gets wings. What ordinary animal would you most like to see fly, and where would you ride it?"
+     },
+     {
+      "title": "Toffee tree",
+      "prompt": "Polly plants a toffee and gets a toffee tree. What would you plant, if anything you buried grew into a tree of itself?"
+     },
+     {
+      "title": "Last page",
+      "prompt": "In one word, how did the ending make you feel?"
+     }
+    ],
+    "chapterQuestions": [
+     {
+      "chapter": "11",
+      "title": "Digory and His Uncle Are Both in Trouble",
+      "questions": [
+       "The animals decide Uncle Andrew is a tree and plant him. Was this the funniest moment in the book for you?",
+       "Aslan won't help Digory until he owns up to striking the bell. Why does the confession have to come first?",
+       "Why do you think Aslan chooses the cabby, of all people, to be Narnia's first King?"
+      ]
+     },
+     {
+      "chapter": "12",
+      "title": "Strawberry's Adventure",
+      "questions": [
+       "Digory sees the Lion's tears and realizes Aslan is sorrier about his mother than he is. How did that scene land for you?",
+       "Strawberry becomes Fledge. What changes about him along with his name?",
+       "Aslan sends two children on a long journey with no supplies. Why not just fetch the apple himself?",
+       "The toffee tree is a small, silly miracle. What is it doing in a chapter this serious?"
+      ]
+     },
+     {
+      "chapter": "13",
+      "title": "An Unexpected Meeting",
+      "questions": [
+       "The verse on the gate says to take the fruit for others or not at all. How does each character treat that rule?",
+       "The Witch's argument about Digory's mother is a strong one. Did you want him to take the apple home?",
+       "Her mistake is suggesting he leave Polly behind. Why does that, of all things, break the spell?"
+      ]
+     },
+     {
+      "chapter": "14",
+      "title": "The Planting of the Tree",
+      "questions": [
+       "Aslan says the Witch got what she wanted, endless days, and that it will be misery to her. What does Lewis mean?",
+       "Why would a stolen apple have healed Digory's mother but brought sorrow, while the given one brings joy?",
+       "Frank and Helen are told how to rule. Which of Aslan's instructions would you keep if you were King or Queen?"
+      ]
+     },
+     {
+      "chapter": "15",
+      "title": "The End of This Story and the Beginning of All the Others",
+      "questions": [
+       "Aslan's warning about our own world is one of the most direct things he says. Who do you think it was written for?",
+       "Was the mother's recovery too easy, or exactly the ending this book needed?",
+       "How did you feel when the wardrobe turned up on the last page?",
+       "Uncle Andrew ends up a little kinder but mostly the same. Is that more believable than a full change of heart?"
+      ]
+     }
+    ],
+    "themes": [
+     {
+      "title": "Temptation in the garden",
+      "prompt": "A walled garden, a forbidden fruit, a tempter who has already eaten. How closely does Lewis follow the Eden story, and where does he change it?"
+     },
+     {
+      "title": "Right thing, wrong way",
+      "prompt": "The same apple heals or curses depending on how it is taken. Can a good result come out of a wrong act?"
+     },
+     {
+      "title": "Grief and hope",
+      "prompt": "Lewis lost his own mother to cancer when he was nine. Does knowing that change how Digory's story reads?"
+     },
+     {
+      "title": "Ordinary people, real crowns",
+      "prompt": "A London cabby and his wife become Narnia's first rulers. What makes them fit for it?"
+     },
+     {
+      "title": "Hearing what you want to hear",
+      "prompt": "Uncle Andrew still can't understand the animals at the end. Is that a punishment, or a choice he keeps making?"
+     },
+     {
+      "title": "Endings that start things",
+      "prompt": "The last chapter is called the beginning of all the others. Did this book make you want to read the rest of the series?"
+     }
+    ],
+    "context": [
+     {
+      "title": "Lewis's mother",
+      "detail": "Lewis's mother, Flora, died of cancer in 1908, when he was nine. Many readers see Digory's hope for his mother as Lewis writing the ending he couldn't have."
+     },
+     {
+      "title": "Eden and the apple",
+      "detail": "The garden scene borrows from Genesis and from Milton's Paradise Lost, which Lewis knew well and wrote a book about (A Preface to Paradise Lost, 1942)."
+     },
+     {
+      "title": "Written sixth, set first",
+      "detail": "Lewis published this book in 1955, the sixth of seven, but it tells how Narnia began. Readers still argue about whether to read the series in publication order or story order."
+     },
+     {
+      "title": "Where the wardrobe comes from",
+      "detail": "The last chapter ties this book to The Lion, the Witch and the Wardrobe (1950), the first Narnia book Lewis wrote. No more spoilers than that here."
+     }
+    ],
+    "spoilerNote": "The last page explains where a famous wardrobe comes from. Members who haven't read The Lion, the Witch and the Wardrobe can read this book on its own; just don't go further into the later books without asking the group.",
+    "adaptations": [
+     {
+      "title": "Narnia: The Magician's Nephew (Greta Gerwig)",
+      "detail": "As of Nov 2026, set for theaters and IMAX on Feb 12, 2027 and Netflix on Apr 2, 2027. A good excuse for a club movie night. Check current news."
+     }
+    ],
+    "wrapUp": {
+     "predictions": [
+      "Did last meeting's predictions come true?",
+      "Who would read The Lion, the Witch and the Wardrobe next?",
+      "Which book on the ballot are we reading next?"
+     ],
+     "nextReading": "Our next book: whichever wins the vote on the Bookshelf",
+     "bring": "Your rating, 1 to 5 (tap Rate the book)."
+    }
+   },
+   "createdAt": "2026-11-18T19:30:00.000Z",
+   "updatedAt": "2026-11-18T19:30:00.000Z"
   }
  ],
  "club": {
-  "currentId": "m-magicians-nephew-2",
+  "currentId": "m-magicians-nephew-3",
   "now": ""
  },
  "settings": {
@@ -449,18 +655,7 @@
   "nextDateUrl": "https://docs.google.com/forms/d/e/1FAIpQLSd7Z6LE-WLQyaPWXwxEX39sV3DNhWlaZ4nU_tD32-licEPIrA/viewform",
   "roundUrl": "https://docs.google.com/forms/d/e/1FAIpQLScBvrz_JyrugCAedscePW4dxqNih7bLHDlr2V3zbhIW7o4G6Q/viewform"
  },
- "schedule": [
-  {
-   "id": "p-mn-3",
-   "book": "The Magician's Nephew",
-   "author": "C.S. Lewis",
-   "meetingNumber": 3,
-   "chapters": "11–15",
-   "date": "",
-   "time": "18:00",
-   "type": "chapters"
-  }
- ],
+ "schedule": [],
  "shelf": {
   "upNext": [],
   "books": {
@@ -511,5 +706,5 @@
   }
  },
  "public": true,
- "exportedAt": "2026-11-17T14:43:07.271673Z"
+ "exportedAt": "2026-11-18T19:06:57.854734Z"
 }
