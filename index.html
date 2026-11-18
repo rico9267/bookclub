@@ -1338,14 +1338,16 @@ function titledList(key, a, b, label) {
 }
 
 // ---------- Your questions: sent in by members before the meeting (through the club's question form) ----------
+// Still to come: dated in the future, or written up without a date yet.
+const ahead = (m) => isUpcoming(m) || (!!m.id && !m.date);
 function showMemberQuestions(m) {
-  return allQuestions(S.current).length > 0 || (!!m.id && isUpcoming(m) && (isUrl(S.data.settings.questionsUrl) || canManage()));
+  return allQuestions(S.current).length > 0 || (!!m.id && ahead(m) && (isUrl(S.data.settings.questionsUrl) || canManage()));
 }
 function memberQuestionsBlock(m) {
   const E = S.editing, url = S.data.settings.questionsUrl;
   const list = E ? S.current.guide.memberQuestions : allQuestions(S.current);   // editing touches the host's own list only
   const live = liveBallot() && isUrl(url);
-  const open = !!m.id && isUpcoming(m) && isUrl(url);
+  const open = !!m.id && ahead(m) && isUrl(url);
   return el("div", { class: "mq-wrap" },
     !E && !list.length ? el("p", { class: "mq-empty" }, open
       ? (live ? "No questions sent in yet. Have one for the group? Send it in and it shows up here within a couple of minutes." : "No questions sent in yet. Have one for the group? Send it before the meeting and it will show up here.")
@@ -1358,7 +1360,7 @@ function memberQuestionsBlock(m) {
     E ? el("div", { class: "mq-tools" }, addBtn("memberQuestions", "Add question", { question: "", from: "" }), pasteBox()) : null,
     !E && open ? el("div", { class: "actions", style: "margin-top:12px" },
       el("a", { class: "btn" + (list.length ? "" : " primary"), id: "mq-send", href: questionFormUrl(m), target: "_blank", rel: "noopener" }, "Send a question")) : null,
-    !E && canManage() && !isUrl(url) && m.id && isUpcoming(m) ? el("p", { class: "hint", style: "margin:10px 0 0" },
+    !E && canManage() && !isUrl(url) && m.id && ahead(m) ? el("p", { class: "hint", style: "margin:10px 0 0" },
       "Members can send questions once you add a question form link in the ", el("button", { class: "btn link", type: "button", onclick: () => showView("club") }, "Club tab"), ".") : null,
     !E && canManage() && isUrl(url) ? el("p", { class: "hint", id: "mq-host", style: "margin:10px 0 0" }, live
       ? "On the public site, questions sent through your form appear here by themselves within a couple of minutes (not inside this planner). To take one down, delete that response in the form. Edit text adds your own."
@@ -1619,7 +1621,7 @@ function renderGuide() {
 
   if (g.icebreakers.length || E) parts.push(sec("icebreakers", sectionHidden(m, "icebreakers") ? hiddenSection(m, "icebreakers") : titledList("icebreakers", "title", "prompt", "Icebreaker")));
 
-  const askOpen = !E && !!m.id && isUpcoming(m) && isUrl(S.data.settings.questionsUrl);
+  const askOpen = !E && !!m.id && ahead(m) && isUrl(S.data.settings.questionsUrl);
   if (g.chapterQuestions.length) parts.push(sectionHidden(m, "chapterQuestions") ? sec("chapterQuestions", hiddenSection(m, "chapterQuestions")) : sec("chapterQuestions",
     askOpen ? el("div", { class: "ask-callout", id: "ask-callout" }, el("span", {}, "Have your own question for the group?"),
       el("a", { class: "btn small", id: "ask-here", href: questionFormUrl(m), target: "_blank", rel: "noopener" }, "Send a question")) : null,
@@ -2222,7 +2224,8 @@ function clubBar() {
       el("p", { class: "club-cap" }, "Next meeting"),
       el("p", { class: "club-note" }, tbd ? "Date to be set" : "Not scheduled yet",
         S.isHost && !PUBLIC ? [" ", el("button", { class: "btn link", type: "button", onclick: () => openClubSection("club-schedule-sec") }, tbd ? "Set a date" : "Plan it")] : null),
-      tbd ? quickDate() : null, hostDateLink())
+      tbd ? quickDate() : null, hostDateLink(),
+      (() => { const u = undatedNext(); return u && u.guide && isUrl(st.questionsUrl) ? el("div", { class: "club-forms" }, formLink("club-ask", questionFormUrl(u), "Send a question")) : null; })())
     : (rsvp || ask) ? el("div", { class: "club-group" },
       el("p", { class: "club-cap" }, day ? `Next meeting · ${day}` : "Meetings"),
       nx?.feedDated ? hostDateLink("Change the date") : null,
