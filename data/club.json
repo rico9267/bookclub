@@ -431,8 +431,8 @@
    "chapters": "11–15",
    "meetingNumber": 3,
    "minutes": 90,
-   "date": "",
-   "time": "18:00",
+   "date": "2026-11-23",
+   "time": "19:00",
    "type": "chapters",
    "guide": {
     "lead": "Digory faces the Lion, flies west on a winged horse to fetch a silver apple, meets the Witch in a walled garden, and comes home with a gift for his mother.",
@@ -628,7 +628,7 @@
     }
    },
    "createdAt": "2026-11-18T19:30:00.000Z",
-   "updatedAt": "2026-11-18T19:30:00.000Z"
+   "updatedAt": "2026-11-18T20:05:00.000Z"
   }
  ],
  "club": {
@@ -706,5 +706,5 @@
   }
  },
  "public": true,
- "exportedAt": "2026-11-18T19:06:57.854734Z"
+ "exportedAt": "2026-11-18T20:01:15.058643Z"
 }
