@@ -2227,7 +2227,7 @@ function clubBar() {
       tbd ? quickDate() : null, hostDateLink(),
       (() => { const u = undatedNext(); return u && u.guide && isUrl(st.questionsUrl) ? el("div", { class: "club-forms" }, formLink("club-ask", questionFormUrl(u), "Send a question")) : null; })())
     : (rsvp || ask) ? el("div", { class: "club-group" },
-      el("p", { class: "club-cap" }, day ? `Next meeting · ${day}` : "Meetings"),
+      el("p", { class: "club-cap" }, day ? `Next meeting · ${day}${nx.time ? " · " + fmtMeetTime(nx.date, nx.time) : ""}` : "Meetings"),
       nx?.feedDated ? hostDateLink("Change the date") : null,
       el("div", { class: "club-forms" },
         rsvp ? formLink("club-rsvp", st.rsvpUrl, "RSVP", { primary: true, aria: day ? `RSVP for ${day}` : null }) : null,
