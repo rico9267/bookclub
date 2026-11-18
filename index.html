@@ -2984,6 +2984,36 @@ function exportPanel() {
     el("div", { class: "actions" },
       el("button", { class: "btn", type: "button", onclick: (e) => exportPublic(e.currentTarget) }, "Download public page")));
 }
+// A page saved to a phone's Home Screen opens from memory and never reloads by itself, so it can show yesterday's
+// meeting. The public site checks its own data file (never cached) when it opens and whenever it comes back into view,
+// and if the host has changed anything it loads the new page once. "?r=" makes the browser fetch the page again
+// instead of using its stored copy; it is taken out of the address right away.
+const FRESH_KEYS = (d) => { d = normalizeData(d); return JSON.stringify([d.club.currentId, d.meetings.map(m => [m.id, m.updatedAt, m.date, m.time]), d.schedule, d.settings, d.shelf]); };
+function keepFresh() {
+  if (!PUBLIC || !/^https?:$/.test(location.protocol)) return;
+  try { const u = new URL(location.href); if (u.searchParams.has("r")) { u.searchParams.delete("r"); history.replaceState(null, "", u.pathname + u.search + u.hash); } } catch {}
+  let mine = ""; try { mine = FRESH_KEYS(JSON.parse($("club-data").textContent || "{}")); } catch { return; }
+  let last = 0;
+  const check = async () => {
+    if (Date.now() - last < 30000) return;
+    last = Date.now();
+    try {
+      const r = await fetch("data/club.json?t=" + Date.now(), { cache: "no-store", credentials: "omit" });
+      if (!r.ok) return;
+      const theirs = FRESH_KEYS(await r.json());
+      if (theirs === mine) return;
+      // Once per change: if the page that comes back is still the old one (the site is mid-update), don't loop.
+      if (ss.get("bc-fresh") === theirs) return;
+      ss.set("bc-fresh", theirs);
+      if (S.editing || document.querySelector("dialog[open]")) return;   // never pull the page out from under someone typing
+      const u = new URL(location.href); u.searchParams.set("r", Date.now().toString(36));
+      location.replace(u.toString());
+    } catch {}
+  };
+  setTimeout(check, 1500);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });
+  window.addEventListener("pageshow", (e) => { if (e.persisted) { last = 0; check(); } });
+}
 function renderFooter() {
   if (!PUBLIC || $("pub-footer")) return;
   document.querySelector(".brand-rest")?.remove();
@@ -3066,6 +3096,7 @@ function pickInitial() {
 pickInitial();
 applyRole();
 renderGuide(); renderSaved(); renderLivebar();
+keepFresh();
 {
   const msg = ss.get("bc-msg"); if (msg) { setStatus(msg); ss.del("bc-msg"); }
 }
